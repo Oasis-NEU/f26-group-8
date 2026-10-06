@@ -2,28 +2,33 @@ import {useState} from 'react';
 import { Link } from 'react-router';
 
 function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+    const [message, setMessage] = useState('');
 
-  const handleSubmit = (event) => {
+    function handleSubmit(event) {
         event.preventDefault();
-
-        // Perform login logic here
-        if (email === '' || password === '') {
-            setError('Please enter both email and password.');
-            return;
-        }
-
-        // Login Success 
-        setError('The login worked! Redirecting to the dashboard...');
+        const email = event.target.email.value;
+        setMessage(`Welcome, ${email}!`);
     }
-    return(
-        <div className="page">
-            <Link to="/about" className="link">
-                Back to About
-            </Link>
+
+return (
+    <div className="page">
+        <h1 className="page-title">Log in</h1>
+
+        <form onSubmit={handleSubmit} className="card">
+            <label htmlFor="email">Email</label>
+            <input id="email" name="email" type="email" autoComplete="email" required />
+
+            <label htmlFor="password">Password</label>
+            <input id="password" name="password" type="password" autoComplete="current-password" required />
+
+            <button type="submit" className="btn-primary">Log in</button>
+
+            <p role="status" className='message'>{message}</p>
+        </form>
+        
+        <Link to="/about" className="link">Back to About</Link>
         </div>
-    )
+    )  
 }
-export default Login;
+
+export default Login
