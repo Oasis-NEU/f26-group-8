@@ -27,11 +27,13 @@ function About() {
             </Link>
             <header className="banner">
                 <h1 className="banner-title">About Us</h1>
-                <p className="banner-subtitle">Welcome to our platform!</p>
+                <p className="banner-subtitle">A Northeastern Oasis Project...</p>
             </header>
             <section className="section">
                 <h2 className="section-title">Who we are</h2>
-                <p>We are a group of students along with a mentor trying to build a Co-Op, Internship, and Research position platform for students. Our goal is to make it easier for students to find opportunities that fit their needs and interests.</p>
+                <div className="column">
+                    <p>We are a group of students along with a mentor trying to build a Co-Op, Internship, and Research position platform for students. Our goal is to make it easier for students to find opportunities that fit their needs and interests.</p>
+                </div>
             </section>
 
             <section className="section">
@@ -49,7 +51,7 @@ function About() {
             </section>
 
             <section className="section">
-                <h2>What you can do</h2>
+                <h2>Why use our platform?</h2>
                 <div className="feature-grid">
                     {features.map((feature) => (
                         <div key={feature.title} className="column">
