@@ -29,11 +29,14 @@ function About() {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <h1 className="text-4xl font-bold mb-8">About Us</h1>
-            <p className="text-gray-700 mb-6">Welcome to our platform!</p>
-            <Link to="/login" className="mt-6 text-blue-700 underline">
+            <Link
+                to="/login"
+                className="absolute top-6 right-6 rounded-md bg-blue-600 px-4 py-2 font-bold text-white hover:bg-blue-700"
+            >
                 Log in
             </Link>
+            <h1 className="text-4xl font-bold mb-8">About Us</h1>
+            <p className="text-gray-700 mb-6">Welcome to our platform!</p>
         </div>
     )
 }
