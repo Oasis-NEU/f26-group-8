@@ -1,1 +1,116 @@
 @import 'tailwindcss';
+
+/* Colors used across the whole site. Change one here and it updates everywhere. */
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --bg: #f3f4f6;
+  --surface: #ffffff;
+  --text: #111827;
+  --text-muted: #374151;
+  --border: #6b7280;
+  --error: #b91c1c;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+@layer components {
+  /* Page layout: full-height column, everything centered left to right */
+  .page {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 6rem 1.5rem 3rem;
+  }
+
+  /* Big blue rounded heading box at the top of each page */
+  .page-title {
+    background-color: var(--primary);
+    color: white;
+    font-size: 2.25rem;
+    font-weight: 700;
+    padding: 1.5rem 2.5rem;
+    border-radius: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 1.125rem;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    display: inline-block;
+    background-color: var(--primary);
+    color: white;
+    font-weight: 700;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--primary-dark);
+  }
+
+  /* Pins an element to the top-right corner of the page */
+  .top-right {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+  }
+
+  /* White box that holds a form */
+  .card {
+    width: 100%;
+    max-width: 28rem;
+    background-color: var(--surface);
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    padding: 1.5rem;
+  }
+
+  /* Form pieces */
+  .field {
+    margin-bottom: 1rem;
+  }
+
+  .label {
+    display: block;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+
+  .input {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 0.375rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .error {
+    color: var(--error);
+    margin-bottom: 1rem;
+  }
+
+  .link {
+    margin-top: 1.5rem;
+    color: var(--primary-dark);
+    text-decoration: underline;
+  }
+
+  /* Keyboard focus outline (WCAG): shows where you are when pressing Tab */
+  .btn-primary:focus-visible,
+  .input:focus-visible,
+  .link:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
