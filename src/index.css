@@ -36,7 +36,6 @@ body {
   font-size: 36px;
   font-weight: bold;
   padding: 24px 40px;
-  border-radius: 12px;
   margin-bottom: 24px;
 }
 
@@ -45,7 +44,6 @@ body {
   color: white;
   font-weight: bold;
   padding: 8px 16px;
-  border-radius: 6px;
   cursor: pointer;
 }
 
@@ -68,7 +66,6 @@ body {
   max-width: 400px;
   background-color: white;
   padding: 24px;
-  border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
@@ -82,7 +79,6 @@ body {
   display: block;
   width: 100%;
   border: 1px solid var(--border);
-  border-radius: 6px;
   padding: 8px 12px;
   margin-bottom: 16px;
 }
@@ -115,7 +111,6 @@ body {
   color: white;
   text-align: center;
   padding: 100px 32px;
-  border-radius: 24px;
   margin-bottom: 48px;
   min-height: 400px;
 }
@@ -159,7 +154,6 @@ body {
   flex: 1;
   background-color: white;
   padding: 24px;
-  border-radius: 12px;
 }
 
 .column h3 {
