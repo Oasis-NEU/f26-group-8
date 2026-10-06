@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "react-router";
 
 const features = [
@@ -21,19 +20,45 @@ const features = [
 ]
 
 function About() {
-    const [current, setCurrent] = useState(0);
-
-    const slide = features[current];
-    const isFirst = current === 0;
-    const isLast = current === features.length - 1;
-
     return (
         <div className="page">
             <Link to="/login" className="btn-primary top-right">
                 Log in
             </Link>
-            <h1 className="page-title">About Us</h1>
-            <p className="subtitle">Welcome to our platform!</p>
+            <header className="banner">
+                <h1 className="banner-title">About Us</h1>
+                <p className="banner-subtitle">Welcome to our platform!</p>
+            </header>
+            <section className="section">
+                <h2 className="section-title">Who we are</h2>
+                <p>We are a group of students along with a mentor trying to build a Co-Op, Internship, and Research position platform for students. Our goal is to make it easier for students to find opportunities that fit their needs and interests.</p>
+            </section>
+
+            <section className="section">
+                <h2>Who it's for</h2>
+                <div className="columns">
+                    <div className="column">
+                        <h3>High School Students</h3>
+                        <p>High school students can use our platform to find internships and research positions that will help them gain experience and prepare for college search or college Co-Op search.</p>
+                    </div>
+                    <div className="column">
+                        <h3>College Students</h3>
+                        <p>College students can use our platform to find internships, co-ops, and research positions that will help them gain experience and prepare for their future careers.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section className="section">
+                <h2>What you can do</h2>
+                <div className="feature-grid">
+                    {features.map((feature) => (
+                        <div key={feature.title} className="column">
+                            <h3>{feature.title}</h3>
+                            <p>{feature.description}</p>
+                        </div>
+                    ))}
+                </div>
+            </section>
         </div>
     )
 }
