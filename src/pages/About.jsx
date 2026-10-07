@@ -22,9 +22,14 @@ const features = [
 function About() {
     return (
         <div className="page">
-            <Link to="/login" className="btn-primary top-right">
-                Log in
-            </Link>
+            <div className="top-right">
+                <Link to="/signup" className="btn-primary">
+                    Sign up
+                </Link>
+                <Link to="/login" className="btn-primary">
+                    Log in
+                </Link>
+            </div>
             <header className="banner">
                 <h1 className="banner-title">About Us</h1>
                 <p className="banner-subtitle">A Northeastern Oasis Project...</p>

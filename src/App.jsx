@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router'
 import About from './pages/About.jsx'
 import Login from './pages/Login.jsx'
+import Signup from './pages/Signup.jsx'
 
 function App() {
   return (
@@ -8,6 +9,7 @@ function App() {
       <Route path="/" element={<Navigate to="/about" />} />
       <Route path="/about" element={<About />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
     </Routes>
   )
 }
