@@ -1,190 +1,389 @@
+/* index.css holds the styles (colors, sizes, spacing) for the whole site.
+   main.jsx loads it once, and every page can use it.
+
+   How CSS works:
+     .something { ... }   styles every element with className="something"
+     .a .b { ... }        styles .b elements that are INSIDE an .a element
+     .a > .b { ... }      styles .b elements that are DIRECTLY inside .a
+     .a:hover { ... }     styles .a while the mouse is over it
+   Inside the { }, each line is "property: value;".
+
+   Size units:
+     px  = pixels (fixed size)
+     vh  = % of the screen's height (100vh = full height)
+     vw  = % of the screen's width (8vw = 8% of the width) */
+
+/* Loads Tailwind, a CSS toolkit. It also removes the browser's default
+   styles (like big bold headings and blue links), which is why every
+   heading size below is set by hand. */
 @import 'tailwindcss';
 
-/* Colors used across the whole site. Change one here and it updates everywhere. */
+/* Colors used across the whole site. Change one here and it updates everywhere.
+   These are "variables": you use one by writing var(--name). */
 :root {
-  --bg: #f3f4f6;
-  --text: #111827;
-  --muted: #374151;
-  --primary: #2563eb;
-  --primary-dark: #1d4ed8;
-  --border: #6b7280;
+  --bg: #f3f4f6;           /* light gray page background */
+  --text: #111827;         /* almost-black main text color */
+  --muted: #374151;        /* dark gray for paragraph text */
+  --primary: #2563eb;      /* the main blue (buttons, boxes, top bar) */
+  --primary-dark: #1d4ed8; /* darker blue, used when hovering over buttons */
+  --border: #6b7280;       /* gray for input box borders */
 }
 
+/* body is the whole web page */
 body {
-  background-color: var(--bg);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  color: var(--text);
+  background-color: var(--bg); /* light gray background */
+  /* The next 4 lines only matter if you add a background IMAGE.
+     Right now there isn't one, so they don't do anything. */
+  background-size: cover;       /* stretch the image to fill the screen */
+  background-position: center;  /* keep the middle of the image in view */
+  background-repeat: no-repeat; /* show the image once, not tiled */
+  background-attachment: fixed; /* the image stays still while you scroll */
+  color: var(--text); /* default text color for everything */
 }
 
-/* ---------- Used on both pages ---------- */
+/* ---------- Used on more than one page ---------- */
 
+/* The layout of a whole page (used on About, Login, and Signup) */
 .page {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  padding: 96px 24px 48px;
+  position: relative;      /* lets things inside be positioned relative to the page */
+  display: flex;           /* turns on flexbox, a way to line things up */
+  flex-direction: column;  /* stack everything inside top to bottom */
+  align-items: center;     /* center everything left-to-right */
+  min-height: 100vh;       /* always at least as tall as the screen */
+  padding: 96px 24px 48px; /* space inside the edges: top, left/right, bottom */
 }
 
+/* The blue title box at the top of the Login and Signup pages */
 .page-title {
-  background-color: var(--primary);
-  color: white;
-  font-size: 36px;
-  font-weight: bold;
-  padding: 24px 40px;
-  margin-bottom: 24px;
-  border-radius: 16px;
+  background-color: var(--primary); /* blue box */
+  color: white;                     /* white text */
+  font-size: 36px;                  /* text size */
+  font-weight: bold;                /* thick text */
+  padding: 24px 40px;               /* space inside the box: top/bottom, left/right */
+  margin-bottom: 24px;              /* space below the box */
+  border-radius: 16px;              /* rounded corners */
 }
 
+/* Blue buttons (Sign up, Log in, and the form buttons) */
 .btn-primary {
-  background-color: var(--primary);
-  color: white;
-  font-weight: bold;
-  padding: 8px 16px;
-  cursor: pointer;
-  border-radius: 4px;
+  background-color: var(--primary); /* blue */
+  color: white;                     /* white text */
+  font-weight: bold;                /* thick text */
+  padding: 8px 16px;                /* space inside: top/bottom, left/right */
+  cursor: pointer;                  /* mouse turns into a pointing hand */
+  border-radius: 4px;               /* slightly rounded corners */
 }
 
+/* When the mouse is over a blue button, it turns a darker blue */
 .btn-primary:hover {
   background-color: var(--primary-dark);
 }
 
+/* ---------- About page: top bar ---------- */
+
+/* sticky + top: 0 keeps the bar stuck to the top of the screen while you scroll */
+.top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10; /* keeps the bar on top of the page content */
+  background-color: var(--primary); /* blue bar */
+}
+
+/* Tabs on the left, buttons on the right. Same width as the page content */
+.top-bar-inner {
+  display: flex;                   /* put the tabs and buttons in a row */
+  align-items: center;             /* line them up vertically in the middle */
+  justify-content: space-between;  /* tabs go left, buttons go right */
+  gap: 16px;                       /* space between the tabs and the buttons */
+  max-width: 1048px;               /* 1000px of content + 24px padding on each side */
+  margin: 0 auto;                  /* "auto" on the sides centers it on wide screens */
+  padding: 12px 24px;              /* space inside the bar: top/bottom, left/right */
+}
+
+/* The list of tabs */
+.tabs {
+  display: flex; /* show the tabs in a row instead of a list going down */
+  gap: 4px;      /* small space between tabs */
+}
+
+/* Each tab link */
+.tabs a {
+  display: block;      /* lets the link have padding all around it */
+  color: white;        /* white text on the blue bar */
+  font-weight: 600;    /* a little bolder than normal text */
+  padding: 10px 16px;  /* makes the clickable area bigger */
+  border-radius: 8px;  /* rounded corners for the hover box */
+}
+
+/* Light see-through box behind a tab when you hover over it.
+   rgb(255 255 255 / 0.2) means white at 20% strength */
+.tabs a:hover {
+  background-color: rgb(255 255 255 / 0.2);
+}
+
+/* The Sign up and Log in buttons, side by side */
+.top-bar-buttons {
+  display: flex; /* put the two buttons in a row */
+  gap: 12px;     /* space between them */
+}
+
+/* White buttons, because blue buttons would disappear on the blue bar.
+   Also slightly bigger so they're easy to click and tap (WCAG) */
+.top-bar .btn-primary {
+  background-color: white;
+  color: var(--primary-dark); /* blue text */
+  padding: 10px 20px;
+}
+
+/* Light blue when you hover over a button in the bar */
+.top-bar .btn-primary:hover {
+  background-color: #dbeafe;
+}
+
+/* White outline when you Tab to a link in the bar (a blue one wouldn't show).
+   :focus-visible means "reached with the keyboard" */
+.top-bar a:focus-visible {
+  outline: 2px solid white; /* a 2px white line around the link */
+  outline-offset: 2px;      /* a small gap between the link and the line */
+}
+
+/* Stops the sticky bar from covering a section's heading after you click a tab.
+   88px = the bar's height (68px) plus 20px of breathing room */
+.section {
+  scroll-margin-top: 88px;
+}
+
+/* Clicking a tab glides down to the section instead of jumping.
+   Skipped for people who turned on "reduce motion" in their settings (WCAG) */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 /* ---------- About page ---------- */
 
-.top-right {
-  position: absolute;
-  top: 24px;
-  right: 24px;
-  display: flex;
-  gap: 12px;
+/* Less space above the content now that the bar sits at the top.
+   This replaces the 96px top padding from .page, but only on the About page */
+.about-page {
+  padding-top: 40px;
 }
 
-/* ---------- Login page ---------- */
+/* The "ScoutSearch" box. Smaller than the About Us banner so they don't compete */
+.title-box {
+  background-color: var(--primary); /* blue box */
+  color: white;                     /* white text */
+  font-size: 28px;                  /* text size */
+  font-weight: bold;                /* thick text */
+  padding: 12px 32px;               /* space inside the box: top/bottom, left/right */
+  margin-bottom: 16px;              /* space below the box */
+  border-radius: 12px;              /* rounded corners */
+}
 
+/* ---------- Login and Signup pages ---------- */
+
+/* The white box around the form */
 .card {
-  width: 100%;
-  max-width: 400px;
+  width: 100%;              /* fill the available width... */
+  max-width: 400px;         /* ...but never get wider than 400px */
   background-color: white;
-  padding: 24px;
-  border-radius: 16px;
+  padding: 24px;            /* space inside the box on all sides */
+  border-radius: 16px;      /* rounded corners */
 }
 
+/* The labels above each input ("Email", "Password") */
 .card label {
-  display: block;
-  font-weight: 500;
-  margin-bottom: 6px;
-  border-radius: 4px;
+  display: block;       /* put the label on its own line, above the input */
+  font-weight: 500;     /* slightly bolder than normal */
+  margin-bottom: 6px;   /* small space between the label and its input */
+  border-radius: 4px;   /* has no visible effect, since labels have no background or border */
 }
 
+/* The boxes you type into */
 .card input {
-  display: block;
-  width: 100%;
-  border: 1px solid var(--border);
-  padding: 8px 12px;
-  margin-bottom: 16px;
+  display: block;                   /* each input on its own line */
+  width: 100%;                      /* as wide as the white box */
+  border: 1px solid var(--border);  /* thin gray line around the input */
+  padding: 8px 12px;                /* space between the text and the input's edge */
+  margin-bottom: 16px;              /* space before the next label */
 }
 
+/* The message under the form ("Welcome, ...!") */
 .message {
-  margin-top: 16px;
-  color: var(--muted);
+  margin-top: 16px;     /* space above the message */
+  color: var(--muted);  /* dark gray text */
 }
 
+/* The "Back to About" link */
 .link {
-  margin-top: 24px;
-  color: var(--primary-dark);
-  text-decoration: underline;
+  margin-top: 24px;              /* space above the link */
+  color: var(--primary-dark);    /* blue text */
+  text-decoration: underline;    /* underlined, so it looks like a link */
 }
 
 /* Blue outline when you reach something with the Tab key (WCAG) */
 .btn-primary:focus-visible,
 .card input:focus-visible,
 .link:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
+  outline: 2px solid var(--primary); /* a 2px blue line around it */
+  outline-offset: 2px;               /* a small gap between it and the line */
 }
 
 /* ---------- About page: title banner ---------- */
 
+/* The big blue "About Us" box */
 .banner {
   width: 100%;
-  max-width: 1200px;
-  background-color: var(--primary);
-  color: white;
-  text-align: center;
-  padding: 100px 32px;
-  margin-bottom: 48px;
-  min-height: 400px;
-  border-radius: 16px;
+  max-width: 1000px; /* same width as the sections below, so the edges line up */
+  background-color: var(--primary); /* blue */
+  color: white;                     /* white text */
+  text-align: center;               /* center the text */
+  padding: 72px 32px;               /* space inside: top/bottom, left/right */
+  margin-bottom: 56px;              /* space below the banner */
+  border-radius: 16px;              /* rounded corners */
 }
 
+/* clamp(smallest, preferred, biggest): the text grows with the screen width,
+   but never gets smaller than the first number or bigger than the last */
 .banner-title {
-  font-size: 72px;
+  font-size: clamp(44px, 8vw, 64px);
   font-weight: bold;
+  line-height: 1.1; /* space between lines, as a multiple of the text size */
 }
 
+/* "A Northeastern Oasis Project..." */
 .banner-subtitle {
-  font-size: 28px;
-  margin-top: 12px;
+  font-size: clamp(18px, 3vw, 24px); /* between 18px and 24px depending on screen width */
+  margin-top: 12px;                  /* space between the title and subtitle */
 }
 
 /* ---------- About page: text sections ---------- */
 
+/* Each section ("Who we are", "Who it's for", "Why use our platform?").
+   (.section also has scroll-margin-top in the top bar part above) */
 .section {
-  width: 100%;
-  max-width: 1000px;
-  margin-bottom: 40px;
+  width: 100%;          /* fill the available width... */
+  max-width: 1000px;    /* ...but never get wider than 1000px */
+  margin-bottom: 56px;  /* space between sections */
 }
 
+/* Section headings */
 .section h2 {
   font-size: 28px;
   font-weight: bold;
-  margin-bottom: 12px;
+  margin-bottom: 16px; /* space between the heading and its boxes */
 }
 
+/* The "Who we are" text is a bit bigger, so its long lines are easier to read.
+   ">" means only a .column DIRECTLY inside a .section, which is just
+   the "Who we are" box (the other boxes are inside .columns or .feature-grid) */
+.section > .column p {
+  font-size: 20px;
+}
+
+/* All paragraph text in the sections */
 .section p {
   font-size: 18px;
-  line-height: 1.6;
-  color: var(--muted);
+  line-height: 1.6;     /* space between lines, as a multiple of the text size */
+  color: var(--muted);  /* dark gray */
 }
 
+/* Puts the "High School" and "College" boxes side by side */
 .columns {
-  display: flex;
-  gap: 24px;
+  display: flex; /* put the boxes in a row */
+  gap: 24px;     /* space between them */
 }
 
+/* The white boxes */
 .column {
-  flex: 1;
+  flex: 1;                  /* boxes in a row share the space equally */
   background-color: white;
-  padding: 24px;
-  border-radius: 16px;
+  padding: 24px;            /* space inside the box on all sides */
+  border-radius: 16px;      /* rounded corners */
 }
 
+/* Headings inside the white boxes ("High School Students", "Filters", ...) */
 .column h3 {
   font-size: 20px;
   font-weight: bold;
-  margin-bottom: 8px;
+  margin-bottom: 8px; /* small space between the heading and its text */
 }
 
 /* ---------- About page: features grid ---------- */
 
+/* The 4 "Why use our platform?" boxes in a grid */
 .feature-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  display: grid;                   /* turns on grid, a way to make rows and columns */
+  grid-template-columns: 1fr 1fr;  /* 2 columns of equal width ("fr" = a share of the space) */
+  gap: 24px;                       /* space between the boxes */
 }
+
+/* ---------- Smaller screens ----------
+   @media (max-width: 640px) means "only use these styles when the screen
+   is 640px wide or less", which is roughly phone-sized. */
 
 /* On small screens (phones), show one card per row */
 @media (max-width: 640px) {
+  /* 1 column instead of 2 */
   .feature-grid {
     grid-template-columns: 1fr;
   }
 
+  /* Stack the "High School" and "College" boxes instead of side by side */
   .columns {
     flex-direction: column;
   }
+
+  /* Less empty space around the edges on a small screen */
+  .about-page {
+    padding: 32px 16px 40px;
+  }
+
+  /* Smaller ScoutSearch box text */
+  .title-box {
+    font-size: 24px;
+  }
+
+  /* Shorter banner with less space inside */
+  .banner {
+    padding: 48px 20px;
+    margin-bottom: 40px;
+  }
+
+  /* Less space between sections */
+  .section {
+    margin-bottom: 40px;
+  }
+
+  /* "Who we are" text back to normal size */
+  .section > .column p {
+    font-size: 18px;
+  }
 }
 
+/* Small screens: the tabs and buttons can't fit on one row, so they stack.
+   The bar also stops sticking to the top, so it doesn't cover half the phone screen */
+@media (max-width: 760px) {
+  /* "static" is the normal, non-sticky behavior */
+  .top-bar {
+    position: static;
+  }
+
+  /* Tabs on top, buttons underneath */
+  .top-bar-inner {
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 16px;
+  }
+
+  /* If the tabs don't fit in one row, they continue on the next row, centered */
+  .tabs {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* Slightly smaller tabs */
+  .tabs a {
+    padding: 8px 12px;
+  }
+}
