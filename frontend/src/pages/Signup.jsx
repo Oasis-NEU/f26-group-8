@@ -6,6 +6,8 @@
 import { useState } from 'react';
 // Link makes a clickable link to another page of our site.
 import { Link } from 'react-router';
+// useNavigate lets the page send the user to another page of our site.
+import { useNavigate } from 'react-router';
 
 function Signup() {
     // "message" is the text shown under the form. It starts empty ('').
@@ -26,7 +28,7 @@ function Signup() {
         // The backticks ` ` let you put a variable inside text with ${ }.
         setMessage(`Thanks for signing up, ${name}!`);
         // Navigate to the feed page after successful signup
-        navigate('/feed');
+        navigate('/Feed');
     }
 
     return (
