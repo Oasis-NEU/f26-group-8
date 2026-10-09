@@ -1,11 +1,17 @@
 {
   "dependencies": {
+    "bcrypt": "^6.0.0",
+    "express": "^5.2.1",
     "express.js": "^1.0.0",
     "next-auth": "^5.0.0-beta.32"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
     "@types/node": "^26.6.4",
     "typescript": "^7.0.2"
+  },
+  "allowScripts": {
+    "bcrypt@6.0.0": true
   }
 }
