@@ -1,11 +1,36 @@
 {
   "dependencies": {
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^18.0.6",
+    "express": "^5.2.1",
     "express.js": "^1.0.0",
+    "jsonwebtoken": "^9.0.3",
     "next-auth": "^5.0.0-beta.32"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
     "@types/node": "^26.6.4",
     "typescript": "^7.0.2"
-  }
+  },
+  "name": "f26-group-8",
+  "version": "1.0.0",
+  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Oasis-NEU/f26-group-8.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Oasis-NEU/f26-group-8/issues"
+  },
+  "homepage": "https://github.com/Oasis-NEU/f26-group-8#readme"
 }

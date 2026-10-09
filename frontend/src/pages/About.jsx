@@ -42,7 +42,7 @@ function About() {
             <header className="top-bar">
                 {/* <nav> marks this as navigation (a group of links).
                     aria-label="Main" is the name screen readers say out loud for it */}
-                <nav className="top-bar-inner" aria-label="Main">
+                <nav className="top-bar-row" aria-label="Main">
                     {/* The tabs. <ul> is a list and each <li> is one item in it.
                         Screen readers announce "list, 3 items" so people know
                         how many tabs there are */}
@@ -55,10 +55,10 @@ function About() {
                     {/* The Sign up and Log in buttons on the right side of the bar */}
                     <div className="top-bar-buttons">
                         {/* to="/signup" goes to the Signup page (set up in App.jsx) */}
-                        <Link to="/signup" className="btn-primary">
+                        <Link to="/signup" className="top-bar-button">
                             Sign up
                         </Link>
-                        <Link to="/login" className="btn-primary">
+                        <Link to="/login" className="top-bar-button">
                             Log in
                         </Link>
                     </div>
@@ -71,13 +71,13 @@ function About() {
                 About-only spacing (both are in index.css) */}
             <main className="page about-page">
                 {/* Title box with the company name */}
-                <p className="title-box">ScoutSearch</p>
+                <p className="site-name-box">ScoutSearch</p>
 
                 {/* The big blue box with the page title */}
-                <header className="banner">
+                <header className="about-us-box">
                     {/* <h1> is the main heading. Each page should have only one */}
-                    <h1 className="banner-title">About Us</h1>
-                    <p className="banner-subtitle">A Northeastern Oasis Project...</p>
+                    <h1 className="about-us-title">About Us</h1>
+                    <p className="about-us-subtitle">A Northeastern Oasis Project...</p>
                 </header>
 
                 {/* "Who we are" section. id="who-we-are" is where the
@@ -86,7 +86,7 @@ function About() {
                     {/* <h2> is a section heading (one level below the <h1>) */}
                     <h2 className="section-title">Who we are</h2>
                     {/* The white box around the text */}
-                    <div className="column">
+                    <div className="white-box">
                         <p>We are a group of students along with a mentor trying to build a Co-Op, Internship, and Research position platform for students. Our goal is to make it easier for students to find opportunities that fit their needs and interests.</p>
                     </div>
                 </section>
@@ -94,15 +94,15 @@ function About() {
                 {/* "Who it's for" section. The "Who it's for" tab jumps here */}
                 <section id="who-its-for" className="section">
                     <h2>Who it's for</h2>
-                    {/* "columns" puts the two white boxes side by side
+                    {/* "side-by-side" puts the two white boxes side by side
                         (they stack on phones) */}
-                    <div className="columns">
-                        <div className="column">
+                    <div className="side-by-side">
+                        <div className="white-box">
                             {/* <h3> is a smaller heading inside a section */}
                             <h3>High School Students</h3>
                             <p>High school students can use our platform to find internships and research positions that will help them gain experience and prepare for college search or college Co-Op search.</p>
                         </div>
-                        <div className="column">
+                        <div className="white-box">
                             <h3>College Students</h3>
                             <p>College students can use our platform to find internships, co-ops, and research positions that will help them gain experience and prepare for their future careers.</p>
                         </div>
@@ -112,15 +112,15 @@ function About() {
                 {/* "Why use our platform?" section. The third tab jumps here */}
                 <section id="why-use-our-platform" className="section">
                     <h2>Why use our platform?</h2>
-                    {/* "feature-grid" arranges the boxes in 2 columns (1 on phones) */}
-                    <div className="feature-grid">
+                    {/* "why-us-grid" arranges the boxes in 2 columns (1 on phones) */}
+                    <div className="why-us-grid">
                         {/* .map() goes through the features list at the top of
                             this file and makes one white box for each item.
                             Curly braces {} mean "this is JavaScript, not plain text" */}
                         {features.map((feature) => (
                             // React needs a unique "key" on each repeated item
                             // to keep track of it. The title is unique, so it works
-                            <div key={feature.title} className="column">
+                            <div key={feature.title} className="white-box">
                                 <h3>{feature.title}</h3>
                                 <p>{feature.description}</p>
                             </div>
