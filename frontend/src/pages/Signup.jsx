@@ -12,6 +12,9 @@ function Signup() {
     // Calling setMessage('...') changes it, and React updates the page.
     const [message, setMessage] = useState('');
 
+    // navigate('/feed') // Sends the user to the feed page after signing in
+    const navigate = useNavigate();
+
     // Runs when the form is submitted (the Sign up button is clicked,
     // or Enter is pressed).
     function handleSubmit(event) {
@@ -22,6 +25,8 @@ function Signup() {
         const name = event.target.name.value;
         // The backticks ` ` let you put a variable inside text with ${ }.
         setMessage(`Thanks for signing up, ${name}!`);
+        // Navigate to the feed page after successful signup
+        navigate('/feed');
     }
 
     return (

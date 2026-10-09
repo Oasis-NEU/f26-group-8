@@ -12,6 +12,9 @@ function Login() {
     // Calling setMessage('...') changes it, and React updates the page.
     const [message, setMessage] = useState('');
 
+    // navigate('/feed') // Sends the user to the Feed page after Logging in
+    const navigate = useNavigate();
+
     // Runs when the form is submitted (the Log in button is clicked,
     // or Enter is pressed).
     function handleSubmit(event) {
@@ -22,6 +25,8 @@ function Login() {
         const email = event.target.email.value;
         // The backticks ` ` let you put a variable inside text with ${ }.
         setMessage(`Welcome, ${email}!`);
+        // Navigate to the feed page after successful login
+        navigate('/Feed');
     }
 
 return (
