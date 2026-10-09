@@ -64,8 +64,8 @@ body {
   border-radius: 16px;              /* rounded corners */
 }
 
-/* Blue buttons (Sign up, Log in, and the form buttons) */
-.btn-primary {
+/* The blue Log in / Sign up button under the form */
+.form-button {
   background-color: var(--primary); /* blue */
   color: white;                     /* white text */
   font-weight: bold;                /* thick text */
@@ -75,7 +75,7 @@ body {
 }
 
 /* When the mouse is over a blue button, it turns a darker blue */
-.btn-primary:hover {
+.form-button:hover {
   background-color: var(--primary-dark);
 }
 
@@ -90,7 +90,7 @@ body {
 }
 
 /* Tabs on the left, buttons on the right. Same width as the page content */
-.top-bar-inner {
+.top-bar-row {
   display: flex;                   /* put the tabs and buttons in a row */
   align-items: center;             /* line them up vertically in the middle */
   justify-content: space-between;  /* tabs go left, buttons go right */
@@ -127,16 +127,20 @@ body {
   gap: 12px;     /* space between them */
 }
 
-/* White buttons, because blue buttons would disappear on the blue bar.
+/* The Sign up and Log in buttons in the bar.
+   White, because blue buttons would disappear on the blue bar.
    Also slightly bigger so they're easy to click and tap (WCAG) */
-.top-bar .btn-primary {
+.top-bar-button {
   background-color: white;
   color: var(--primary-dark); /* blue text */
-  padding: 10px 20px;
+  font-weight: bold;          /* thick text */
+  padding: 10px 20px;         /* space inside: top/bottom, left/right */
+  cursor: pointer;            /* mouse turns into a pointing hand */
+  border-radius: 4px;         /* slightly rounded corners */
 }
 
 /* Light blue when you hover over a button in the bar */
-.top-bar .btn-primary:hover {
+.top-bar-button:hover {
   background-color: #dbeafe;
 }
 
@@ -169,8 +173,8 @@ body {
   padding-top: 40px;
 }
 
-/* The "ScoutSearch" box. Smaller than the About Us banner so they don't compete */
-.title-box {
+/* The "ScoutSearch" box. Smaller than the About Us box so they don't compete */
+.site-name-box {
   background-color: var(--primary); /* blue box */
   color: white;                     /* white text */
   font-size: 28px;                  /* text size */
@@ -183,7 +187,7 @@ body {
 /* ---------- Login and Signup pages ---------- */
 
 /* The white box around the form */
-.card {
+.form-box {
   width: 100%;              /* fill the available width... */
   max-width: 400px;         /* ...but never get wider than 400px */
   background-color: white;
@@ -192,7 +196,7 @@ body {
 }
 
 /* The labels above each input ("Email", "Password") */
-.card label {
+.form-box label {
   display: block;       /* put the label on its own line, above the input */
   font-weight: 500;     /* slightly bolder than normal */
   margin-bottom: 6px;   /* small space between the label and its input */
@@ -200,7 +204,7 @@ body {
 }
 
 /* The boxes you type into */
-.card input {
+.form-box input {
   display: block;                   /* each input on its own line */
   width: 100%;                      /* as wide as the white box */
   border: 1px solid var(--border);  /* thin gray line around the input */
@@ -209,50 +213,50 @@ body {
 }
 
 /* The message under the form ("Welcome, ...!") */
-.message {
+.form-message {
   margin-top: 16px;     /* space above the message */
   color: var(--muted);  /* dark gray text */
 }
 
 /* The "Back to About" link */
-.link {
+.back-link {
   margin-top: 24px;              /* space above the link */
   color: var(--primary-dark);    /* blue text */
   text-decoration: underline;    /* underlined, so it looks like a link */
 }
 
 /* Blue outline when you reach something with the Tab key (WCAG) */
-.btn-primary:focus-visible,
-.card input:focus-visible,
-.link:focus-visible {
+.form-button:focus-visible,
+.form-box input:focus-visible,
+.back-link:focus-visible {
   outline: 2px solid var(--primary); /* a 2px blue line around it */
   outline-offset: 2px;               /* a small gap between it and the line */
 }
 
-/* ---------- About page: title banner ---------- */
+/* ---------- About page: About Us box ---------- */
 
 /* The big blue "About Us" box */
-.banner {
+.about-us-box {
   width: 100%;
   max-width: 1000px; /* same width as the sections below, so the edges line up */
   background-color: var(--primary); /* blue */
   color: white;                     /* white text */
   text-align: center;               /* center the text */
   padding: 72px 32px;               /* space inside: top/bottom, left/right */
-  margin-bottom: 56px;              /* space below the banner */
+  margin-bottom: 56px;              /* space below the box */
   border-radius: 16px;              /* rounded corners */
 }
 
 /* clamp(smallest, preferred, biggest): the text grows with the screen width,
    but never gets smaller than the first number or bigger than the last */
-.banner-title {
+.about-us-title {
   font-size: clamp(44px, 8vw, 64px);
   font-weight: bold;
   line-height: 1.1; /* space between lines, as a multiple of the text size */
 }
 
 /* "A Northeastern Oasis Project..." */
-.banner-subtitle {
+.about-us-subtitle {
   font-size: clamp(18px, 3vw, 24px); /* between 18px and 24px depending on screen width */
   margin-top: 12px;                  /* space between the title and subtitle */
 }
@@ -275,9 +279,9 @@ body {
 }
 
 /* The "Who we are" text is a bit bigger, so its long lines are easier to read.
-   ">" means only a .column DIRECTLY inside a .section, which is just
-   the "Who we are" box (the other boxes are inside .columns or .feature-grid) */
-.section > .column p {
+   ">" means only a .white-box DIRECTLY inside a .section, which is just
+   the "Who we are" box (the other boxes are inside .side-by-side or .why-us-grid) */
+.section > .white-box p {
   font-size: 20px;
 }
 
@@ -289,13 +293,13 @@ body {
 }
 
 /* Puts the "High School" and "College" boxes side by side */
-.columns {
+.side-by-side {
   display: flex; /* put the boxes in a row */
   gap: 24px;     /* space between them */
 }
 
 /* The white boxes */
-.column {
+.white-box {
   flex: 1;                  /* boxes in a row share the space equally */
   background-color: white;
   padding: 24px;            /* space inside the box on all sides */
@@ -303,16 +307,16 @@ body {
 }
 
 /* Headings inside the white boxes ("High School Students", "Filters", ...) */
-.column h3 {
+.white-box h3 {
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 8px; /* small space between the heading and its text */
 }
 
-/* ---------- About page: features grid ---------- */
+/* ---------- About page: "Why use our platform?" grid ---------- */
 
 /* The 4 "Why use our platform?" boxes in a grid */
-.feature-grid {
+.why-us-grid {
   display: grid;                   /* turns on grid, a way to make rows and columns */
   grid-template-columns: 1fr 1fr;  /* 2 columns of equal width ("fr" = a share of the space) */
   gap: 24px;                       /* space between the boxes */
@@ -325,12 +329,12 @@ body {
 /* On small screens (phones), show one card per row */
 @media (max-width: 640px) {
   /* 1 column instead of 2 */
-  .feature-grid {
+  .why-us-grid {
     grid-template-columns: 1fr;
   }
 
   /* Stack the "High School" and "College" boxes instead of side by side */
-  .columns {
+  .side-by-side {
     flex-direction: column;
   }
 
@@ -340,12 +344,12 @@ body {
   }
 
   /* Smaller ScoutSearch box text */
-  .title-box {
+  .site-name-box {
     font-size: 24px;
   }
 
-  /* Shorter banner with less space inside */
-  .banner {
+  /* Shorter About Us box with less space inside */
+  .about-us-box {
     padding: 48px 20px;
     margin-bottom: 40px;
   }
@@ -356,7 +360,7 @@ body {
   }
 
   /* "Who we are" text back to normal size */
-  .section > .column p {
+  .section > .white-box p {
     font-size: 18px;
   }
 }
@@ -370,7 +374,7 @@ body {
   }
 
   /* Tabs on top, buttons underneath */
-  .top-bar-inner {
+  .top-bar-row {
     flex-direction: column;
     gap: 8px;
     padding: 12px 16px;
@@ -389,6 +393,12 @@ body {
 }
 
 /* ---------- Feed page ---------- */
+/* Everything below styles the Feed page (Feed.jsx, yoursite.com/feed).
+   Every class name starts with "feed-" so it can't clash with other pages.
+
+   The gray text uses #64748b. A lighter gray (like #94a3b8) is too faint
+   to read on white. Text needs a contrast of at least 4.5 to 1 against
+   its background (WCAG), and #64748b on white is about 4.8 to 1. */
 
 /* The white profile card box */
 .feed-profile-card {
@@ -400,22 +410,22 @@ body {
 }
 
 /* Name */
-.feed-profile-name {  
-  font-size: 22px;
-  font-weight: bold;
-  margin-top: 12px;
+.feed-profile-name {
+  font-size: 22px;      /* text size */
+  font-weight: bold;    /* thick text */
+  margin-top: 12px;     /* space between the circle and the name */
 }
 
 /* Profile Bio Display */
 .feed-profile-bio {
-  font-size: 16px; 
-  color: var(--muted);
+  font-size: 16px;      /* text size */
+  color: var(--muted);  /* dark gray (set at the top of this file) */
 }
 
 /* School Display */
 .feed-profile-school {
-  font-size: 14px;
-  color: #94a3b8;
+  font-size: 14px;      /* a bit smaller than the bio */
+  color: #64748b;       /* medium gray, so it looks less important */
 }
 
 /* The circle with initials */
@@ -434,9 +444,10 @@ body {
   margin: -36px 0 0 20px;       /* top, right, bottom, left. The -36px pulls it UP onto the strip */
 }
 
+/* The blue strip across the top of the profile card */
 .feed-profile-banner {
-  height: 72px;
-  background-color: #1d4ed8;
+  height: 72px;                 /* how tall the strip is */
+  background-color: #1d4ed8;    /* dark blue (the same color as --primary-dark) */
 }
 
 /* Same left/right spacing for the name, bio, and school */
@@ -467,75 +478,88 @@ body {
   border-right: 1px solid #e5e7eb;
 }
 
+/* The big number in each stat (like 222) */
 .feed-profile-stat-number {
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 18px;      /* bigger than the label under it */
+  font-weight: bold;    /* thick text */
 }
 
+/* The small word under each number (like "Connections") */
 .feed-profile-stat-label {
-  font-size: 13px;
-  color: #94a3b8;
+  font-size: 13px;      /* small text */
+  color: #64748b;       /* medium gray */
 }
 
+/* The "View your profile →" link at the bottom of the card */
 .feed-profile-link {
-  display: flex;
-  justify-content: space-between;
-  padding: 14px 20px;
-  color: var(--primary);
-  font-weight: bold;
+  display: flex;                    /* turns on flexbox... */
+  justify-content: space-between;   /* ...pushes the words left and the arrow right */
+  padding: 14px 20px;               /* space inside: top/bottom, left/right */
+  color: var(--primary);            /* blue text */
+  font-weight: bold;                /* thick text */
 }
 
+/* The link turns a darker blue when the mouse is over it */
 .feed-profile-link:hover {
   color: var(--primary-dark);
 }
 
+/* The layout of the whole page: 3 columns side by side */
 .feed-page {
-  display: grid;
-  grid-template-columns: 260px 1fr 300px;
-  gap: 24px;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 32px 24px;
+  display: grid;                          /* turns on grid, a way to make rows and columns */
+  grid-template-columns: 260px 1fr 300px; /* left column 260px wide, right column 300px wide.
+                                             1fr = the middle column gets all the leftover space */
+  gap: 24px;                              /* space between the columns */
+  max-width: 1200px;                      /* never wider than 1200px */
+  margin: 0 auto;                         /* "auto" on the left/right centers the page on the screen */
+  padding: 32px 24px;                     /* space inside the edges: top/bottom, left/right */
 }
 
+/* The white "Your space" box under the profile card */
 .feed-space-card {
-  background-color: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  padding: 20px;
-  margin-top: 16px;
+  background-color: white;      /* white box */
+  border: 1px solid #e5e7eb;    /* thin light-gray line around it */
+  border-radius: 16px;          /* rounded corners */
+  padding: 20px;                /* space inside the box */
+  margin-top: 16px;             /* space between it and the profile card above */
 }
 
+/* The small gray heading at the top of a box (like "YOUR SPACE").
+   "People to know" and "Trending Topics" use it too */
 .feed-space-title {
-  font-size: 12px;
-  font-weight: bold;
-  color: #94a3b8;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 12px;
+  font-size: 12px;              /* small text */
+  font-weight: bold;            /* thick text */
+  color: #64748b;               /* medium gray */
+  text-transform: uppercase;    /* shows the words in ALL CAPS (Feed.jsx still says "Your space") */
+  letter-spacing: 1px;          /* a little extra space between letters */
+  margin-bottom: 12px;          /* space under the heading */
 }
 
+/* One row in "Your space" (like "Saved posts ... 12") */
 .feed-space-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
-  color: var(--muted);
+  display: flex;                    /* turns on flexbox... */
+  justify-content: space-between;   /* ...words on the left, number on the right */
+  padding: 6px 0;                   /* space above and below each row */
+  color: var(--muted);              /* dark gray */
 }
 
+/* The top of a post: the circle next to the name, headline, and time */
 .feed-post-header {
-  display: flex;
-  gap: 12px;
-  align-items: center;
+  display: flex;          /* puts the circle and the words side by side */
+  gap: 12px;              /* space between them */
+  align-items: center;    /* lines them up in the middle, top-to-bottom */
 }
 
+/* The white box around each post */
 .feed-post {
-  background-color: white;
-  border-radius: 16px;
-  padding: 20px;
-  border: 1px solid #e5e7eb;
+  background-color: white;      /* white box */
+  border-radius: 16px;          /* rounded corners */
+  padding: 20px;                /* space inside the box */
+  border: 1px solid #e5e7eb;    /* thin light-gray line around it */
 }
 
-  /* Small circle with initials on each post */
+/* Small circle with initials on each post.
+   Also used in "People to know", the post box, and the top bar */
 .feed-post-avatar {
   width: 48px;                  /* same width and height = a square */
   height: 48px;
@@ -550,49 +574,58 @@ body {
   flex-shrink: 0;               /* keeps the circle from getting squished */
 }
 
+/* The name of the person who wrote the post */
 .feed-post-author {
-  font-weight: bold;
+  font-weight: bold;    /* thick text */
 }
 
+/* The line under the name (like their school or job) */
 .feed-post-headline {
-  color: #94a3b8;
-  font-size: 14px;
+  color: #64748b;       /* medium gray */
+  font-size: 14px;      /* smaller text */
 }
 
+/* How long ago it was posted (like "1h") */
 .feed-post-time {
-  color: #94a3b8;
-  font-size: 12px;
+  color: #64748b;       /* medium gray */
+  font-size: 12px;      /* even smaller text */
 }
 
+/* The words of the post */
 .feed-post-text {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 10px;      /* space above */
+  margin-bottom: 10px;   /* space below */
 }
 
+/* The row with "222 reactions" on the left and "18 comments" on the right */
 .feed-post-counts {
-  display: flex;
-  justify-content: space-between;
-  color: #94a3b8;
-  font-size: 14px;
+  display: flex;                    /* turns on flexbox... */
+  justify-content: space-between;   /* ...pushes one to each side */
+  color: #64748b;                   /* medium gray */
+  font-size: 14px;                  /* smaller text */
 }
 
+/* The row of buttons at the bottom of a post (Like, Comment, Share).
+   The post box uses it too (Photo, Event, Article) */
 .feed-post-actions {
-  display: flex;
-  border-top: 1px solid #e5e7eb;
-  margin-top: 8px;
+  display: flex;                  /* puts the buttons side by side */
+  border-top: 1px solid #e5e7eb;  /* light line above the buttons */
+  margin-top: 8px;                /* space above the line */
 }
 
+/* Each button in that row */
 .feed-post-actions button {
-  flex: 1;
-  border: none;
-  background: none;
-  color: var(--muted);
-  padding: 10px;
-  cursor: pointer;
+  flex: 1;                /* every button gets an equal share of the row's width */
+  border: none;           /* no line around the button */
+  background: none;       /* see-through, so it looks like plain words */
+  color: var(--muted);    /* dark gray */
+  padding: 10px;          /* space inside the button, so it's easier to click */
+  cursor: pointer;        /* the mouse turns into a pointing hand over it */
 }
 
+/* A button gets a light gray background when the mouse is over it */
 .feed-post-actions button:hover {
-   background-color: #f1f5f9;
+  background-color: #f1f5f9;
 }
 
 /* Stacks the posts with space between them */
@@ -602,113 +635,132 @@ body {
   gap: 16px;               /* space between each post */
 }
 
+/* The white boxes in the right column ("People to know" and "Trending Topics") */
 .feed-side-card {
-  background-color: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  padding: 20px;
+  background-color: white;      /* white box */
+  border: 1px solid #e5e7eb;    /* thin light-gray line around it */
+  border-radius: 16px;          /* rounded corners */
+  padding: 20px;                /* space inside the box */
 }
 
+/* One person in "People to know": the circle, their name, then the Connect button */
 .feed-person {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  padding: 8px 0;
+  display: flex;          /* puts them side by side */
+  gap: 12px;              /* space between them */
+  align-items: center;    /* lines them up in the middle, top-to-bottom */
+  padding: 8px 0;         /* space above and below each person */
 }
 
+/* The person's name and headline */
 .feed-person-info {
-  flex: 1;
+  flex: 1;    /* takes all the leftover space, which pushes the Connect button to the right edge */
 }
 
+/* The "Connect" button */
 .feed-connect-btn {
-  border: 1px solid var(--primary);
-  color: var(--primary);
-  border-radius: 999px;
-  padding: 4px 12px;
-  font-size: 14px;
-  cursor: pointer;
+  border: 1px solid var(--primary);   /* blue line around it */
+  color: var(--primary);              /* blue words */
+  border-radius: 999px;               /* a huge number gives it fully rounded "pill" ends */
+  padding: 4px 12px;                  /* space inside: top/bottom, left/right */
+  font-size: 14px;                    /* smaller text */
+  cursor: pointer;                    /* the mouse turns into a pointing hand over it */
 }
 
+/* One row in "Trending Topics" (like "#Internships ... 860 posts") */
 .feed-topic {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
+  display: flex;                    /* turns on flexbox... */
+  justify-content: space-between;   /* ...hashtag on the left, post count on the right */
+  padding: 6px 0;                   /* space above and below each row */
 }
 
+/* The right column: stacks its boxes with space between them */
 .feed-right {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  flex-direction: column;   /* stack top-to-bottom */
+  gap: 16px;                /* space between each box */
 }
 
+/* The white "start a post" box at the top of the middle column */
 .feed-composer {
-  background-color: white;
-  border-radius: 16px;
-  padding: 20px;
-  border: 1px solid #e5e7eb;
+  background-color: white;      /* white box */
+  border-radius: 16px;          /* rounded corners */
+  padding: 20px;                /* space inside the box */
+  border: 1px solid #e5e7eb;    /* thin light-gray line around it */
 }
 
+/* The top row of the post box: your circle next to the typing box */
 .feed-composer-top {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  padding: 8px 0;
+  display: flex;          /* puts them side by side */
+  gap: 12px;              /* space between them */
+  align-items: center;    /* lines them up in the middle, top-to-bottom */
+  padding: 8px 0;         /* space above and below */
 }
 
+/* The "Type here..." box */
 .feed-composer-input {
-  flex: 1;
-  border: 1px solid #e5e7eb;
-  border-radius: 999px;
-  padding: 10px 16px;
+  flex: 1;                      /* stretches to fill the rest of the row */
+  border: 1px solid #e5e7eb;    /* thin light-gray line around it */
+  border-radius: 999px;         /* pill shape */
+  padding: 10px 16px;           /* space inside, so the words don't touch the edge */
 }
 
+/* The bar across the top of the Feed page */
 .feed-nav {
-  position: sticky;   /* stays stuck when you scroll... */
-  top: 0;             /* ...at the very top edge of the screen */
-  z-index: 10;        /* draws it ON TOP of posts that scroll underneath */
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 24px;
-  border-bottom: 1px solid #e5e7eb;
-  background-color: white;
-  align-items: center;
+  position: sticky;                 /* stays stuck when you scroll... */
+  top: 0;                           /* ...at the very top edge of the screen */
+  z-index: 10;                      /* draws it ON TOP of posts that scroll underneath */
+  display: flex;                    /* turns on flexbox... */
+  justify-content: space-between;   /* ...left side on the left, right side on the right */
+  padding: 8px 24px;                /* space inside: top/bottom, left/right */
+  border-bottom: 1px solid #e5e7eb; /* light line along the bottom */
+  background-color: white;          /* solid white, so posts don't show through when they scroll under it */
+  align-items: center;              /* lines everything up in the middle, top-to-bottom */
 }
 
+/* Left side of the top bar: the site name and the search box */
 .feed-nav-left {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  padding: 8px 0;
+  display: flex;          /* puts them side by side */
+  gap: 12px;              /* space between them */
+  align-items: center;    /* lines them up in the middle, top-to-bottom */
+  padding: 8px 0;         /* space above and below */
 }
 
+/* The "ScoutSearch" name in the top bar */
 .feed-nav-logo {
-  font-weight: bold;
-  font-size: 32px;
+  font-weight: bold;    /* thick text */
+  font-size: 32px;      /* big text */
 }
 
+/* The search box in the top bar */
 .feed-nav-search {
-  width: 260px;
-  border: 1px solid #e5e7eb;
-  border-radius: 999px;
-  padding: 10px 16px;
+  width: 260px;                 /* how wide the box is */
+  border: 1px solid #e5e7eb;    /* thin light-gray line around it */
+  border-radius: 999px;         /* pill shape */
+  padding: 10px 16px;           /* space inside, so the words don't touch the edge */
 }
 
+/* Right side of the top bar: the links and your circle */
 .feed-nav-right {
-  display: flex;
-  gap: 24px;
-  align-items: center;
+  display: flex;          /* puts them side by side */
+  gap: 24px;              /* space between them */
+  align-items: center;    /* lines them up in the middle, top-to-bottom */
 }
+
+/* The links in the top bar (Home, Network, Messages) */
 .feed-nav-right a {
-  color: var(--muted);
-  padding: 10px;
-  font-weight: 600;
+  color: var(--muted);    /* dark gray */
+  padding: 10px;          /* space around the words, so they're easier to click */
+  font-weight: 600;       /* semi-bold: thicker than normal (400), thinner than bold (700) */
 }
 
+/* A link turns blue when the mouse is over it */
 .feed-nav-right a:hover {
-  color:var(--primary);
+  color: var(--primary);
 }
 
+/* The Like button after you click it.
+   Feed.jsx adds the "feed-liked" class to the button while the post is liked */
 .feed-post-actions .feed-liked {
-  color:var(--primary);
-  font-weight: bold;
+  color: var(--primary);    /* blue */
+  font-weight: bold;        /* thick text */
 }

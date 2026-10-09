@@ -31,8 +31,8 @@ function Signup() {
             <h1 className="page-title">Sign up</h1>
 
             {/* onSubmit={handleSubmit} runs the function above when the form is sent.
-                "card" is the white box around the form */}
-            <form onSubmit={handleSubmit} className="card">
+                "form-box" is the white box around the form */}
+            <form onSubmit={handleSubmit} className="form-box">
                 {/* htmlFor="name" connects this label to the input with id="name".
                     Clicking the label focuses the input, and screen readers read
                     the label out loud (WCAG) */}
@@ -51,15 +51,15 @@ function Signup() {
                 <input id="password" name="password" type="password" autoComplete="new-password" required />
 
                 {/* type="submit" means clicking this button sends the form */}
-                <button type="submit" className="btn-primary">Sign up</button>
+                <button type="submit" className="form-button">Sign up</button>
 
                 {/* Shows the message. role="status" makes screen readers read the
                     message out loud when it appears (WCAG) */}
-                <p role="status" className="message">{message}</p>
+                <p role="status" className="form-message">{message}</p>
             </form>
 
             {/* Link back to the About page */}
-            <Link to="/about" className="link">Back to About</Link>
+            <Link to="/about" className="back-link">Back to About</Link>
         </div>
     )
 }
