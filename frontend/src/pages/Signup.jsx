@@ -6,11 +6,16 @@
 import { useState } from 'react';
 // Link makes a clickable link to another page of our site.
 import { Link } from 'react-router';
+// useNavigate lets the page send the user to another page of our site.
+import { useNavigate } from 'react-router';
 
 function Signup() {
     // "message" is the text shown under the form. It starts empty ('').
     // Calling setMessage('...') changes it, and React updates the page.
     const [message, setMessage] = useState('');
+
+    // navigate('/feed') // Sends the user to the feed page after signing in
+    const navigate = useNavigate();
 
     // Runs when the form is submitted (the Sign up button is clicked,
     // or Enter is pressed).
@@ -22,6 +27,8 @@ function Signup() {
         const name = event.target.name.value;
         // The backticks ` ` let you put a variable inside text with ${ }.
         setMessage(`Thanks for signing up, ${name}!`);
+        // Navigate to the feed page after successful signup
+        navigate('/Feed');
     }
 
     return (
@@ -31,8 +38,8 @@ function Signup() {
             <h1 className="page-title">Sign up</h1>
 
             {/* onSubmit={handleSubmit} runs the function above when the form is sent.
-                "card" is the white box around the form */}
-            <form onSubmit={handleSubmit} className="card">
+                "form-box" is the white box around the form */}
+            <form onSubmit={handleSubmit} className="form-box">
                 {/* htmlFor="name" connects this label to the input with id="name".
                     Clicking the label focuses the input, and screen readers read
                     the label out loud (WCAG) */}
@@ -51,15 +58,15 @@ function Signup() {
                 <input id="password" name="password" type="password" autoComplete="new-password" required />
 
                 {/* type="submit" means clicking this button sends the form */}
-                <button type="submit" className="btn-primary">Sign up</button>
+                <button type="submit" className="form-button">Sign up</button>
 
                 {/* Shows the message. role="status" makes screen readers read the
                     message out loud when it appears (WCAG) */}
-                <p role="status" className="message">{message}</p>
+                <p role="status" className="form-message">{message}</p>
             </form>
 
             {/* Link back to the About page */}
-            <Link to="/about" className="link">Back to About</Link>
+            <Link to="/about" className="back-link">Back to About</Link>
         </div>
     )
 }
