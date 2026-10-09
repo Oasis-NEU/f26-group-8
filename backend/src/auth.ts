@@ -1,8 +1,11 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import { users } from './db.js';
+import jwt from 'jsonwebtoken'
 
 const router = express.Router();
+const key = process.env.JWT_KEY
+
 
 router.post('/signup', async (req, res) => {
   const { username, password } = req.body ?? {};
@@ -24,6 +27,7 @@ router.post('/signup', async (req, res) => {
 router.post('/login', async (req, res) => {
   const { username, password } = req.body ?? {};
 
+
   const user = users.find(u => u.username === username);
   if (!user) {
     return res.status(401).json({ error: 'Invalid username or password' });
@@ -34,8 +38,12 @@ router.post('/login', async (req, res) => {
     return res.status(401).json({ error: 'Invalid username or password' });
   }
 
-  // TODO: put w/ Jayden JWT function here when ready
-  res.json({ token: 'TODO-jwt' });
+  if (!key)
+    return res.status(500).json({error: "Key does not exist"})
+
+  // create and signs token for the user
+  const token = jwt.sign({User: username}, key, {expiresIn: '6h'});
+  res.json({token});
 });
 
 export default router;
