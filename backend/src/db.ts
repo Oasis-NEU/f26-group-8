@@ -1,6 +1,6 @@
-export type User = {
-  username: string;
-  passwordHash: string;
-};
+import { createClient } from '@supabase/supabase-js';
 
-export const users: User[] = [];
+export const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SECRET_KEY!
+);
