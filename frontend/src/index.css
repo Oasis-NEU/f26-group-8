@@ -764,3 +764,315 @@ body {
   color: var(--primary);    /* blue */
   font-weight: bold;        /* thick text */
 }
+
+
+/* ---------- Profile page ---------- */
+
+.profile-page {
+  display: grid;                          
+  grid-template-columns: 1fr 340px; 
+  gap: 24px;                              
+  max-width: 1200px;                      
+  margin: 0 auto;                          
+  padding: 32px 24px;                  
+}
+
+.profile-main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.profile-side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.profile-header {
+  background-color: white;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  position: relative;
+}
+
+.profile-banner {
+  height: 150px;
+  background-color: #1d4ed8;
+}
+
+.profile-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 120px;
+  width: 120px;
+  border-radius: 50%;
+  background-color: #2563eb;
+  font-weight: bold;
+  color:white;
+  font-size: 32px;
+  border: 5px solid white;
+  margin-top: -60px;
+  margin-left: 32px;
+}
+
+.profile-edit-btn {
+  position: absolute;
+  top: 165px;
+  right: 32px;
+  background: white;
+  border: 1px solid #64748b;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 8px 16px;
+  border-radius: 16px;
+}
+
+.profile-name,
+.profile-bio,
+.profile-info,
+.profile-actions {
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+.profile-name {
+  font-weight: bold;
+  font-size: 28px;
+  margin-top: 8px;
+}
+
+.profile-bio {
+  font-size: 17px;
+  color: var(--muted);
+}
+
+.profile-info {
+  display: flex;
+  gap: 22px;
+  color: #949494;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.profile-actions {
+  margin-top: 16px;
+}
+
+.profile-btn-outline {
+  color: var(--primary);
+  font-weight: bold;
+  background-color: white;
+  border-radius: 999px;
+  padding: 8px 16px;
+  cursor: pointer;
+  border: 1px solid #2563eb;
+}
+.profile-btn-outline:hover {
+  background-color: #e7edfc;
+}
+
+.profile-stats {
+  display: flex;
+  margin-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.profile-stat {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 16px 32px;
+}
+
+/* Divider line after every stat EXCEPT the last one */
+.profile-stat:not(:last-child) {
+  border-right: 1px solid #e5e7eb;
+}
+
+.profile-stat-number {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.profile-stat-label {
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+.profile-card {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 32px;
+}
+
+.profile-card-title {
+  font-weight: bold;
+  font-size: 22px;
+}
+
+.profile-card-subtitle {
+  color: #949494;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.profile-about-text {
+  color: var(--muted);
+  margin-top: 16px;
+  line-height: 1.6;
+}
+
+/* Education Card CSS */
+
+.profile-item {
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.profile-item-logo {
+  display: flex;
+  height: 56px;
+  width: 56px;
+  border-radius: 12px;
+  background-color: #2563eb;
+  color: white;
+  font-weight: bold;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-item-title {
+  font-weight: bold;
+  font-size: 17px;
+}
+
+.profile-item-subtitle {
+  color: var(--muted);
+}
+
+.profile-item-date {
+  font-size: 12px;
+  margin-top: 6px;
+  color: #949494;
+}
+
+.profile-item-text {
+  color:var(--muted);
+  margin-top: 8px;
+}
+
+/* creates a divider for every experience but the last one */
+.profile-item:not(:last-child) {
+  border-bottom: 1px solid #e5e5e5;
+  padding-bottom: 20px;
+}
+
+.profile-skills {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* divides into 2 columns */
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.profile-skill {
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 14px 18px;
+  color: var(--muted);
+  font-weight: bold;
+}
+
+.profile-resume-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  border: 1px solid #e5e5e5;
+  background-color: #e7edfc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+/* The resume card: icon, info, and buttons in one row */
+.profile-resume {
+  display: flex;          /* put the 3 parts side by side */
+  align-items: center;    /* line them up vertically in the middle */
+  gap: 16px;              /* space between icon, info, and buttons */
+}
+
+/* The text in the middle: stretches to push the buttons to the right */
+.profile-resume-info {
+  flex: 1;
+}
+
+/* Small blue "RESUME" label */
+.profile-resume-label {
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--primary);
+  letter-spacing: 1px;    /* spreads the letters apart */
+}
+
+/* View + Download side by side */
+.profile-resume-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* The filled blue button */
+.profile-btn-primary {
+  background-color: var(--primary);
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.profile-btn-primary:hover {
+  background-color: var(--primary-dark);
+}
+
+.profile-side-title {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+/* One company row: placeholder box next to the name */
+.profile-company,
+.profile-community {
+  display: flex;          /* box and name side by side */
+  align-items: center;    /* name lines up with the middle of the box */
+  gap: 12px;              /* space between the box and the name */
+  padding: 8px 0;         /* 8px above and below each row, 0 on the sides */
+}
+
+.profile-company-logo,
+.profile-community-logo {
+  height: 40px;
+  width: 40px;
+  background-color: #f1f5f9;
+  flex-shrink: 0;
+  border-radius: 10px;
+}
+
+.profile-company-name,
+.profile-community-name {
+  font-weight: bold;
+}
+
+.profile-community-members {
+  font-size: 13px;
+  color: #949494;
+}
