@@ -8,6 +8,7 @@
 // useState lets the page remember a value and redraw itself when it changes.
 import { useState } from "react";
 import NavBar from "../components/NavBar.jsx";
+import { Link } from "react-router";
 
 // ---------- Sample data ----------
 // These lists hold the made-up content shown on the page.
@@ -119,11 +120,10 @@ function ProfileCard() {
           <p className="feed-profile-stat-label">Profile views</p>
         </div>
       </div>
-      {/* href="#" is a placeholder: the link doesn't go anywhere yet,
-          because there's no profile page yet */}
-      <a className="feed-profile-link" href="#">
-        View your profile <span>→</span>
-      </a>
+      {/* Takes you to your Profile page (yoursite.com/profile) */}
+      <Link to="/profile" className="feed-profile-link">
+        View your profile <span aria-hidden="true">→</span>
+      </Link>
     </div>
   );
 }
