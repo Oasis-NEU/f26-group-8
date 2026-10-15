@@ -7,6 +7,8 @@
 // The styles are in index.css, under "Feed page". The class names still
 // start with "feed-" because the bar was first made for the Feed page.
 
+// Link makes a clickable link to another page of our site.
+import { Link } from "react-router";
 // The top bar
 function NavBar() {
   return (
@@ -29,9 +31,9 @@ function NavBar() {
       {/* Right side: links to other pages, then your circle.
           href="#" means the links don't go anywhere yet */}
       <div className="feed-nav-right">
-        <a href="#">Home</a>
-        <a href="#">Network</a>
-        <a href="#">Messages</a>
+        <Link to="/feed">Home</Link>
+        <Link to="/network">Network</Link>
+        <Link to="/messages">Messages</Link>
         {/* Your circle. It borrows the circle style from the Feed posts */}
         <div className="feed-post-avatar">RMV</div>
       </div>

@@ -256,7 +256,7 @@ function Post(props) {
       <div className="feed-post-counts">
         {/* "liked ? A : B" means: if liked is true, use A. Otherwise, use B.
             So the count goes up by 1 while you have the post liked */}
-        <span>{liked ? props.likes + 1 : props.likes} reactions</span>
+        <span>{liked ? props.likes + 1 : props.likes} Likes</span>
         <span>{props.comments} comments</span>
       </div>
       <div className="feed-post-actions">
