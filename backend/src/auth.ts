@@ -77,7 +77,9 @@ router.post('/login', async (req, res) => {
     return res.status(500).json({error: "Key does not exist"})
 
   // create and signs token for the user
-  const token = jwt.sign({User: username}, key, {expiresIn: '6h'});
+  // the field name here has to match TokenPayload in middleware.ts,
+  // otherwise req.user.username comes out undefined on protected routes
+  const token = jwt.sign({ username: user.username }, key, { expiresIn: '6h' });
   res.json({token});
 });
 
