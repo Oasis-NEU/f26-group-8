@@ -767,57 +767,69 @@ body {
 
 
 /* ---------- Profile page ---------- */
+/* Everything below styles the Profile page (Profile.jsx, yoursite.com/profile).
+   Every class name starts with "profile-" so it can't clash with other pages.
+   The top bar uses the "feed-nav" styles in the Feed page part above. */
 
+/* The layout of the whole page: 2 columns side by side */
 .profile-page {
-  display: grid;                          
-  grid-template-columns: 1fr 340px; 
-  gap: 24px;                              
-  max-width: 1200px;                      
-  margin: 0 auto;                          
-  padding: 32px 24px;                  
+  display: grid;                      /* turns on grid, a way to make rows and columns */
+  grid-template-columns: 1fr 340px;   /* right column 340px wide.
+                                         1fr = the left column gets all the leftover space */
+  gap: 24px;                          /* space between the columns */
+  max-width: 1200px;                  /* never wider than 1200px */
+  margin: 0 auto;                     /* "auto" on the left/right centers the page on the screen */
+  padding: 32px 24px;                 /* space inside the edges: top/bottom, left/right */
 }
 
+/* The left column: stacks its cards with space between them */
 .profile-main {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  flex-direction: column;   /* stack top-to-bottom instead of side by side */
+  gap: 16px;                /* space between each card */
 }
 
+/* The right column: stacks its boxes with space between them */
 .profile-side {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  flex-direction: column;   /* stack top-to-bottom */
+  gap: 16px;                /* space between each box */
 }
 
+/* The big white box at the top of the left column */
 .profile-header {
-  background-color: white;
-  border-radius: 16px;
-  border: 1px solid #e5e7eb;
-  overflow: hidden;
-  position: relative;
+  background-color: white;      /* white box */
+  border-radius: 16px;          /* rounded corners */
+  border: 1px solid #e5e7eb;    /* thin light-gray line around it */
+  overflow: hidden;             /* hides anything poking out past the rounded corners */
+  position: relative;           /* lets the "Edit profile" button place itself inside this box
+                                   (see .profile-edit-btn below) */
 }
 
+/* The blue strip across the top of the header */
 .profile-banner {
-  height: 150px;
-  background-color: #1d4ed8;
+  height: 150px;                /* how tall the strip is */
+  background-color: #1d4ed8;    /* dark blue (the same color as --primary-dark) */
 }
 
+/* The big circle with initials */
 .profile-avatar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 120px;
+  display: flex;                /* turns on flexbox so we can center the text... */
+  align-items: center;          /* ...centered top-to-bottom */
+  justify-content: center;      /* ...centered left-to-right */
+  height: 120px;                /* same width and height makes a square... */
   width: 120px;
-  border-radius: 50%;
-  background-color: #2563eb;
-  font-weight: bold;
-  color:white;
-  font-size: 32px;
-  border: 5px solid white;
-  margin-top: -60px;
-  margin-left: 32px;
+  border-radius: 50%;           /* ...and 50% rounds the square into a circle */
+  background-color: #2563eb;    /* blue (the same color as --primary) */
+  font-weight: bold;            /* thick text */
+  color:white;                  /* white initials */
+  font-size: 32px;              /* big text */
+  border: 5px solid white;      /* white ring around the circle */
+  margin-top: -60px;            /* pulls it UP by half its height, so it overlaps the strip */
+  margin-left: 32px;            /* space from the left edge of the box */
 }
 
+/* The "Edit profile" button */
 .profile-edit-btn {
   position: absolute;
   top: 165px;
@@ -836,6 +848,8 @@ body {
   background-color: #e5e5e5;
 }
 
+/* Same left/right spacing for the name, bio, info row, and Connect button,
+   so they all line up with the circle */
 .profile-name,
 .profile-bio,
 .profile-info,
@@ -844,168 +858,199 @@ body {
   padding-right: 32px;
 }
 
+/* Your name */
 .profile-name {
-  font-weight: bold;
-  font-size: 28px;
-  margin-top: 8px;
+  font-weight: bold;    /* thick text */
+  font-size: 28px;      /* big text */
+  margin-top: 8px;      /* space between the circle and the name */
 }
 
+/* Your major and school, under your name */
 .profile-bio {
   font-size: 17px;
-  color: var(--muted);
+  color: var(--muted);  /* dark gray (set at the top of this file) */
 }
 
+/* The row of small details (school and city) */
 .profile-info {
-  display: flex;
-  gap: 22px;
-  color: #949494;
-  font-size: 14px;
-  margin-top: 8px;
+  display: flex;        /* puts them side by side */
+  gap: 22px;            /* space between them */
+  color: #949494;       /* light gray */
+  font-size: 14px;      /* smaller text */
+  margin-top: 8px;      /* space above the row */
 }
 
+/* The area holding the Connect button */
 .profile-actions {
-  margin-top: 16px;
+  margin-top: 16px;     /* space above the button */
 }
 
+/* A white button with a blue outline (Connect, View, View Project) */
 .profile-btn-outline {
-  color: var(--primary);
-  font-weight: bold;
-  background-color: white;
-  border-radius: 999px;
-  padding: 8px 16px;
-  cursor: pointer;
-  border: 1px solid #2563eb;
+  color: var(--primary);          /* blue words */
+  font-weight: bold;              /* thick text */
+  background-color: white;        /* white button */
+  border-radius: 999px;           /* a huge number gives it fully rounded "pill" ends */
+  padding: 8px 16px;              /* space inside: top/bottom, left/right */
+  cursor: pointer;                /* the mouse turns into a pointing hand over it */
+  border: 1px solid #2563eb;      /* blue line around it (the same color as --primary) */
 }
+/* The outline button turns light blue when the mouse is over it */
 .profile-btn-outline:hover {
   background-color: #e7edfc;
 }
 
+/* The row of 3 numbers along the bottom of the header */
 .profile-stats {
-  display: flex;
-  margin-top: 16px;
-  border-top: 1px solid #e5e7eb;
+  display: flex;                  /* puts the stats side by side */
+  margin-top: 16px;               /* space between the Connect button and the row */
+  border-top: 1px solid #e5e7eb;  /* light line above the row */
 }
 
+/* Each stat (number + label) */
 .profile-stat {
-  flex: 1;
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  padding: 16px 32px;
+  flex: 1;                  /* all 3 stats share the row's width equally */
+  display: flex;            /* puts the number and the label side by side */
+  align-items: baseline;    /* lines up the bottoms of the letters, even though
+                               the number is bigger than the label */
+  gap: 8px;                 /* space between the number and the label */
+  padding: 16px 32px;       /* space inside: top/bottom, left/right */
 }
 
 /* Divider line after every stat EXCEPT the last one */
+/* :not(:last-child) means "every .profile-stat that is NOT the last one",
+   so the left and middle stats get a line on their right side */
 .profile-stat:not(:last-child) {
   border-right: 1px solid #e5e7eb;
 }
 
+/* The big number in each stat (like 222) */
 .profile-stat-number {
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 20px;      /* bigger than the label next to it */
+  font-weight: bold;    /* thick text */
 }
 
+/* The small word next to each number (like "Connections") */
 .profile-stat-label {
-  font-size: 14px;
-  color: #94a3b8;
+  font-size: 14px;      /* smaller text */
+  color: #94a3b8;       /* light gray */
 }
 
+/* The white box used for every card on this page
+   (About, Education, Experience, Projects, Resume, Skills, and the right column) */
 .profile-card {
-  background-color: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  padding: 32px;
+  background-color: white;      /* white box */
+  border: 1px solid #e5e7eb;    /* thin light-gray line around it */
+  border-radius: 16px;          /* rounded corners */
+  padding: 32px;                /* space inside the box */
 }
 
+/* The title at the top of a card (like "About") */
 .profile-card-title {
-  font-weight: bold;
-  font-size: 22px;
+  font-weight: bold;    /* thick text */
+  font-size: 22px;      /* big text */
 }
 
+/* The small gray line under a card's title (like "A quick introduction") */
 .profile-card-subtitle {
-  color: #949494;
-  font-size: 12px;
-  margin-top: 6px;
+  color: #949494;       /* light gray */
+  font-size: 12px;      /* small text */
+  margin-top: 6px;      /* space between the title and this line */
 }
 
+/* The paragraph in the About card */
 .profile-about-text {
-  color: var(--muted);
-  margin-top: 16px;
-  line-height: 1.6;
+  color: var(--muted);  /* dark gray */
+  margin-top: 16px;     /* space above the paragraph */
+  line-height: 1.6;     /* space between lines: 1.6 times the text size, so it's easier to read */
 }
 
 /* Education Card CSS */
+/* These "profile-item" classes are used by both the Education and Experience cards */
 
+/* One row: the square logo next to the info */
 .profile-item {
-  display: flex;
-  gap: 16px;
-  margin-top: 20px;
+  display: flex;        /* puts the logo and the info side by side */
+  gap: 16px;            /* space between them */
+  margin-top: 20px;     /* space above each row */
 }
 
+/* The blue square on the left of each row (like "NU") */
 .profile-item-logo {
-  display: flex;
-  height: 56px;
+  display: flex;                /* turns on flexbox so we can center the text... */
+  height: 56px;                 /* same width and height makes a square */
   width: 56px;
-  border-radius: 12px;
-  background-color: #2563eb;
-  color: white;
-  font-weight: bold;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  border-radius: 12px;          /* rounded corners */
+  background-color: #2563eb;    /* blue (the same color as --primary) */
+  color: white;                 /* white letters */
+  font-weight: bold;            /* thick text */
+  align-items: center;          /* ...centered top-to-bottom */
+  justify-content: center;      /* ...centered left-to-right */
+  flex-shrink: 0;               /* keeps the square from getting squished */
 }
 
+/* The main line of a row (like "Northeastern University").
+   The Resume and Projects cards use it too */
 .profile-item-title {
-  font-weight: bold;
+  font-weight: bold;    /* thick text */
   font-size: 17px;
 }
 
+/* The line under it (like the major or the company) */
 .profile-item-subtitle {
-  color: var(--muted);
+  color: var(--muted);  /* dark gray */
 }
 
+/* The dates (like "2026 - 2029").
+   The Resume and Projects cards use it too */
 .profile-item-date {
-  font-size: 12px;
-  margin-top: 6px;
-  color: #949494;
+  font-size: 12px;      /* small text */
+  margin-top: 6px;      /* space above */
+  color: #949494;       /* light gray */
 }
 
+/* The sentence about a job in the Experience card */
 .profile-item-text {
-  color:var(--muted);
-  margin-top: 8px;
+  color:var(--muted);   /* dark gray */
+  margin-top: 8px;      /* space above */
 }
 
 /* creates a divider for every experience but the last one */
+/* :not(:last-child) means "every row that is NOT the last one" */
 .profile-item:not(:last-child) {
-  border-bottom: 1px solid #e5e5e5;
-  padding-bottom: 20px;
+  border-bottom: 1px solid #e5e5e5;   /* light line under the row */
+  padding-bottom: 20px;               /* space between the words and the line */
 }
 
+/* The Skills card: lays the skill boxes out in a grid */
 .profile-skills {
   display: grid;
   grid-template-columns: 1fr 1fr; /* divides into 2 columns */
-  gap: 12px;
-  margin-top: 20px;
+  gap: 12px;                      /* space between the boxes */
+  margin-top: 20px;               /* space between the subtitle and the boxes */
 }
 
+/* Each skill box (like "✓ React") */
 .profile-skill {
-  border: 1px solid #e5e5e5;
-  border-radius: 12px;
-  padding: 14px 18px;
-  color: var(--muted);
-  font-weight: bold;
+  border: 1px solid #e5e5e5;    /* thin light-gray line around it */
+  border-radius: 12px;          /* rounded corners */
+  padding: 14px 18px;           /* space inside: top/bottom, left/right */
+  color: var(--muted);          /* dark gray */
+  font-weight: bold;            /* thick text */
 }
 
+/* The light blue square with the 📄 icon (Resume and Projects cards) */
 .profile-resume-icon {
-  width: 56px;
+  width: 56px;                  /* same width and height makes a square */
   height: 56px;
-  border-radius: 12px;
-  border: 1px solid #e5e5e5;
-  background-color: #e7edfc;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  flex-shrink: 0;
+  border-radius: 12px;          /* rounded corners */
+  border: 1px solid #e5e5e5;    /* thin light-gray line around it */
+  background-color: #e7edfc;    /* light blue */
+  display: flex;                /* turns on flexbox so we can center the icon... */
+  align-items: center;          /* ...centered top-to-bottom */
+  justify-content: center;      /* ...centered left-to-right */
+  font-size: 24px;              /* makes the icon bigger */
+  flex-shrink: 0;               /* keeps the square from getting squished */
 }
 
 /* The resume card: icon, info, and buttons in one row */
@@ -1036,26 +1081,29 @@ body {
 
 /* The filled blue button */
 .profile-btn-primary {
-  background-color: var(--primary);
-  color: white;
-  font-weight: bold;
-  border: none;
-  border-radius: 999px;
-  padding: 8px 16px;
-  cursor: pointer;
+  background-color: var(--primary);   /* blue button */
+  color: white;                       /* white words */
+  font-weight: bold;                  /* thick text */
+  border: none;                       /* no line around it */
+  border-radius: 999px;               /* pill shape */
+  padding: 8px 16px;                  /* space inside: top/bottom, left/right */
+  cursor: pointer;                    /* the mouse turns into a pointing hand over it */
 }
 
+/* The filled button turns a darker blue when the mouse is over it */
 .profile-btn-primary:hover {
   background-color: var(--primary-dark);
 }
 
+/* The heading at the top of each box in the right column (like "Followed Companies") */
 .profile-side-title {
-  font-weight: bold;
+  font-weight: bold;      /* thick text */
   font-size: 18px;
-  margin-bottom: 12px;
+  margin-bottom: 12px;    /* space under the heading */
 }
 
 /* One company row: placeholder box next to the name */
+/* (The rows in "Followed Communities" look the same, so they share these styles) */
 .profile-company,
 .profile-community {
   display: flex;          /* box and name side by side */
@@ -1064,20 +1112,23 @@ body {
   padding: 8px 0;         /* 8px above and below each row, 0 on the sides */
 }
 
+/* The empty gray square on the left of each row, saving space for a logo later */
 .profile-company-logo,
 .profile-community-logo {
-  height: 40px;
+  height: 40px;                 /* same width and height makes a square */
   width: 40px;
-  background-color: #f1f5f9;
-  flex-shrink: 0;
-  border-radius: 10px;
+  background-color: #f1f5f9;    /* very light gray, so you can see the square */
+  flex-shrink: 0;               /* keeps the square from getting squished */
+  border-radius: 10px;          /* rounded corners */
 }
 
+/* The company or community name */
 .profile-company-name,
 .profile-community-name {
-  font-weight: bold;
+  font-weight: bold;    /* thick text */
 }
 
+/* How many members a community has (like "80 members") */
 .profile-community-members {
   font-size: 13px;
   color: #949494;
@@ -1225,4 +1276,94 @@ body {
   padding: 6px 12px;
   border-radius: 999px;
   font-size: 13px;
+}
+
+/* ---------- Network page ---------- */
+/* Everything below styles the Network page (Network.jsx, yoursite.com/network).
+   Every class name starts with "network-" so it can't clash with other pages. */
+
+/* The layout of the whole page: 2 columns side by side */
+.network-page {
+  display: grid;                      /* turns on grid, a way to make rows and columns */
+  grid-template-columns: 1fr 300px;   /* right column 300px wide, left column gets the rest */
+  gap: 24px;                          /* space between the columns */
+  max-width: 1200px;                  /* never wider than 1200px */
+  margin: 0 auto;                     /* centers the page on the screen */
+  padding: 32px 24px;                 /* space inside the edges: top/bottom, left/right */
+}
+
+/* Both columns stack their boxes top to bottom with space between them */
+.network-main,
+.network-side {
+  display: flex;
+  flex-direction: column;   /* stack top-to-bottom instead of side by side */
+  gap: 16px;                /* space between each box */
+}
+
+/* The white boxes */
+.network-box {
+  background-color: white;      /* white box */
+  border: 1px solid #e5e7eb;    /* thin light-gray line around it */
+  border-radius: 16px;          /* rounded corners */
+  padding: 20px;                /* space inside the box */
+}
+
+/* The title at the top of each box (like "Invitations") */
+.network-box-title {
+  font-size: 18px;
+  font-weight: bold;      /* thick text */
+  margin-bottom: 12px;    /* space under the title */
+}
+
+/* The grid of people boxes in "People You May Know" */
+.network-people {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));  /* as many columns as fit, each at least 180px wide */
+  gap: 16px;                                                     /* space between the boxes */
+}
+
+/* One person's box: circle, name, headline, and button, stacked and centered */
+.network-person {
+  display: flex;
+  flex-direction: column;      /* stack top-to-bottom */
+  align-items: center;         /* centers everything left-to-right */
+  text-align: center;          /* centers the words too */
+  gap: 8px;                    /* space between each piece */
+  padding: 20px 16px;          /* space inside: top/bottom, left/right */
+  border: 1px solid #e5e7eb;   /* thin light-gray line around it */
+  border-radius: 12px;         /* rounded corners */
+}
+
+/* The person's name */
+.network-person-name {
+  font-weight: bold;    /* thick text */
+}
+
+/* The line under the name (like their school) */
+.network-person-headline {
+  color: #64748b;       /* medium gray (dark enough to read on white, WCAG) */
+  font-size: 14px;      /* smaller text */
+  flex: 1;              /* takes up the extra space, which pushes every button to the bottom so they line up */
+}
+
+/* The "Connect" button */
+.network-connect-button {
+  border: 1px solid var(--primary);   /* blue line around it */
+  color: var(--primary);              /* blue words */
+  border-radius: 999px;               /* pill shape */
+  padding: 6px 16px;                  /* space inside: top/bottom, left/right */
+  font-weight: 600;                   /* semi-bold */
+  cursor: pointer;                    /* the mouse turns into a pointing hand over it */
+}
+
+/* The button gets a very light blue background when the mouse is over it */
+.network-connect-button:hover {
+  background-color: #eff6ff;
+}
+
+/* Small screens: 2 columns don't fit side by side on a phone, so they stack */
+@media (max-width: 760px) {
+  .network-page {
+    grid-template-columns: 1fr;   /* just 1 column */
+  }
 }
