@@ -1,0 +1,803 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-18T20:32:48.000Z",
+  "title": "Design System: ScoutSearch",
+  "extensions": {
+    "surfaces": [
+      {
+        "name": "About (Persuade)",
+        "scope": ".about-site wrapper in frontend/src/pages/About.jsx",
+        "ground": "about-bg",
+        "colorScheme": "light",
+        "fonts": "Overpass + Atkinson Hyperlegible Next"
+      },
+      {
+        "name": "App pages (Operate)",
+        "scope": "Feed, Profile, Network, Login, Signup",
+        "ground": "bg",
+        "fonts": "System font stack"
+      }
+    ],
+    "direction": {
+      "source": "User-pinned PhishAware reference (product landing with a live demo); recolored at the user's request from dark night-slate + amber, to light professional blue, to light sky blue, briefly to a dusty blue, then a gentle gray-leaning light blue, and now to a clear light blue with real blues (no grays) for secondary text and lines, kept a step dimmer than full brightness, with blue-white cards (no pure white surfaces)",
+      "seedKey": null
+    },
+    "colorMeta": {
+      "about-bg": {
+        "role": "neutral",
+        "displayName": "Trailhead Sky",
+        "canonical": "#d7e9fb",
+        "cssVariable": "--about-bg",
+        "oklch": "oklch(92.6% 0.031 248.2)",
+        "tonalRamp": [
+          "oklch(15% 0.031 248.2)",
+          "oklch(26.4% 0.031 248.2)",
+          "oklch(37.9% 0.031 248.2)",
+          "oklch(49.3% 0.031 248.2)",
+          "oklch(60.7% 0.031 248.2)",
+          "oklch(72.1% 0.031 248.2)",
+          "oklch(83.6% 0.031 248.2)",
+          "oklch(95% 0.031 248.2)"
+        ],
+        "contrast": "Navy Ink 10.4:1, Lake Blue Ink 7.3:1, Haze Blue 5.3:1, Harbor Blue 5.8:1; App Blue 3.9:1 (not text); Trail Sky 1.8:1 (fill only)",
+        "note": "Same value as --bg. Clear light blue, a step dimmer than full brightness."
+      },
+      "about-panel": {
+        "role": "neutral",
+        "displayName": "Deeper Sky Panel",
+        "canonical": "#c6def7",
+        "cssVariable": "--about-panel",
+        "oklch": "oklch(89.1% 0.043 249.4)",
+        "tonalRamp": [
+          "oklch(15% 0.043 249.4)",
+          "oklch(26.4% 0.043 249.4)",
+          "oklch(37.9% 0.043 249.4)",
+          "oklch(49.3% 0.043 249.4)",
+          "oklch(60.7% 0.043 249.4)",
+          "oklch(72.1% 0.043 249.4)",
+          "oklch(83.6% 0.043 249.4)",
+          "oklch(95% 0.043 249.4)"
+        ],
+        "contrast": "Navy Ink 9.3:1, Lake Blue Ink 6.5:1, Haze Blue 4.8:1, Harbor Blue ring 5.2:1; App Blue 3.5:1 (not text)"
+      },
+      "about-edge": {
+        "role": "neutral",
+        "displayName": "Sky Edge",
+        "canonical": "#b3d0ee",
+        "cssVariable": "--about-edge",
+        "oklch": "oklch(84.6% 0.052 249.3)",
+        "tonalRamp": [
+          "oklch(15% 0.052 249.3)",
+          "oklch(26.4% 0.052 249.3)",
+          "oklch(37.9% 0.052 249.3)",
+          "oklch(49.3% 0.052 249.3)",
+          "oklch(60.7% 0.052 249.3)",
+          "oklch(72.1% 0.052 249.3)",
+          "oklch(83.6% 0.052 249.3)",
+          "oklch(95% 0.052 249.3)"
+        ],
+        "note": "Same value as --line."
+      },
+      "about-ink": {
+        "role": "neutral",
+        "displayName": "Navy Ink",
+        "canonical": "#10325a",
+        "cssVariable": "--about-ink",
+        "oklch": "oklch(31.6% 0.082 254.7)",
+        "tonalRamp": [
+          "oklch(15% 0.082 254.7)",
+          "oklch(26.4% 0.082 254.7)",
+          "oklch(37.9% 0.082 254.7)",
+          "oklch(49.3% 0.082 254.7)",
+          "oklch(60.7% 0.082 254.7)",
+          "oklch(72.1% 0.082 254.7)",
+          "oklch(83.6% 0.082 254.7)",
+          "oklch(95% 0.082 254.7)"
+        ],
+        "note": "Same value as --text and --accent-text. Fill of the navy band button (white on it 12.9:1); focus ring on the sky-blue band (5.9:1)."
+      },
+      "about-ink-2": {
+        "role": "neutral",
+        "displayName": "Lake Blue Ink",
+        "canonical": "#1f4a7d",
+        "cssVariable": "--about-ink-2",
+        "oklch": "oklch(40.6% 0.098 254.5)",
+        "tonalRamp": [
+          "oklch(15% 0.098 254.5)",
+          "oklch(26.4% 0.098 254.5)",
+          "oklch(37.9% 0.098 254.5)",
+          "oklch(49.3% 0.098 254.5)",
+          "oklch(60.7% 0.098 254.5)",
+          "oklch(72.1% 0.098 254.5)",
+          "oklch(83.6% 0.098 254.5)",
+          "oklch(95% 0.098 254.5)"
+        ],
+        "note": "Same value as --muted. A real blue, not a gray. 8.3:1 on the Card Mist tab tray."
+      },
+      "about-ink-3": {
+        "role": "neutral",
+        "displayName": "Haze Blue",
+        "canonical": "#355f8f",
+        "cssVariable": "--about-ink-3",
+        "oklch": "oklch(47.8% 0.091 253.0)",
+        "tonalRamp": [
+          "oklch(15% 0.091 253.0)",
+          "oklch(26.4% 0.091 253.0)",
+          "oklch(37.9% 0.091 253.0)",
+          "oklch(49.3% 0.091 253.0)",
+          "oklch(60.7% 0.091 253.0)",
+          "oklch(72.1% 0.091 253.0)",
+          "oklch(83.6% 0.091 253.0)",
+          "oklch(95% 0.091 253.0)"
+        ],
+        "note": "Same value as --subtle. A softer clear blue, not a gray."
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Trail Sky",
+        "canonical": "#74b6ea",
+        "cssVariable": "--accent",
+        "oklch": "oklch(75.2% 0.101 243.5)",
+        "tonalRamp": [
+          "oklch(15% 0.101 243.5)",
+          "oklch(26.4% 0.101 243.5)",
+          "oklch(37.9% 0.101 243.5)",
+          "oklch(49.3% 0.101 243.5)",
+          "oklch(60.7% 0.101 243.5)",
+          "oklch(72.1% 0.101 243.5)",
+          "oklch(83.6% 0.101 243.5)",
+          "oklch(95% 0.101 243.5)"
+        ],
+        "contrast": "Navy on it 5.9:1; white on it 2.2:1 (not allowed); as text or stroke 1.8:1 on the page, 2:1 on cards (fill only)"
+      },
+      "accent-hover": {
+        "role": "primary",
+        "displayName": "Deeper Sky",
+        "canonical": "#5ea8e3",
+        "cssVariable": "--accent-hover",
+        "oklch": "oklch(70.8% 0.114 244.5)",
+        "tonalRamp": [
+          "oklch(15% 0.114 244.5)",
+          "oklch(26.4% 0.114 244.5)",
+          "oklch(37.9% 0.114 244.5)",
+          "oklch(49.3% 0.114 244.5)",
+          "oklch(60.7% 0.114 244.5)",
+          "oklch(72.1% 0.114 244.5)",
+          "oklch(83.6% 0.114 244.5)",
+          "oklch(95% 0.114 244.5)"
+        ],
+        "contrast": "Navy on it 5:1"
+      },
+      "accent-text": {
+        "role": "primary",
+        "displayName": "Navy on Sky",
+        "canonical": "#10325a",
+        "cssVariable": "--accent-text",
+        "oklch": "oklch(31.6% 0.082 254.7)",
+        "tonalRamp": [
+          "oklch(15% 0.082 254.7)",
+          "oklch(26.4% 0.082 254.7)",
+          "oklch(37.9% 0.082 254.7)",
+          "oklch(49.3% 0.082 254.7)",
+          "oklch(60.7% 0.082 254.7)",
+          "oklch(72.1% 0.082 254.7)",
+          "oklch(83.6% 0.082 254.7)",
+          "oklch(95% 0.082 254.7)"
+        ],
+        "note": "Only text color allowed on the accent (5.9:1)."
+      },
+      "accent-soft": {
+        "role": "primary",
+        "displayName": "Trail Mark Wash",
+        "canonical": "#cde4fa",
+        "cssVariable": "--accent-soft",
+        "oklch": "oklch(90.9% 0.039 247.1)",
+        "tonalRamp": [
+          "oklch(15% 0.039 247.1)",
+          "oklch(26.4% 0.039 247.1)",
+          "oklch(37.9% 0.039 247.1)",
+          "oklch(49.3% 0.039 247.1)",
+          "oklch(60.7% 0.039 247.1)",
+          "oklch(72.1% 0.039 247.1)",
+          "oklch(83.6% 0.039 247.1)",
+          "oklch(95% 0.039 247.1)"
+        ],
+        "contrast": "Navy Text 9.9:1"
+      },
+      "bg": {
+        "role": "neutral",
+        "displayName": "Sky Page",
+        "canonical": "#d7e9fb",
+        "cssVariable": "--bg",
+        "oklch": "oklch(92.6% 0.031 248.2)",
+        "tonalRamp": [
+          "oklch(15% 0.031 248.2)",
+          "oklch(26.4% 0.031 248.2)",
+          "oklch(37.9% 0.031 248.2)",
+          "oklch(49.3% 0.031 248.2)",
+          "oklch(60.7% 0.031 248.2)",
+          "oklch(72.1% 0.031 248.2)",
+          "oklch(83.6% 0.031 248.2)",
+          "oklch(95% 0.031 248.2)"
+        ],
+        "contrast": "Quiet Blue 5.3:1, Lake Blue 7.3:1, Field Blue 3.05:1 (non-text)"
+      },
+      "card": {
+        "role": "neutral",
+        "displayName": "Card Mist",
+        "canonical": "#f0f7ff",
+        "cssVariable": "--card",
+        "oklch": "oklch(97.3% 0.013 251.6)",
+        "tonalRamp": [
+          "oklch(15% 0.013 251.6)",
+          "oklch(26.4% 0.013 251.6)",
+          "oklch(37.9% 0.013 251.6)",
+          "oklch(49.3% 0.013 251.6)",
+          "oklch(60.7% 0.013 251.6)",
+          "oklch(72.1% 0.013 251.6)",
+          "oklch(83.6% 0.013 251.6)",
+          "oklch(95% 0.013 251.6)"
+        ],
+        "note": "Clean blue-white for every box, card, tray, and pill; replaces pure white surfaces. The brightest surface in the system.",
+        "contrast": "Navy Text 12:1, Lake Blue 8.3:1, Harbor Blue 6.6:1, Quiet Blue 6.1:1, App Blue 4.5:1, Field Blue 3.5:1 (non-text only); Trail Sky 2:1 (never text)"
+      },
+      "on-blue": {
+        "role": "neutral",
+        "displayName": "White on Blue",
+        "canonical": "#ffffff",
+        "cssVariable": null,
+        "oklch": "oklch(100.0% 0.000 89.9)",
+        "tonalRamp": [
+          "oklch(15% 0.000 89.9)",
+          "oklch(26.4% 0.000 89.9)",
+          "oklch(37.9% 0.000 89.9)",
+          "oklch(49.3% 0.000 89.9)",
+          "oklch(60.7% 0.000 89.9)",
+          "oklch(72.1% 0.000 89.9)",
+          "oklch(83.6% 0.000 89.9)",
+          "oklch(95% 0.000 89.9)"
+        ],
+        "note": "Literal white in index.css. Only words, initials, and avatar rings on solid App Blue (4.9:1), Harbor Blue (7.1:1), or navy (12.9:1). Never a surface."
+      },
+      "text": {
+        "role": "neutral",
+        "displayName": "Navy Text",
+        "canonical": "#10325a",
+        "cssVariable": "--text",
+        "oklch": "oklch(31.6% 0.082 254.7)",
+        "tonalRamp": [
+          "oklch(15% 0.082 254.7)",
+          "oklch(26.4% 0.082 254.7)",
+          "oklch(37.9% 0.082 254.7)",
+          "oklch(49.3% 0.082 254.7)",
+          "oklch(60.7% 0.082 254.7)",
+          "oklch(72.1% 0.082 254.7)",
+          "oklch(83.6% 0.082 254.7)",
+          "oklch(95% 0.082 254.7)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Lake Blue",
+        "canonical": "#1f4a7d",
+        "cssVariable": "--muted",
+        "oklch": "oklch(40.6% 0.098 254.5)",
+        "tonalRamp": [
+          "oklch(15% 0.098 254.5)",
+          "oklch(26.4% 0.098 254.5)",
+          "oklch(37.9% 0.098 254.5)",
+          "oklch(49.3% 0.098 254.5)",
+          "oklch(60.7% 0.098 254.5)",
+          "oklch(72.1% 0.098 254.5)",
+          "oklch(83.6% 0.098 254.5)",
+          "oklch(95% 0.098 254.5)"
+        ]
+      },
+      "primary": {
+        "role": "secondary",
+        "displayName": "App Blue",
+        "canonical": "#2a74ba",
+        "cssVariable": "--primary",
+        "oklch": "oklch(54.8% 0.131 250.6)",
+        "tonalRamp": [
+          "oklch(15% 0.131 250.6)",
+          "oklch(26.4% 0.131 250.6)",
+          "oklch(37.9% 0.131 250.6)",
+          "oklch(49.3% 0.131 250.6)",
+          "oklch(60.7% 0.131 250.6)",
+          "oklch(72.1% 0.131 250.6)",
+          "oklch(83.6% 0.131 250.6)",
+          "oklch(95% 0.131 250.6)"
+        ],
+        "contrast": "White on it 4.9:1. As text only on Card Mist (4.5:1); fails on the page 3.9:1, panels 3.5:1, Soft Blue 4.2:1"
+      },
+      "primary-dark": {
+        "role": "secondary",
+        "displayName": "Harbor Blue",
+        "canonical": "#1d5a94",
+        "cssVariable": "--primary-dark",
+        "oklch": "oklch(46.0% 0.113 250.9)",
+        "tonalRamp": [
+          "oklch(15% 0.113 250.9)",
+          "oklch(26.4% 0.113 250.9)",
+          "oklch(37.9% 0.113 250.9)",
+          "oklch(49.3% 0.113 250.9)",
+          "oklch(60.7% 0.113 250.9)",
+          "oklch(72.1% 0.113 250.9)",
+          "oklch(83.6% 0.113 250.9)",
+          "oklch(95% 0.113 250.9)"
+        ],
+        "contrast": "As text 6.6:1 on cards; white on it 7.1:1; focus ring 5.8:1 on the page, 5.2:1 on panels"
+      },
+      "subtle": {
+        "role": "neutral",
+        "displayName": "Quiet Blue",
+        "canonical": "#355f8f",
+        "cssVariable": "--subtle",
+        "oklch": "oklch(47.8% 0.091 253.0)",
+        "tonalRamp": [
+          "oklch(15% 0.091 253.0)",
+          "oklch(26.4% 0.091 253.0)",
+          "oklch(37.9% 0.091 253.0)",
+          "oklch(49.3% 0.091 253.0)",
+          "oklch(60.7% 0.091 253.0)",
+          "oklch(72.1% 0.091 253.0)",
+          "oklch(83.6% 0.091 253.0)",
+          "oklch(95% 0.091 253.0)"
+        ]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Field Blue",
+        "canonical": "#5b86b8",
+        "cssVariable": "--border",
+        "oklch": "oklch(61.0% 0.090 252.9)",
+        "tonalRamp": [
+          "oklch(15% 0.090 252.9)",
+          "oklch(26.4% 0.090 252.9)",
+          "oklch(37.9% 0.090 252.9)",
+          "oklch(49.3% 0.090 252.9)",
+          "oklch(60.7% 0.090 252.9)",
+          "oklch(72.1% 0.090 252.9)",
+          "oklch(83.6% 0.090 252.9)",
+          "oklch(95% 0.090 252.9)"
+        ],
+        "note": "Non-text only. 3.5:1 on cards, 3.05:1 on the page."
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Hairline Blue",
+        "canonical": "#b3d0ee",
+        "cssVariable": "--line",
+        "oklch": "oklch(84.6% 0.052 249.3)",
+        "tonalRamp": [
+          "oklch(15% 0.052 249.3)",
+          "oklch(26.4% 0.052 249.3)",
+          "oklch(37.9% 0.052 249.3)",
+          "oklch(49.3% 0.052 249.3)",
+          "oklch(60.7% 0.052 249.3)",
+          "oklch(72.1% 0.052 249.3)",
+          "oklch(83.6% 0.052 249.3)",
+          "oklch(95% 0.052 249.3)"
+        ]
+      },
+      "soft": {
+        "role": "neutral",
+        "displayName": "Soft Blue",
+        "canonical": "#e2effd",
+        "cssVariable": "--soft",
+        "oklch": "oklch(94.7% 0.023 250.1)",
+        "tonalRamp": [
+          "oklch(15% 0.023 250.1)",
+          "oklch(26.4% 0.023 250.1)",
+          "oklch(37.9% 0.023 250.1)",
+          "oklch(49.3% 0.023 250.1)",
+          "oklch(60.7% 0.023 250.1)",
+          "oklch(72.1% 0.023 250.1)",
+          "oklch(83.6% 0.023 250.1)",
+          "oklch(95% 0.023 250.1)"
+        ],
+        "contrast": "Navy 11.1:1; App Blue 4.2:1 (not text)"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The single About h1."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "About section headings; the closing band heading runs clamp(30px, 4vw, 48px) / 1.05 at 18ch."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Feature and step headings (audience boxes 24px, listing titles 19px)."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "About paragraphs, capped at 48ch to 60ch."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Tabs, nav links (600), buttons (16px; 18px when big). Never uppercase."
+      },
+      "small": {
+        "displayName": "Small",
+        "purpose": "Demo notes, listing facts, match reasons."
+      },
+      "app-body": {
+        "displayName": "App body",
+        "purpose": "Light app pages inherit the system font; headings bold at 18 to 22px."
+      }
+    },
+    "shadows": [
+      {
+        "name": "demo-float",
+        "value": "0 24px 48px -24px rgb(15 42 68 / 0.18)",
+        "purpose": "The example-search window only, so the live demo floats above the page (navy at 18%)."
+      },
+      {
+        "name": "control-lift",
+        "value": "0 4px 12px -6px rgb(15 42 68 / 0.3)",
+        "purpose": "The fixed Pause background pill only, so it reads as a control above the moving lines."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.23, 1, 0.32, 1)",
+        "cssVariable": "--ease-out",
+        "purpose": "Things appearing (listing entrance) and the button press."
+      },
+      {
+        "name": "ease-in-out",
+        "value": "cubic-bezier(0.77, 0, 0.175, 1)",
+        "cssVariable": "--ease-in-out",
+        "purpose": "Things moving across the screen (the sky-blue tab cut-out)."
+      },
+      {
+        "name": "time-press",
+        "value": "160ms",
+        "cssVariable": "--time-press",
+        "purpose": "scale(0.97) on :active for About buttons and Log in."
+      },
+      {
+        "name": "time-hover",
+        "value": "150ms",
+        "cssVariable": "--time-hover",
+        "purpose": "Background, color, and underline fades on hover; also the reduced-motion listing fade."
+      },
+      {
+        "name": "time-enter",
+        "value": "240ms",
+        "cssVariable": "--time-enter",
+        "purpose": "Listings fade in and rise 8px via @starting-style; the second listing is delayed 50ms."
+      },
+      {
+        "name": "time-move",
+        "value": "250ms",
+        "cssVariable": "--time-move",
+        "purpose": "clip-path slide of the blue selected-tab highlight."
+      },
+      {
+        "name": "time-glow",
+        "value": "300ms",
+        "cssVariable": "--time-glow",
+        "purpose": "SpotlightCard glow fading in and out on hover."
+      },
+      {
+        "name": "time-reveal",
+        "value": "600ms",
+        "cssVariable": "--time-reveal",
+        "purpose": "FadeContent: sections rise 24px into view; features (90ms steps) and steps (150ms steps) rise 16px in sequence."
+      },
+      {
+        "name": "time-shine",
+        "value": "2.2s",
+        "cssVariable": "--time-shine",
+        "purpose": "ShinyText: one sweep; runs twice after a 400ms delay (4.4s), then stops."
+      },
+      {
+        "name": "time-star",
+        "value": "3s",
+        "cssVariable": "--time-star",
+        "purpose": "StarBorder: one lap of the lights after a 600ms delay; loops only on hover or focus."
+      },
+      {
+        "name": "click-spark",
+        "value": "8 lines, 12px long, 22px travel, 400ms",
+        "cssVariable": "--spark-color",
+        "purpose": "ClickSpark constants in ClickSpark.jsx; skipped with reduced motion."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "All CSS motion inside @media (prefers-reduced-motion: no-preference); canvas effects check the same query in script. The reduce variant keeps an opacity-only listing fade and a still wave picture",
+        "purpose": "WCAG motion requirement."
+      },
+      {
+        "name": "auto-stop",
+        "value": "Anything that starts by itself stops within 5 seconds, or has a visible Pause control",
+        "purpose": "WCAG 2.2.2 (shine twice, star lights one lap; the endless Waves background has the Pause background pill and is still on phones and for reduced motion)."
+      },
+      {
+        "name": "forced-colors",
+        "value": "@media (forced-colors: active): blue tab copy hidden, aria-selected tab underlined; buttons keep a transparent 2px border; shine falls back to CanvasText; star lights hidden",
+        "purpose": "Windows High Contrast fallback."
+      },
+      {
+        "name": "waves",
+        "value": "1px lines every 22px, points every 12px, sway 22px + 7px (two sines), speed 0.00025, mouse reach 170px, push 28px, ease 0.1 per frame",
+        "cssVariable": "--wave-color",
+        "purpose": "Waves constants in Waves.jsx; endless, so paired with a Pause control; still at 760px and narrower and for reduced motion; stops while the tab is hidden."
+      }
+    ],
+    "reactBits": [
+      {
+        "name": "ShinyText",
+        "file": "frontend/src/components/reactbits/ShinyText.jsx",
+        "usedOn": "Hero subtitle",
+        "tokens": {
+          "--shine-base": "var(--about-ink-2)",
+          "--shine-light": "var(--primary-dark)"
+        },
+        "behavior": "120deg gradient band clipped to the letters, 300% wide, sweeps twice then stops; Harbor Blue band stays 5.8:1 on the page."
+      },
+      {
+        "name": "StarBorder",
+        "file": "frontend/src/components/reactbits/StarBorder.jsx",
+        "usedOn": "Hero Sign up button",
+        "tokens": {
+          "--star-color": "var(--about-ink)"
+        },
+        "behavior": "3px ring, 11px corners, two radial-gradient lights; one lap on load, loop on hover/focus."
+      },
+      {
+        "name": "SpotlightCard",
+        "file": "frontend/src/components/reactbits/SpotlightCard.jsx",
+        "usedOn": "Audience boxes",
+        "tokens": {
+          "--spotlight-color": "color-mix(in srgb, white 70%, transparent)"
+        },
+        "behavior": "Radial white glow at --spot-x/--spot-y behind the text, fades in on hover; text stays 6.5:1 or better."
+      },
+      {
+        "name": "FadeContent",
+        "file": "frontend/src/components/reactbits/FadeContent.jsx",
+        "usedOn": "Hero text and sections below the hero",
+        "tokens": {
+          "--time-reveal": "600ms"
+        },
+        "behavior": "IntersectionObserver adds fade-in-box-shown once; box rises 24px, inner features/steps stagger."
+      },
+      {
+        "name": "ClickSpark",
+        "file": "frontend/src/components/reactbits/ClickSpark.jsx",
+        "usedOn": "Whole About page",
+        "tokens": {
+          "--spark-color": "var(--primary)"
+        },
+        "behavior": "Fixed click-through canvas, z-index 30; draws only while sparks fly."
+      },
+      {
+        "name": "Waves",
+        "file": "frontend/src/components/reactbits/Waves.jsx",
+        "usedOn": "Whole About page background",
+        "tokens": {
+          "--wave-color": "color-mix(in srgb, var(--primary) 10%, transparent)"
+        },
+        "behavior": "Fixed click-through canvas at z-index 0 behind .about-main (z-index 1); vertical lines sway by two summed sine waves and bend away from a real mouse with an eased follow; stops while the tab is hidden; still picture for reduced motion and at 760px or narrower; otherwise a fixed bottom-left Pause/Play background pill (WCAG 2.2.2)."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "tablet",
+        "value": "960px",
+        "note": "Hero to one column; top-bar links wrap onto their own row"
+      },
+      {
+        "name": "phone",
+        "value": "760px",
+        "note": "All grids stack; bar stops sticking; sections 64px; Waves becomes a still picture with no Pause pill"
+      },
+      {
+        "name": "small-phone",
+        "value": "480px",
+        "note": "16px side padding; tighter tabs and demo"
+      }
+    ],
+    "conventions": [
+      "Plain CSS in frontend/src/index.css only; tokens are the :root variables",
+      "Page-prefixed plain-English class names (about-, feed-, profile-, network-, form-)",
+      "Every rule commented in plain language for student learners, with contrast ratios beside text colors",
+      "No Tailwind utility classes (Tailwind is imported for its reset only); no inline styles"
+    ]
+  },
+  "components": [
+    {
+      "name": "Sign up Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Sky-blue action button with navy words on the light blue page; the one thing to notice.",
+      "html": "<a class=\"ds-about-button\" href=\"#\">Sign up</a>",
+      "css": ".ds-about-button{display:inline-block;background-color:var(--accent,#74b6ea);color:var(--accent-text,#10325a);font-family:var(--font-body);font-weight:700;font-size:16px;line-height:1.25;padding:10px 18px;border:2px solid transparent;border-radius:8px;text-decoration:none;transition:background-color 150ms ease,transform 160ms cubic-bezier(0.23,1,0.32,1);} .ds-about-button:hover{background-color:var(--accent-hover,#5ea8e3);} .ds-about-button:focus-visible{outline:3px solid var(--primary-dark,#1d5a94);outline-offset:3px;} .ds-about-button:active{transform:scale(0.97);}"
+    },
+    {
+      "name": "Star Border Sign up",
+      "kind": "button",
+      "refersTo": "star-border-ring",
+      "description": "The big hero Sign up inside a 3px ring; navy lights lap the edge once, and loop while hovered or focused.",
+      "html": "<div class=\"ds-page\"><a class=\"ds-star\" href=\"#\"><span class=\"ds-star-bottom\" aria-hidden=\"true\"></span><span class=\"ds-star-top\" aria-hidden=\"true\"></span><span class=\"ds-star-face\">Sign up</span></a></div>",
+      "css": ".ds-page{background-color:var(--about-bg,#d7e9fb);padding:24px;} .ds-star{position:relative;display:inline-block;padding:3px;border-radius:11px;overflow:hidden;text-decoration:none;} .ds-star-face{position:relative;z-index:1;display:block;background-color:var(--accent,#74b6ea);color:var(--accent-text,#10325a);font-family:var(--font-body);font-weight:700;font-size:18px;line-height:1.25;padding:14px 28px;border:2px solid transparent;border-radius:8px;transition:background-color 150ms ease;} .ds-star:hover .ds-star-face{background-color:var(--accent-hover,#5ea8e3);} .ds-star:focus-visible{outline:3px solid var(--primary-dark,#1d5a94);outline-offset:3px;} .ds-star-bottom,.ds-star-top{position:absolute;width:300%;height:50%;border-radius:50%;background-image:radial-gradient(circle,var(--star-color,#10325a),transparent 15%);animation:3s linear 600ms 1 alternate both;} .ds-star-bottom{bottom:-12px;right:-250%;animation-name:ds-star-b;} .ds-star-top{top:-12px;left:-250%;animation-name:ds-star-t;} .ds-star:hover>.ds-star-bottom,.ds-star:hover>.ds-star-top,.ds-star:focus-visible>.ds-star-bottom,.ds-star:focus-visible>.ds-star-top{animation-iteration-count:infinite;} @keyframes ds-star-b{from{transform:translateX(0);}to{transform:translateX(-100%);}} @keyframes ds-star-t{from{transform:translateX(0);}to{transform:translateX(100%);}} @media (prefers-reduced-motion:reduce){.ds-star-bottom,.ds-star-top{display:none;}}"
+    },
+    {
+      "name": "Navy Button on the Sky Band",
+      "kind": "button",
+      "refersTo": "button-navy",
+      "description": "Navy Sign up with white words inside the sky-blue closing band; navy focus ring.",
+      "html": "<div class=\"ds-ready\"><a class=\"ds-about-button-navy\" href=\"#\">Sign up</a></div>",
+      "css": ".ds-ready{background-color:var(--accent,#74b6ea);color:var(--accent-text,#10325a);padding:24px;} .ds-about-button-navy{display:inline-block;background-color:var(--about-ink,#10325a);color:#fff;font-family:var(--font-body);font-weight:700;font-size:18px;line-height:1.25;padding:14px 28px;border:2px solid transparent;border-radius:8px;text-decoration:none;transition:background-color 150ms ease,transform 160ms cubic-bezier(0.23,1,0.32,1);} .ds-about-button-navy:hover{background-color:var(--primary-dark,#1d5a94);} .ds-about-button-navy:focus-visible{outline:3px solid var(--about-ink,#10325a);outline-offset:3px;} .ds-about-button-navy:active{transform:scale(0.97);}"
+    },
+    {
+      "name": "Pause Background Pill",
+      "kind": "button",
+      "refersTo": "background-pause",
+      "description": "Fixed bottom-left blue-white pill that pauses or plays the Waves background (WCAG 2.2.2).",
+      "html": "<div class=\"ds-page\"><button type=\"button\" class=\"ds-pause\">Pause background</button></div>",
+      "css": ".ds-page{background-color:var(--about-bg,#d7e9fb);padding:24px;} .ds-pause{font-family:var(--font-body);font-size:14px;font-weight:600;color:var(--about-ink,#10325a);background-color:var(--card,#f0f7ff);border:1px solid var(--about-edge,#b3d0ee);border-radius:999px;padding:8px 14px;box-shadow:0 4px 12px -6px rgb(15 42 68 / 0.3);cursor:pointer;transition:background-color 150ms ease;} .ds-pause:hover{background-color:var(--soft,#e2effd);} .ds-pause:focus-visible{outline:3px solid var(--primary-dark,#1d5a94);outline-offset:3px;}"
+    },
+    {
+      "name": "About Top Bar",
+      "kind": "nav",
+      "refersTo": "link-quiet",
+      "description": "Sticky light blue bar with the sky-blue blaze, section links, Log in, and the sky-blue Sign up with navy words.",
+      "html": "<header class=\"ds-bar\"><a class=\"ds-logo\" href=\"#\"><span class=\"ds-blaze\"></span>ScoutSearch</a><nav><a class=\"ds-bar-link\" href=\"#\">Who it&#39;s for</a><a class=\"ds-bar-link\" href=\"#\">Who we are</a></nav><div class=\"ds-bar-actions\"><a class=\"ds-login\" href=\"#\">Log in</a><a class=\"ds-signup\" href=\"#\">Sign up</a></div></header>",
+      "css": ".ds-bar{display:flex;align-items:center;gap:24px;min-height:68px;padding:0 24px;background-color:var(--about-bg,#d7e9fb);border-bottom:1px solid var(--about-edge,#b3d0ee);font-family:var(--font-body);} .ds-logo{display:inline-flex;align-items:center;gap:12px;font-family:var(--font-display);font-weight:800;font-size:22px;letter-spacing:-0.01em;color:var(--about-ink,#10325a);text-decoration:none;} .ds-blaze{width:14px;height:14px;background-color:var(--accent,#74b6ea);border-radius:2px;transform:rotate(45deg);} .ds-bar nav{display:flex;gap:4px;} .ds-bar-link{color:var(--about-ink-2,#1f4a7d);font-weight:600;font-size:15px;padding:8px 12px;border-radius:6px;text-decoration:none;transition:background-color 150ms ease,color 150ms ease;} .ds-bar-link:hover{color:var(--about-ink,#10325a);background-color:var(--about-panel,#c6def7);} .ds-bar-actions{margin-left:auto;display:flex;align-items:center;gap:8px;} .ds-login{color:var(--about-ink,#10325a);font-weight:700;font-size:16px;padding:10px 14px;border-radius:8px;text-decoration:none;} .ds-login:hover{background-color:var(--about-panel,#c6def7);} .ds-signup{background-color:var(--accent,#74b6ea);color:var(--accent-text,#10325a);font-weight:700;font-size:16px;padding:10px 18px;border-radius:8px;text-decoration:none;} .ds-signup:hover{background-color:var(--accent-hover,#5ea8e3);} .ds-bar a:focus-visible{outline:3px solid var(--primary-dark,#1d5a94);outline-offset:3px;}"
+    },
+    {
+      "name": "Example Search Tabs",
+      "kind": "custom",
+      "refersTo": "tab-selected",
+      "description": "Off-white tray of three tabs on the deeper blue demo window; a sky-blue copy of the row with navy words is clipped to the selected tab and slides with clip-path.",
+      "html": "<div class=\"ds-tabs-wrap\"><div class=\"ds-tabs\"><div class=\"ds-tab-list\" role=\"tablist\"><button class=\"ds-tab\" role=\"tab\" aria-selected=\"true\">Internships</button><button class=\"ds-tab\" role=\"tab\" aria-selected=\"false\" tabindex=\"-1\">Co-ops</button><button class=\"ds-tab\" role=\"tab\" aria-selected=\"false\" tabindex=\"-1\">Research</button></div><div class=\"ds-tab-highlight\" aria-hidden=\"true\"><span>Internships</span><span>Co-ops</span><span>Research</span></div></div></div>",
+      "css": ".ds-tabs-wrap{background-color:var(--about-panel,#c6def7);padding:16px;border-radius:16px;max-width:520px;} .ds-tabs{position:relative;padding:4px;background-color:var(--card,#f0f7ff);border-radius:10px;font-family:var(--font-body);} .ds-tab-list,.ds-tab-highlight{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;} .ds-tab{font-family:inherit;font-size:15px;font-weight:700;line-height:1.25;color:var(--about-ink-2,#1f4a7d);background:transparent;padding:10px 8px;border:0;border-radius:7px;cursor:pointer;transition:background-color 150ms ease,color 150ms ease;} .ds-tab:hover{color:var(--about-ink,#10325a);background-color:var(--about-panel,#c6def7);} .ds-tab:focus-visible{outline:3px solid var(--primary-dark,#1d5a94);outline-offset:3px;} .ds-tab-highlight{position:absolute;inset:4px;pointer-events:none;background-color:var(--accent,#74b6ea);color:var(--accent-text,#10325a);border-radius:7px;clip-path:inset(0 calc(2 * ((100% - 8px) / 3 + 4px)) 0 0 round 7px);transition:clip-path 250ms cubic-bezier(0.77,0,0.175,1);} .ds-tab-highlight span{display:grid;place-items:center;font-size:15px;font-weight:700;line-height:1.25;padding:10px 8px;}"
+    },
+    {
+      "name": "Example Listing Card",
+      "kind": "card",
+      "refersTo": "listing-card",
+      "description": "Blue-white job card inside the floating deeper blue demo window, with initials square, facts, match reasons, and a Sign up to apply link.",
+      "html": "<div class=\"ds-demo\"><div class=\"ds-listing\"><div class=\"ds-listing-top\"><span class=\"ds-listing-logo\">HB</span><div><h3 class=\"ds-listing-title\">Marketing Intern</h3><p class=\"ds-listing-org\">Harbor Street Bakery</p></div></div><ul class=\"ds-facts\"><li>Quincy, MA</li><li>Paid, $17/hr</li><li>Summer, part-time</li></ul><div class=\"ds-match\"><p class=\"ds-match-label\">Why it matched</p><ul class=\"ds-match-list\"><li>Open to high school students</li><li>No experience needed</li></ul></div><a class=\"ds-listing-link\" href=\"#\">Sign up to apply</a></div></div>",
+      "css": ".ds-demo{background-color:var(--about-panel,#c6def7);border:1px solid var(--about-edge,#b3d0ee);border-radius:16px;padding:16px;box-shadow:0 24px 48px -24px rgb(15 42 68 / 0.18);max-width:540px;font-family:var(--font-body);} .ds-listing{background:var(--card,#f0f7ff);color:var(--text,#10325a);border-radius:12px;padding:18px;} .ds-listing-top{display:flex;align-items:flex-start;gap:14px;} .ds-listing-logo{flex:none;display:grid;place-items:center;width:44px;height:44px;border-radius:10px;background-color:var(--primary,#2a74ba);color:#fff;font-family:var(--font-display);font-weight:800;font-size:16px;} .ds-listing-title{margin:0;font-family:var(--font-display);font-size:19px;font-weight:700;line-height:1.25;} .ds-listing-org{margin:0;font-size:15px;font-weight:600;color:var(--muted,#1f4a7d);} .ds-facts{list-style:none;display:flex;flex-wrap:wrap;gap:4px 16px;margin:10px 0 0;padding:0;font-size:14px;color:var(--subtle,#355f8f);} .ds-match{margin-top:14px;padding-top:14px;border-top:1px solid var(--line,#b3d0ee);} .ds-match-label{margin:0;font-size:14px;font-weight:700;} .ds-match-list{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0;padding:0;} .ds-match-list li{background-color:var(--accent-soft,#cde4fa);font-size:14px;font-weight:600;padding:4px 12px;border-radius:14px;} .ds-listing-link{display:inline-block;margin-top:14px;padding:2px 0;color:var(--primary-dark,#1d5a94);font-weight:700;text-decoration:underline;text-decoration-color:var(--border,#5b86b8);text-underline-offset:4px;transition:text-decoration-color 150ms ease;} .ds-listing-link:hover{text-decoration-color:currentColor;} .ds-listing-link:focus-visible{outline:3px solid var(--primary-dark,#1d5a94);outline-offset:3px;}"
+    },
+    {
+      "name": "Match Reason Chip",
+      "kind": "chip",
+      "refersTo": "match-reason",
+      "description": "Very light blue reason chip on Card Mist; 14px corners so wrapped text stays tidy.",
+      "html": "<span class=\"ds-chip\">Fits your interest: Biology</span>",
+      "css": ".ds-chip{display:inline-block;background-color:var(--accent-soft,#cde4fa);color:var(--text,#10325a);font-size:14px;font-weight:600;padding:4px 12px;border-radius:14px;}"
+    },
+    {
+      "name": "Spotlight Audience Panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "Deeper blue panel for the audience boxes; a soft white glow brightens it on hover (centered here; the live one follows the mouse).",
+      "html": "<div class=\"ds-panel\"><h3>High School Students</h3><p>Find internships and research positions while you&#39;re still in high school.</p></div>",
+      "css": ".ds-panel{position:relative;overflow:hidden;background-color:var(--about-panel,#c6def7);border-radius:16px;padding:32px;max-width:480px;font-family:var(--font-body);font-size:18px;line-height:1.6;} .ds-panel>*{position:relative;} .ds-panel::before{content:\"\";position:absolute;inset:0;background-image:radial-gradient(circle at 50% 50%,var(--spotlight-color,rgb(255 255 255 / 0.7)),transparent 80%);opacity:0;pointer-events:none;transition:opacity 300ms ease;} .ds-panel:hover::before{opacity:1;} .ds-panel h3{margin:0;font-family:var(--font-display);font-size:24px;font-weight:700;line-height:1.2;color:var(--about-ink,#10325a);} .ds-panel p{margin:12px 0 0;color:var(--about-ink-2,#1f4a7d);max-width:48ch;}"
+    },
+    {
+      "name": "Shiny Subtitle",
+      "kind": "custom",
+      "refersTo": "body",
+      "description": "Hero subtitle in Lake Blue Ink with a Harbor Blue band that sweeps across twice, then stops.",
+      "html": "<div class=\"ds-page\"><p class=\"ds-subtitle\"><span class=\"ds-shiny\">For high school and college students</span></p></div>",
+      "css": ".ds-page{background-color:var(--about-bg,#d7e9fb);padding:24px;} .ds-subtitle{margin:0;font-family:var(--font-body);font-size:22px;line-height:1.6;color:var(--about-ink-2,#1f4a7d);} .ds-shiny{display:inline-block;} @media (prefers-reduced-motion:no-preference){.ds-shiny{background-image:linear-gradient(120deg,var(--shine-base,#1f4a7d) 40%,var(--shine-light,#1d5a94) 50%,var(--shine-base,#1f4a7d) 60%);background-size:300% 100%;background-repeat:no-repeat;-webkit-background-clip:text;background-clip:text;color:transparent;animation:ds-shine 2.2s linear 400ms 2 both;} @keyframes ds-shine{from{background-position:100% 0;}to{background-position:0 0;}}}"
+    },
+    {
+      "name": "App Card",
+      "kind": "card",
+      "refersTo": "app-card",
+      "description": "Blue-white box with a deeper blue hairline on the light app pages.",
+      "html": "<div class=\"ds-app-card\"><p class=\"ds-app-card-title\">Followed Companies</p><p class=\"ds-app-card-text\">Northeastern University</p></div>",
+      "css": ".ds-app-card{background:var(--card,#f0f7ff);border:1px solid var(--line,#b3d0ee);border-radius:16px;padding:20px;color:var(--text,#10325a);font-family:system-ui,sans-serif;max-width:320px;} .ds-app-card-title{margin:0 0 12px;font-weight:700;font-size:18px;} .ds-app-card-text{margin:0;color:var(--muted,#1f4a7d);}"
+    },
+    {
+      "name": "App Buttons",
+      "kind": "button",
+      "refersTo": "app-button",
+      "description": "Filled and outline App Blue pills used on Profile and Network.",
+      "html": "<div class=\"ds-app-row\"><button class=\"ds-app-btn\">Download</button><button class=\"ds-app-btn-outline\">Connect</button></div>",
+      "css": ".ds-app-row{display:flex;gap:8px;font-family:system-ui,sans-serif;} .ds-app-btn{background-color:var(--primary,#2a74ba);color:#fff;font-weight:700;border:none;border-radius:999px;padding:8px 16px;cursor:pointer;} .ds-app-btn:hover{background-color:var(--primary-dark,#1d5a94);} .ds-app-btn-outline{background:var(--card,#f0f7ff);color:var(--primary,#2a74ba);font-weight:700;border:1px solid var(--primary,#2a74ba);border-radius:999px;padding:8px 16px;cursor:pointer;} .ds-app-btn-outline:hover{background-color:var(--soft,#e2effd);} .ds-app-btn:focus-visible,.ds-app-btn-outline:focus-visible{outline:2px solid var(--primary,#2a74ba);outline-offset:2px;}"
+    },
+    {
+      "name": "Form Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Login/Signup field with label, Field Lake Blue border, App Blue focus outline.",
+      "html": "<div class=\"ds-form\"><label for=\"ds-email\">Email</label><input id=\"ds-email\" class=\"ds-input\" type=\"email\" /></div>",
+      "css": ".ds-form{background:var(--card,#f0f7ff);padding:24px;border-radius:16px;max-width:400px;font-family:system-ui,sans-serif;color:var(--text,#10325a);} .ds-form label{display:block;font-weight:500;margin-bottom:6px;} .ds-input{display:block;width:100%;box-sizing:border-box;border:1px solid var(--border,#5b86b8);padding:8px 12px;} .ds-input:focus-visible{outline:2px solid var(--primary,#2a74ba);outline-offset:2px;}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Daylight Trailhead",
+    "overview": "ScoutSearch is one calm, professional world in a single clear light-blue family. Secondary text, lines, and borders are real blues rather than grays, so the page feels fresh instead of dull, and everything is kept a step dimmer than full brightness for eye comfort: no surface is pure white, the brightest thing on any screen is a blue-white card, and the blues stay clear rather than electric. The public About page (the front door, `/` redirects to it) is a trailhead in clear daylight: a light blue ground stirred by very faint flowing lines, slightly deeper blue panels, navy type, highway-sign headlines, and sky-blue trail marks with navy words that show where to go next. Behind it, the signed-in app (Feed, Profile, Network, Login, Signup) is the same light blue page with blue-white boxes edged in thin light blue lines, navy text, and a steadier app blue on its buttons. The About page persuades; the app pages operate. Both share one palette and one rule about the sky-blue accent.\n\nThe About page shows the product instead of describing it. Its first screen pairs a big headline with a working example job search: tabs that swap clearly labeled made-up listings, rendered as the same blue-white cards a student would see after signing up. Wayfinding is the material: Overpass (lettering drawn from US highway signs), a rotated-square \"trail blaze\" mark, and a trail line with blue diamonds threading the How it works steps. A small set of React Bits effects adds life: thin vertical lines that sway slowly behind the whole page and bend away from the mouse, a shine that sweeps the subtitle twice, star lights that circle the big Sign up button, a soft spotlight on the audience boxes, sections that rise into view, and sparks on click. Density is calm: 96px between sections, 18px body text, line lengths capped at 48 to 60 characters.\n\nThe build is accessibility-first and teaching-first. Every contrast pair is measured and written next to the rule that uses it. All motion sits behind `prefers-reduced-motion: no-preference`; anything that starts by itself either stops within 5 seconds or has a visible Pause control; anything color alone carries has a forced-colors fallback. Every style is plain CSS in `frontend/src/index.css`, commented in plain language for the student team.",
+    "keyCharacteristics": [
+      "One clear light-blue family across every page, a step dimmer than full brightness: light blue ground, deeper blue panels, blue-white cards, navy text, real blues (no grays) for secondary text and lines, with a single sky-blue accent.",
+      "No pure white surfaces; white appears only as words and rings on solid blue or navy fills.",
+      "Sky blue marks actions and always carries navy words: Sign up, the selected tab, the skip link, text selection, and the closing band.",
+      "Harbor Blue draws every keyboard focus ring on About; navy takes over on the sky-blue band.",
+      "Highway-sign display type over a low-vision-friendly body face (About only).",
+      "Depth from tonal layers (light blue page, deeper panel, blue-white card), one soft navy shadow on the demo window and a small one on the fixed Pause control.",
+      "Purposeful motion: short effects stop on their own; the one endless effect, the slow background waves, has a Pause button and stays still on phones and for reduced motion.",
+      "Plain CSS, page-prefixed plain-English class names, every rule commented."
+    ],
+    "rules": [
+      {
+        "name": "The Blue Means Go Rule",
+        "body": "Sky blue (accent) is reserved for actions and the state of an action: Sign up, the selected tab, the skip link, text selection, the closing band, and the light wash behind match reasons. Its only decorative use is the blaze in the logo, which sits inside a link. Sparks are App Blue, the shine band is Harbor Blue, and trail diamonds and step numbers are Haze Blue, never accent.",
+        "section": "colors"
+      },
+      {
+        "name": "The Sky Is Never Ink Rule",
+        "body": "Trail Sky is a fill, never text, an icon stroke, or a focus ring: it is too faint on the page (1.8:1) and on cards (2:1). Words on it are always navy (5.9:1), never white (2.2:1). When sky blue would disappear against itself, as on the closing band, the button turns navy instead.",
+        "section": "colors"
+      },
+      {
+        "name": "The Harbor Ring Rule",
+        "body": "Every keyboard focus ring on About is a 3px Harbor Blue outline at 3px offset, on the page, on panels, and on cards; on the sky-blue band it switches to Navy Ink. App pages keep their 2px App Blue ring.",
+        "section": "colors"
+      },
+      {
+        "name": "The Dimmed Daylight Rule",
+        "body": "Nothing is painted pure white. Every box, card, tray, and pill uses Card Mist, which is the brightest surface in the system; white is kept for words and rings on solid blue or navy fills. New colors join a step below full brightness; secondary roles use clear blues, never grays, and blues stay clear rather than electric.",
+        "section": "colors"
+      },
+      {
+        "name": "The Measured Pair Rule",
+        "body": "Every text color is used only on grounds where its measured contrast passes 4.5:1, and the ratio is written in the CSS comment beside it. Field Blue (#5b86b8) is a border, never text; App Blue words sit only on Card Mist (4.5:1), and colored words elsewhere use Harbor Blue.",
+        "section": "colors"
+      },
+      {
+        "name": "The Sign Lettering Rule",
+        "body": "Overpass is for headings, the logo, step numbers, and initial squares only; everything a student reads at length is Atkinson. Headings use `text-wrap: balance`.",
+        "section": "typography"
+      },
+      {
+        "name": "The Two Floats Rule",
+        "body": "Only the product demo and the fixed Pause control float. Every other surface separates by tone or a 1px line.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do write every style as plain CSS in `frontend/src/index.css`, under a page section, using the `:root` variables.",
+      "Do prefix class names with the page and name them after what is on screen (`about-listing-title`, `form-button`).",
+      "Do comment every rule in plain language for student learners, including the contrast ratio beside every text color.",
+      "Do reserve the sky-blue accent for actions and their states, with navy (#10325a, 5.9:1) as the only text on it.",
+      "Do use the 3px Harbor Blue focus ring at 3px offset everywhere on About, switching to Navy Ink on the sky-blue band.",
+      "Do paint every box, card, tray, and pill with `var(--card)` (Card Mist); keep pure white for words and rings on solid blue or navy fills.",
+      "Do keep new colors a step below full brightness, and use clear blues (not grays) for secondary text, lines, and borders; never neon.",
+      "Do turn a button navy with white text when it sits on a sky-blue fill.",
+      "Do use Harbor Blue for colored words anywhere but Card Mist; App Blue words belong on Card Mist only.",
+      "Do put every animation inside `prefers-reduced-motion: no-preference`, with an opacity-only or still variant where change needs to be noticed.",
+      "Do stop anything that moves on its own within 5 seconds, or give it a visible Pause control and a still version on phones; loop short effects only while the user hovers or focuses.",
+      "Do keep background canvases fixed, click-through, hidden from screen readers, and stopped while the tab is hidden.",
+      "Do read React Bits colors and timing from the `--shine-`, `--star-`, `--spotlight-`, `--spark-`, `--wave-`, and `--time-` variables in `:root`.",
+      "Do give anything that relies on color a forced-colors fallback (transparent borders on buttons, underline on the selected tab, plain text for the shine).",
+      "Do use inline SVG line icons (24px, stroke 2, currentColor), hidden from screen readers when a heading says the same thing.",
+      "Do label every made-up listing as an example."
+    ],
+    "donts": [
+      "Don't paint any surface pure white (`white` or `#ffffff` backgrounds); use Card Mist.",
+      "Don't use Trail Sky as text, an icon stroke, or a focus ring (1.8:1 on the page, 2:1 on cards).",
+      "Don't put white text on Trail Sky or Deeper Sky (2.2:1 or less); use navy.",
+      "Don't set App Blue text on the page (3.9:1), panels (3.5:1), or Soft Blue (4.2:1).",
+      "Don't use the accent for decoration beyond the logo blaze; trail diamonds and step numbers are Haze Blue, sparks are App Blue, the shine is Harbor Blue.",
+      "Don't use Field Blue (#5b86b8) for text.",
+      "Don't use Tailwind utility classes or inline `style` attributes; Tailwind is imported only for its reset.",
+      "Don't add shadows beyond the demo window's float and the Pause pill's lift.",
+      "Don't use full pills on chips whose text can wrap; use 14px corners.",
+      "Don't use emoji or text glyphs as icons.",
+      "Don't put small uppercase, letter-spaced labels above headings."
+    ]
+  }
+}
