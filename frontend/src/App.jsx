@@ -11,6 +11,7 @@ import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import Feed from "./pages/Feed.jsx";
 import Profile from "./pages/Profile.jsx";
+import EditProfile from "./pages/EditProfile.jsx";
 
 // A "component" is a function that returns what should appear on the screen.
 function App() {
@@ -28,6 +29,8 @@ function App() {
       <Route path="/feed" element={<Feed />} />
       {/* yoursite.com/profile shows the Profile page */}
       <Route path="/profile" element={<Profile />} />
+      {/* yoursite.com/profile shows the EditProfile page */}
+      <Route path="/editprofile" element={<EditProfile />} />
     </Routes>
   );
 }

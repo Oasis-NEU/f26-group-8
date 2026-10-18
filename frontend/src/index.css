@@ -1076,3 +1076,26 @@ body {
   font-size: 13px;
   color: #949494;
 }
+
+/* EditProfile Page */
+
+.edit-tracker-card {
+  background: white;
+  margin-top: 32px;
+  margin-left: 24px;
+  padding: 16px 24px;
+  max-width: 300px;
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+}
+
+.edit-tracker-header {
+  font-weight: bold;
+  font-size: 28px;
+}
+
+.edit-tracker-subtitle {
+  font-size: 13px;
+  color: #949494;
+  margin-top: 6px;
+}
