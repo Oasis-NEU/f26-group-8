@@ -1,4 +1,5 @@
 import NavBar from "../components/NavBar.jsx";
+import { Link } from "react-router";
 
 const stats = [
   { number: "222", label: "Connections" },
@@ -33,11 +34,17 @@ const communities = [
 ];
 
 function ProfileHeader() {
+  const isOwnProfile = true;
+
   return (
     <div className="profile-header">
       <div className="profile-banner"></div>
       <div className="profile-avatar">RMV</div>
-      <button className="profile-edit-btn">Edit profile</button>
+      {isOwnProfile && (
+        <Link to="/editprofile" className="profile-edit-btn">
+          Edit profile
+        </Link>
+      )}
       <h1 className="profile-name">Roemer Mallari</h1>
       <p className="profile-bio">
         Computer Science & Business Administration @ Northeastern University
@@ -47,7 +54,9 @@ function ProfileHeader() {
         <span>Torrance, CA</span>
       </div>
       <div className="profile-actions">
-        <button className="profile-btn-outline">Connect</button>
+        {!isOwnProfile && (
+          <button className="profile-btn-outline">Connect</button>
+        )}
       </div>
       <div className="profile-stats">
         {stats.map((stat) => (

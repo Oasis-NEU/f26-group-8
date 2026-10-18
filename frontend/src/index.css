@@ -828,6 +828,12 @@ body {
   font-weight: bold;
   padding: 8px 16px;
   border-radius: 16px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.profile-edit-btn:hover {
+  background-color: #e5e5e5;
 }
 
 .profile-name,
@@ -1199,4 +1205,26 @@ body {
   font-size: 13px;
   color: #949494;
   margin-bottom: 6px;
+}
+
+/* Skills Card */
+
+/* Skills Card */
+
+.edit-skill-input {
+  flex: 1;
+}
+
+.edit-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.edit-skill-pill {
+  background-color: #e5e5e5;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
 }

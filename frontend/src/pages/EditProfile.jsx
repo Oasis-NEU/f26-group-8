@@ -1,5 +1,6 @@
 import NavBar from "../components/NavBar";
 import { useState } from "react";
+import { Link } from "react-router";
 
 const sections = [
   { id: "1", label: "Basics" },
@@ -45,7 +46,7 @@ function BasicsInfo() {
       <input
         className="edit-input"
         type="text"
-        placeholder="Roemer Mallari"
+        placeholder="John Doe"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
       />
@@ -257,6 +258,7 @@ function ProjectInfo() {
   function handleSave() {
     console.log({ project, link });
   }
+
   return (
     <div className="edit-card">
       <h2 className="edit-card-title">Projects</h2>
@@ -298,6 +300,102 @@ function ProjectInfo() {
   );
 }
 
+function ResumeInfo() {
+  const [resume, setResume] = useState("");
+  const [link, setLink] = useState("");
+
+  function handleSave() {
+    console.log({ resume, link });
+  }
+  return (
+    <div className="edit-card">
+      <h2 className="edit-card-title">Resume</h2>
+      <p className="edit-card-subtitle">Show off your resume!</p>
+
+      <div className="edit-row">
+        <div className="edit-field">
+          <label className="edit-label">Resume Name</label>
+          <input
+            className="edit-input"
+            type="text"
+            placeholder="Resume 2026"
+            value={resume}
+            onChange={(e) => setResume(e.target.value)}
+          />
+        </div>
+
+        <div className="edit-field">
+          <label className="edit-label">Resume link</label>
+          <input
+            className="edit-input"
+            type="url"
+            placeholder="Insert pdf file"
+            value={link}
+            onChange={(e) => setLink(e.target.value)}
+          />
+        </div>
+      </div>
+
+      <button
+        className="profile-btn-primary edit-save-btn"
+        onClick={handleSave}
+      >
+        Add resume
+      </button>
+    </div>
+  );
+}
+
+function SkillsInfo() {
+  const [skill, setSkill] = useState(""); // what's being typed right now
+  const [skills, setSkills] = useState([]); // the list of added skills
+
+  function handleAdd() {
+    if (skill === "") return; // don't add blanks
+    setSkills([...skills, skill]); // adds the new skill into the current list of skills, creating a new list
+    setSkill("");
+  }
+
+  function handleSave() {
+    console.log({ skills });
+  }
+  return (
+    <div className="edit-card">
+      <h2 className="edit-card-title">Skills</h2>
+      <p className="edit-card-subtitle">What are your strengths?</p>
+
+      <div className="edit-row">
+        <input
+          className="edit-input edit-skill-input"
+          type="text"
+          placeholder="React"
+          value={skill}
+          onChange={(e) => setSkill(e.target.value)}
+        />
+        <button className="profile-btn-primary" onClick={handleAdd}>
+          Add
+        </button>
+      </div>
+
+      {/* goes through skills one at a time */}
+      <div className="edit-skills">
+        {skills.map((s) => (
+          <span key={s} className="edit-skill-pill">
+            {s}
+          </span>
+        ))}
+      </div>
+
+      <button
+        className="profile-btn-primary edit-save-btn"
+        onClick={handleSave}
+      >
+        Save
+      </button>
+    </div>
+  );
+}
+
 function EditProfile() {
   return (
     <>
@@ -312,6 +410,8 @@ function EditProfile() {
           <EducationInfo />
           <ExperienceInfo />
           <ProjectInfo />
+          <ResumeInfo />
+          <SkillsInfo />
         </section>
       </main>
     </>
