@@ -1,6 +1,6 @@
 ---
 name: scoutsearch-frontend
-description: How to build and change the ScoutSearch frontend (React 19 + Vite + react-router, every style in frontend/src/index.css) for the Oasis-NEU f26-group-8 student job board. Use for ANY work inside frontend/ - adding or changing a page (About, Login, Signup, Feed, Profile, Edit Profile, Network, Messages, or new ones like Apply, Notifications, Job Lister, Admin), styling or redesigning index.css (fonts, colors, hover effects), making buttons work (Like, Comment, Share, Connect, Edit profile), the NavBar, routes in App.jsx, guest/student/job-lister/admin views, hooking the Login/Signup forms up to the backend, frontend lint or build errors, and accessibility (WCAG) checks. Also use it when a teammate asks how something on the site works or wants to be walked through a frontend change step by step, even if they never say "frontend". Also read it before running a design or animation skill (impeccable, animate, emil-design-eng, break-ui) on this site. Not for code inside backend/.
+description: How to build and change the ScoutSearch frontend (React 19 + Vite + react-router, every style in frontend/src/index.css) for the Oasis-NEU f26-group-8 student job board. Use for ANY work inside frontend/ - adding or changing a page (About, Login, Signup, Feed, Profile, Edit Profile, Network, Messages, or new ones like Apply, Notifications, Job Lister, Admin), styling or redesigning index.css (fonts, colors, hover effects), making buttons work (Like, Comment, Share, Connect, Edit profile), the NavBar, routes in App.jsx, guest/student/job-lister/admin views, hooking the Login/Signup forms up to the backend, frontend lint or build errors, and accessibility (WCAG) checks. Also use it when a teammate asks how something on the site works or wants to be walked through a frontend change step by step, even if they never say "frontend". Also read it before running a design or animation skill (frontend-design, impeccable, animate, emil-design-eng, break-ui) on this site. Not for code inside backend/.
 ---
 
 # ScoutSearch frontend
@@ -211,16 +211,27 @@ Keep these consistent across pages:
   what it styles, and a short note after each property, e.g.
   `padding: 8px 16px; /* space inside: top/bottom, left/right */`. These comments
   are how the team learns CSS, so keep them.
-- **Colors:** use the variables in `:root` at the top (`var(--primary)`,
-  `var(--primary-dark)`, `var(--muted)`, `var(--text)`, `var(--bg)`,
-  `var(--border)`) instead of new hex codes. If a redesign needs a new color, add
-  it to `:root` with a comment so the whole site can change together.
-  - `--border` is the darker gray around input boxes. The thin light line around
-    white boxes is written as `#e5e7eb` in about 18 places and isn't a variable
-    yet. Reuse that exact code for new box outlines so they match.
-  - Small gray text: `#64748b` passes on white (4.8:1) but only gets about 4.3:1
-    on the gray page background (`--bg`), which fails. For small text sitting
-    directly on the page background, use `var(--muted)`.
+- **Colors:** the site uses a clear, gentle light blue scheme (real blues, no grays), kept a step dimmer than
+  full brightness so it's easy on the eyes (chosen 2026-10-18): light blue page
+  `#d7e9fb`, off-white boxes `#f0f7ff` (not pure white, which is glaring), navy
+  text `#10325a`, blue buttons `#2a74ba`, and a sky-blue accent `#74b6ea` (navy
+  words on it) saved for the main action. Use the variables in
+  `:root` at the top instead of hex codes: `var(--primary)`,
+  `var(--primary-dark)`, `var(--text)`, `var(--muted)`, `var(--bg)`, `var(--card)`,
+  `var(--border)`, `var(--line)`, `var(--soft)`, `var(--subtle)`, `var(--accent)`. The
+  About page also has its own `--about-` variables. Box backgrounds use
+  `var(--card)`, not `white`; index.css has no hard-coded colors left besides
+  `white` text on blue, so keep it that way. If a redesign
+  needs a new color, add it to `:root` with a comment so the whole site can
+  change together.
+  - `--border` is the gray-blue around input boxes (3.5:1 on boxes, enough for
+    borders). `--line` is the thin soft blue line around boxes and between
+    rows. `--soft` is the very light blue for hover colors and tags.
+  - Small gray text: use `var(--subtle)` (6:1 on boxes, 5.3:1 on `--bg`).
+  - `--muted` and `--text` (and `--primary` and `--primary-dark`) are close in
+    color. A hover or on/off state that only switches between them is hard to
+    see, so add a second cue (underline, bold, or a background) the way
+    `.feed-nav-right a:hover` does.
 - **Fonts:** no `font-family` is set anywhere yet, so the site uses Tailwind's
   default system font. For a new font, load it with a `<link>` in `index.html`'s
   `<head>` and set `font-family` once on `body` in `index.css`.
@@ -261,8 +272,9 @@ Accessibility is an explicit team priority. Check each item for anything you add
 
 ## Design and animation skills
 
-The project also has design skills in `.claude/skills/`: Impeccable (from
-`pbakaus/impeccable`) and Emil Kowalski's skills (from `emilkowalski/skills`).
+The project also has design skills in `.claude/skills/`: Anthropic's
+`frontend-design` (from `anthropics/skills`), Impeccable (from
+`pbakaus/impeccable`), and Emil Kowalski's skills (from `emilkowalski/skills`).
 They know a lot about design but were written for any project, so **on
 ScoutSearch this file's rules win** when they disagree:
 
@@ -281,12 +293,13 @@ ScoutSearch this file's rules win** when they disagree:
   person said they want to type it themselves. Either way, explain each change
   in plain words afterward.
 
-Which one to use:
+Which one to use (most tasks need just one row, so load only that skill):
 
 | When someone wants to... | Use | Notes for this site |
 |---|---|---|
 | Get a review of how a page looks and works | `impeccable` with `critique` (design) or `audit` (accessibility, speed, phone sizes) | Report only. A good first step before a design pass. |
 | Improve how a page looks | `impeccable` with `polish`, `layout`, `typeset`, `colorize`, `bolder`, `quieter`, or `distill` | Keeps the current look, words, and behavior. Only do a full redesign if the team asks for one. |
+| Design a brand-new page (Apply, Notifications, Job Lister, Admin), or redesign a whole page when the team asks | `frontend-design` | Plans first, then builds. See "frontend-design on this site" below. Use it *or* `impeccable` for a task, not both. |
 | Fix the phone layout | `impeccable` with `adapt`, then `mobile-native` for touch details | Feed and Profile have no phone layout yet. Use the file's 640px and 760px breakpoints. |
 | Better button words, labels, and error messages | `impeccable` with `clarify` | |
 | Fill empty boxes (Requests, Groups, Messages) | `impeccable` with `onboard` | |
@@ -320,6 +333,31 @@ springs, so only borrow its ideas on feedback and type.
   mention the new files in the pull request.
 - **Ask first** before turning on `impeccable hooks` (runs a checker after every
   edit) or `live` (edits the page from the browser).
+
+**frontend-design on this site:**
+
+- **Skip its "confirm the subject" step.** The brief is already known:
+  ScoutSearch is a job board where high school and college students find
+  internships, co-ops, and research positions. Each page's job is in the Pages
+  table above, and [roadmap.md](roadmap.md) has the four roles. Don't stop to ask
+  for these.
+- **New pages match the site.** Its advice to take risks and give each project
+  its own look is written for a brand-new brand. Here, a new page uses NavBar and
+  the `:root` colors so it looks like the same site, so the color part of its plan
+  is just those variables. Only pick new colors or fonts when the team asks for a
+  site-wide redesign. A new font changes every page, so check with the team first.
+- **Mode decides how bold** (see Impeccable's Mode above). The About page can
+  have one memorable moment. On Operate pages, keep it calm and spend boldness in
+  one small place or not at all.
+- **Keep the plan short:** a few lines for colors and fonts plus one ASCII sketch.
+  Show it to the teammate before writing code so they can say yes or change it.
+  Then build it the usual way (the `index.css` section first, then the JSX).
+- **Don't strip the site's look to avoid its "AI tells" list.** The white boxes
+  on Feed, Profile, and Network are the site's design. That list is about choices
+  in new work.
+- **Screenshots:** it asks you to screenshot and critique your work. If no browser
+  is available, skip that and say so. Use "Before you say it's done" below in
+  place of its own quality checklist.
 
 ## Before you say it's done
 
@@ -357,10 +395,6 @@ affects the task; don't fix it on the side. Last checked 2026-10-18.
   browser's plain default outline: `.feed-profile-link`, `.feed-post-actions button`,
   `.feed-nav-right a` (NavBar), `.profile-btn-outline`, `.profile-btn-primary`,
   `.network-connect-button`.
-- Some light gray text fails contrast on white: `#949494` (about 3.0:1) and `#94a3b8`
-  (about 2.6:1), used in `.profile-info`, `.profile-card-subtitle`,
-  `.profile-item-date`, `.profile-stat-label`, and `.profile-community-members`.
-  Switch to `#64748b` when you're already editing one of these.
 - Feed (3 columns) and Profile (2 columns) have no phone layout, so they spill
   off small screens.
 - Initials circles are missing `aria-hidden="true"` in Feed.jsx, Profile.jsx, and
