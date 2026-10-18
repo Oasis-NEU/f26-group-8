@@ -1,4 +1,4 @@
-Anthony: Sign Up, Sign in
+Anthony: Sign Up, Sign in, database
 Sign Up steps:
     check if user exists
     hash the password using brcypt
@@ -9,3 +9,5 @@ Log in steps:
     make sure the password matches
     generate the jwt token (Jayden will create jwt)
     send token back to client
+
+Create actual database
