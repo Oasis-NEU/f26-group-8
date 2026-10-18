@@ -1081,8 +1081,6 @@ body {
 
 .edit-tracker-card {
   background: white;
-  margin-top: 32px;
-  margin-left: 24px;
   padding: 16px 24px;
   max-width: 300px;
   border: 1px solid #e5e5e5;
@@ -1098,4 +1096,107 @@ body {
   font-size: 13px;
   color: #949494;
   margin-top: 6px;
+}
+
+.edit-tracker-steps {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.edit-tracker-id {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background-color: #e5e5e5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.edit-tracker-label {
+  font-size: 15px;
+  color: #111827;
+}
+
+.edit-page {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 12px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+
+/* Basic Information Card */ 
+
+.edit-card {
+  background: white;
+  padding: 16px 24px;
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-card-title {
+  font-weight: bold;
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+
+.edit-label {
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 8px;
+  margin-bottom: 6px;
+}
+
+.edit-input {
+  padding: 10px 12px;
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+  font-size: 14px;
+}
+
+.edit-save-btn {
+  margin-top: 18px;
+}
+
+/* About Card */
+
+.edit-textarea {
+  height: 120px;
+  resize: vertical;
+}
+
+.edit-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Education Card */
+
+.edit-row {
+  display: flex;
+  gap: 16px;
+}
+
+.edit-field {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* Card Subtitles */
+
+.edit-card-subtitle {
+  font-size: 13px;
+  color: #949494;
+  margin-bottom: 6px;
 }
