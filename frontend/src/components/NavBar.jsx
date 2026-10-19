@@ -8,12 +8,16 @@
 // start with "feed-" because the bar was first made for the Feed page.
 
 // Link makes a clickable link to another page of our site.
-import { Link } from "react-router";
+// NavLink is the same, but it also knows when you're already on its page:
+// it adds aria-current="page", so screen readers say "current page" (WCAG)
+import { Link, NavLink } from "react-router";
 // The top bar
 function NavBar() {
   return (
-    // <nav> tells screen readers this is the site's navigation (WCAG)
-    <nav className="feed-nav">
+    // <nav> tells screen readers this is the site's navigation (WCAG).
+    // aria-label="Main" names it, so it can be told apart from other
+    // sets of links on a page (like "Profile sections" on the Profile page)
+    <nav className="feed-nav" aria-label="Main">
       {/* Left side: the site name and the search box */}
       <div className="feed-nav-left">
         <span className="feed-nav-logo">ScoutSearch</span>
@@ -28,14 +32,21 @@ function NavBar() {
           placeholder="Search..."
         />
       </div>
-      {/* Right side: links to other pages, then your circle.
-          href="#" means the links don't go anywhere yet */}
+      {/* Right side: links to other pages, then your circle */}
       <div className="feed-nav-right">
         <Link to="/feed">Home</Link>
         <Link to="/network">Network</Link>
         <Link to="/messages">Messages</Link>
-        {/* Your circle. It borrows the circle style from the Feed posts */}
-        <div className="feed-post-avatar">RMV</div>
+        {/* Your circle. It's a link to your profile, and it borrows the circle
+            style from the Feed posts. aria-label is what screen readers say,
+            instead of reading the letters "R M V" (WCAG) */}
+        <NavLink
+          to="/profile"
+          className="feed-post-avatar feed-nav-avatar"
+          aria-label="Your profile"
+        >
+          RMV
+        </NavLink>
       </div>
     </nav>
   );
