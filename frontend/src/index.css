@@ -19,19 +19,82 @@
 @import 'tailwindcss';
 
 /* Colors used across the whole site. Change one here and it updates everywhere.
-   These are "variables": you use one by writing var(--name). */
+   These are "variables": you use one by writing var(--name).
+
+   The site's color scheme is a clear, gentle light blue: a light blue page,
+   blue-white boxes (not pure white, which is glaring), navy text, and
+   sky-blue buttons with navy words. The secondary colors are real blues,
+   not grays, so the page feels fresh instead of dull, and everything is
+   kept a step dimmer than full brightness so it's easy on the eyes.
+   The numbers like 6.2:1 are contrast: how much text stands out from what's
+   behind it. Small text needs at least 4.5:1 (WCAG). */
 :root {
-  --bg: #f3f4f6;           /* light gray page background */
-  --text: #111827;         /* almost-black main text color */
-  --muted: #374151;        /* dark gray for paragraph text */
-  --primary: #2563eb;      /* the main blue (buttons, boxes, top bar) */
-  --primary-dark: #1d4ed8; /* darker blue, used when hovering over buttons */
-  --border: #6b7280;       /* gray for input box borders */
+  --bg: #d7e9fb;           /* clear light blue page background */
+  --card: #f0f7ff;         /* the boxes: a clean blue-white, softer than pure white */
+  --text: #10325a;         /* navy for headings and main text (12:1 on boxes, 10.4:1 on the page) */
+  --muted: #1f4a7d;        /* blue for paragraph text (8.3:1 on boxes, 7.3:1 on the page) */
+  --primary: #2a74ba;      /* the main blue (app buttons, boxes). White text on it is 4.9:1 */
+  --primary-dark: #1d5a94; /* darker blue, for hovering, keyboard outlines, and colored text (6.5:1 on boxes) */
+  --border: #5b86b8;       /* blue for input box borders (3.5:1 on boxes; borders need 3:1, WCAG) */
+  --line: #b3d0ee;         /* light blue for the thin lines around boxes */
+  --soft: #e2effd;         /* very light blue for hover colors and tags */
+  --subtle: #355f8f;       /* soft blue for small, less important text
+                              (6.1:1 on boxes, 5.3:1 on the page background, WCAG) */
+
+  /* The accent: sky blue, saved for the main thing to do on a screen
+     (Sign up, Apply), so it's what people notice first */
+  --accent: #74b6ea;       /* sky blue */
+  --accent-hover: #5ea8e3; /* a little deeper sky blue, for hovering (navy text on it is 5.3:1) */
+  --accent-text: #10325a;  /* navy words on the accent (5.9:1, WCAG) */
+  --accent-soft: #cde4fa;  /* light blue for small highlights (navy text on it is 9.9:1) */
+
+  /* The About page's colors. Light blue like the other pages, with
+     slightly deeper blue boxes so the off-white example job cards stand out */
+  --about-bg: #d7e9fb;     /* page background (clear light blue) */
+  --about-panel: #c6def7;  /* slightly deeper blue boxes on the page */
+  --about-edge: #b3d0ee;   /* thin light blue lines */
+  --about-ink: #10325a;    /* main text: navy (10.4:1 on the background, 9.3:1 on boxes) */
+  --about-ink-2: #1f4a7d;  /* secondary text: blue (7.3:1 on the background, 6.5:1 on boxes) */
+  --about-ink-3: #355f8f;  /* quiet small text: soft blue (5.3:1 on the background, 4.8:1 on boxes) */
+
+  /* The About page's fonts (loaded in index.html). Other pages keep the system font */
+  --font-display: "Overpass", "Segoe UI", system-ui, sans-serif;  /* headlines: based on US highway signs */
+  --font-body: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif; /* body text: made to be
+                                                                                    easy to read, including for
+                                                                                    people with low vision */
+
+  /* Animation timing (used on the About page). "Easing" is how the speed
+     changes during an animation. These curves are stronger than the
+     built-in ones, so motion feels quick and intentional */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);       /* starts fast, then settles: for things appearing */
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);   /* speeds up, then slows down: for things moving across the screen */
+  --time-press: 160ms;   /* a button shrinking when you press it */
+  --time-hover: 150ms;   /* colors changing when the mouse is over something */
+  --time-move: 250ms;    /* the blue tab sliding to the tab you picked */
+  --time-enter: 240ms;   /* example listings fading in */
+
+  /* The React Bits effects (components/reactbits/, used on the About page) */
+  --shine-base: var(--about-ink-2);  /* ShinyText: the words' normal color (7.3:1 on the background) */
+  --shine-light: var(--primary-dark); /* ShinyText: the darker blue band that sweeps across (5.8:1, so the
+                                        words stay readable mid-sweep; white or sky blue would be too faint) */
+  --star-color: var(--about-ink);    /* StarBorder: the lights traveling around the button. Navy, because
+                                        a sky-blue light would blend into the sky-blue button */
+  --spotlight-color: color-mix(in srgb, white 70%, transparent); /* SpotlightCard: the glow. A soft white
+                                        light that only makes the pale blue box brighter, so the text
+                                        stays easy to read (6.5:1 or more, WCAG) */
+  --spark-color: var(--primary);      /* ClickSpark: the sparks when you click (sky blue would be hard to see) */
+  --wave-color: color-mix(in srgb, var(--primary) 10%, transparent); /* Waves: the flowing background
+                                        lines. Very faint (blue at 10% strength), so they never get in
+                                        the way of the text on top of them */
+  --time-shine: 2.2s;    /* one sweep of the shine. It runs twice (4.4s), then stops */
+  --time-star: 3s;       /* the star lights making one trip around the button */
+  --time-glow: 300ms;    /* the spotlight fading in and out */
+  --time-reveal: 300ms;  /* sections fading in as you scroll to them (quick, so nobody waits on a blank area) */
 }
 
 /* body is the whole web page */
 body {
-  background-color: var(--bg); /* light gray background */
+  background-color: var(--bg); /* very light blue background */
   /* The next 4 lines only matter if you add a background IMAGE.
      Right now there isn't one, so they don't do anything. */
   background-size: cover;       /* stretch the image to fill the screen */
@@ -79,109 +142,20 @@ body {
   background-color: var(--primary-dark);
 }
 
-/* ---------- About page: top bar ---------- */
-
-/* sticky + top: 0 keeps the bar stuck to the top of the screen while you scroll */
-.top-bar {
-  position: sticky;
-  top: 0;
-  z-index: 10; /* keeps the bar on top of the page content */
-  background-color: var(--primary); /* blue bar */
+/* A plain white box with a thin light blue line around it (shared, so any page can use it) */
+.white-box {
+  flex: 1;                  /* boxes in a row share the space equally */
+  background-color: var(--card); /* off-white (--card) */
+  border: 1px solid var(--line); /* thin light blue line around it (same as the boxes on Feed, Profile, and Network) */
+  padding: 24px;            /* space inside the box on all sides */
+  border-radius: 16px;      /* rounded corners */
 }
 
-/* Tabs on the left, buttons on the right. Same width as the page content */
-.top-bar-row {
-  display: flex;                   /* put the tabs and buttons in a row */
-  align-items: center;             /* line them up vertically in the middle */
-  justify-content: space-between;  /* tabs go left, buttons go right */
-  gap: 16px;                       /* space between the tabs and the buttons */
-  max-width: 1048px;               /* 1000px of content + 24px padding on each side */
-  margin: 0 auto;                  /* "auto" on the sides centers it on wide screens */
-  padding: 12px 24px;              /* space inside the bar: top/bottom, left/right */
-}
-
-/* The list of tabs */
-.tabs {
-  display: flex; /* show the tabs in a row instead of a list going down */
-  gap: 4px;      /* small space between tabs */
-}
-
-/* Each tab link */
-.tabs a {
-  display: block;      /* lets the link have padding all around it */
-  color: white;        /* white text on the blue bar */
-  font-weight: 600;    /* a little bolder than normal text */
-  padding: 10px 16px;  /* makes the clickable area bigger */
-  border-radius: 8px;  /* rounded corners for the hover box */
-}
-
-/* Light see-through box behind a tab when you hover over it.
-   rgb(255 255 255 / 0.2) means white at 20% strength */
-.tabs a:hover {
-  background-color: rgb(255 255 255 / 0.2);
-}
-
-/* The Sign up and Log in buttons, side by side */
-.top-bar-buttons {
-  display: flex; /* put the two buttons in a row */
-  gap: 12px;     /* space between them */
-}
-
-/* The Sign up and Log in buttons in the bar.
-   White, because blue buttons would disappear on the blue bar.
-   Also slightly bigger so they're easy to click and tap (WCAG) */
-.top-bar-button {
-  background-color: white;
-  color: var(--primary-dark); /* blue text */
-  font-weight: bold;          /* thick text */
-  padding: 10px 20px;         /* space inside: top/bottom, left/right */
-  cursor: pointer;            /* mouse turns into a pointing hand */
-  border-radius: 4px;         /* slightly rounded corners */
-}
-
-/* Light blue when you hover over a button in the bar */
-.top-bar-button:hover {
-  background-color: #dbeafe;
-}
-
-/* White outline when you Tab to a link in the bar (a blue one wouldn't show).
-   :focus-visible means "reached with the keyboard" */
-.top-bar a:focus-visible {
-  outline: 2px solid white; /* a 2px white line around the link */
-  outline-offset: 2px;      /* a small gap between the link and the line */
-}
-
-/* Stops the sticky bar from covering a section's heading after you click a tab.
-   88px = the bar's height (68px) plus 20px of breathing room */
-.section {
-  scroll-margin-top: 88px;
-}
-
-/* Clicking a tab glides down to the section instead of jumping.
-   Skipped for people who turned on "reduce motion" in their settings (WCAG) */
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-behavior: smooth;
-  }
-}
-
-/* ---------- About page ---------- */
-
-/* Less space above the content now that the bar sits at the top.
-   This replaces the 96px top padding from .page, but only on the About page */
-.about-page {
-  padding-top: 40px;
-}
-
-/* The "ScoutSearch" box. Smaller than the About Us box so they don't compete */
-.site-name-box {
-  background-color: var(--primary); /* blue box */
-  color: white;                     /* white text */
-  font-size: 28px;                  /* text size */
-  font-weight: bold;                /* thick text */
-  padding: 12px 32px;               /* space inside the box: top/bottom, left/right */
-  margin-bottom: 16px;              /* space below the box */
-  border-radius: 12px;              /* rounded corners */
+/* Headings inside the white boxes ("High School Students", "Filters", ...) */
+.white-box h3 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 8px; /* small space between the heading and its text */
 }
 
 /* ---------- Login and Signup pages ---------- */
@@ -190,7 +164,7 @@ body {
 .form-box {
   width: 100%;              /* fill the available width... */
   max-width: 400px;         /* ...but never get wider than 400px */
-  background-color: white;
+  background-color: var(--card); /* off-white (--card) */
   padding: 24px;            /* space inside the box on all sides */
   border-radius: 16px;      /* rounded corners */
 }
@@ -207,7 +181,7 @@ body {
 .form-box input {
   display: block;                   /* each input on its own line */
   width: 100%;                      /* as wide as the white box */
-  border: 1px solid var(--border);  /* thin gray line around the input */
+  border: 1px solid var(--border);  /* thin blue line around the input */
   padding: 8px 12px;                /* space between the text and the input's edge */
   margin-bottom: 16px;              /* space before the next label */
 }
@@ -215,7 +189,7 @@ body {
 /* The message under the form ("Welcome, ...!") */
 .form-message {
   margin-top: 16px;     /* space above the message */
-  color: var(--muted);  /* dark gray text */
+  color: var(--muted);  /* blue text */
 }
 
 /* The "Back to About" link */
@@ -233,162 +207,1466 @@ body {
   outline-offset: 2px;               /* a small gap between it and the line */
 }
 
-/* ---------- About page: About Us box ---------- */
+/* ---------- About page ---------- */
+/* Everything below styles the About page (About.jsx, yoursite.com/about),
+   the site's front door. It's light blue like the other pages, and uses its own
+   fonts (--font-display and --font-body in :root).
+   Every class name starts with "about-" so it can't clash with other pages.
 
-/* The big blue "About Us" box */
-.about-us-box {
-  width: 100%;
-  max-width: 1000px; /* same width as the sections below, so the edges line up */
-  background-color: var(--primary); /* blue */
-  color: white;                     /* white text */
-  text-align: center;               /* center the text */
-  padding: 72px 32px;               /* space inside: top/bottom, left/right */
-  margin-bottom: 56px;              /* space below the box */
-  border-radius: 16px;              /* rounded corners */
+   Color rules on this page:
+   - The sky-blue accent (--accent) is only for things you can do: Sign up,
+     the selected example tab, and the "why it matched" reasons.
+   - Navy words on the sky-blue accent are 7.5:1, and on the page 10.9:1 (WCAG).
+   - Keyboard outlines use the darker blue (--primary-dark), because sky blue
+     is too faint against the light page. */
+
+/* Paints the whole browser window the About page's light blue while it's
+   open, so scrolling past the top or bottom matches the page.
+   :has() means "the body, but only when it contains an .about-site" */
+body:has(.about-site) {
+  background-color: var(--about-bg);
 }
 
-/* clamp(smallest, preferred, biggest): the text grows with the screen width,
-   but never gets smaller than the first number or bigger than the last */
-.about-us-title {
-  font-size: clamp(44px, 8vw, 64px);
-  font-weight: bold;
-  line-height: 1.1; /* space between lines, as a multiple of the text size */
+/* Also on the About page only: the browser's own parts match the light page.
+   color-scheme: light gives a light scrollbar, and scrollbar-color sets its
+   colors: the part you drag, then the track behind it */
+html:has(.about-site) {
+  color-scheme: light;
+  scrollbar-color: var(--about-edge) var(--about-bg);
 }
 
-/* "A Northeastern Oasis Project..." */
-.about-us-subtitle {
-  font-size: clamp(18px, 3vw, 24px); /* between 18px and 24px depending on screen width */
-  margin-top: 12px;                  /* space between the title and subtitle */
+/* The highlight when you select text with the mouse: sky blue with navy
+   text (7.5:1), instead of the browser's default */
+.about-site ::selection {
+  background-color: var(--accent);
+  color: var(--accent-text);
 }
 
-/* ---------- About page: text sections ---------- */
-
-/* Each section ("Who we are", "Who it's for", "Why use our platform?").
-   (.section also has scroll-margin-top in the top bar part above) */
-.section {
-  width: 100%;          /* fill the available width... */
-  max-width: 1000px;    /* ...but never get wider than 1000px */
-  margin-bottom: 56px;  /* space between sections */
+/* The wrapper around the whole About page */
+.about-site {
+  background-color: var(--about-bg); /* very light blue background */
+  color: var(--about-ink);              /* deep navy text */
+  font-family: var(--font-body);        /* Atkinson Hyperlegible Next */
+  font-size: 18px;                      /* body text size */
+  line-height: 1.6;                     /* space between lines, as a multiple of the text size */
 }
 
-/* Section headings */
-.section h2 {
-  font-size: 28px;
-  font-weight: bold;
-  margin-bottom: 16px; /* space between the heading and its boxes */
+/* Keeps each band's content 1120px wide at most, centered, with space at
+   the sides. Used inside the top bar and every section */
+.about-inner {
+  max-width: 1168px;   /* 1120px of content + 24px padding on each side */
+  margin: 0 auto;      /* "auto" on the sides centers it on wide screens */
+  padding-left: 24px;  /* space at the left edge */
+  padding-right: 24px; /* space at the right edge */
 }
 
-/* The "Who we are" text is a bit bigger, so its long lines are easier to read.
-   ">" means only a .white-box DIRECTLY inside a .section, which is just
-   the "Who we are" box (the other boxes are inside .side-by-side or .why-us-grid) */
-.section > .white-box p {
-  font-size: 20px;
+/* Headings on this page use the highway-sign font */
+.about-site h1,
+.about-site h2,
+.about-site h3 {
+  font-family: var(--font-display); /* Overpass */
+  text-wrap: balance;               /* when a heading takes 2+ lines, makes them about the same length */
 }
 
-/* All paragraph text in the sections */
-.section p {
-  font-size: 18px;
-  line-height: 1.6;     /* space between lines, as a multiple of the text size */
-  color: var(--muted);  /* dark gray */
+/* The outline you see when you reach a link or button with the Tab key.
+   The darker blue stands out on the light background (5.8:1; outlines need 3:1) (WCAG) */
+.about-site a:focus-visible,
+.about-site button:focus-visible {
+  outline: 3px solid var(--primary-dark); /* a 3px darker blue line around it */
+  outline-offset: 3px;              /* a small gap between it and the line */
 }
 
-/* Puts the "High School" and "College" boxes side by side */
-.side-by-side {
-  display: flex; /* put the boxes in a row */
-  gap: 24px;     /* space between them */
+/* "Skip to main content": hidden until you press Tab on the page, then it
+   appears in the top left so keyboard users can jump past the top bar (WCAG) */
+.about-skip-link {
+  position: absolute;                   /* lifted out of the normal flow... */
+  left: 16px;                           /* ...and placed in the top left corner */
+  top: -100px;                          /* off the top of the screen until it's focused */
+  z-index: 20;                          /* above the top bar */
+  background-color: var(--accent);      /* sky blue */
+  color: var(--accent-text);            /* navy text (6.2:1) */
+  font-weight: 700;                     /* thick text */
+  padding: 10px 16px;                   /* space inside: top/bottom, left/right */
+  border-radius: 8px;                   /* rounded corners */
 }
 
-/* The white boxes */
-.white-box {
-  flex: 1;                  /* boxes in a row share the space equally */
-  background-color: white;
-  padding: 24px;            /* space inside the box on all sides */
-  border-radius: 16px;      /* rounded corners */
+/* When it's focused, it slides down into view */
+.about-skip-link:focus {
+  top: 16px;
 }
 
-/* Headings inside the white boxes ("High School Students", "Filters", ...) */
-.white-box h3 {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 8px; /* small space between the heading and its text */
+/* ---------- About page: buttons ---------- */
+
+/* The sky-blue Sign up buttons (in the top bar and the first screen).
+   Sky blue is the accent color, so these are what people notice first */
+.about-button {
+  display: inline-block;            /* lets the link have padding on all sides */
+  background-color: var(--accent);  /* sky blue */
+  color: var(--accent-text);        /* navy text (6.2:1 on the sky blue, WCAG) */
+  font-weight: 700;                 /* thick text */
+  font-size: 16px;                  /* text size */
+  line-height: 1.25;                /* keeps the button from getting too tall */
+  padding: 10px 18px;               /* space inside: top/bottom, left/right */
+  border: 2px solid transparent;    /* invisible, but Windows High Contrast mode draws it,
+                                       so the button still looks like a button there (WCAG) */
+  border-radius: 8px;               /* rounded corners */
 }
 
-/* ---------- About page: "Why use our platform?" grid ---------- */
-
-/* The 4 "Why use our platform?" boxes in a grid */
-.why-us-grid {
-  display: grid;                   /* turns on grid, a way to make rows and columns */
-  grid-template-columns: 1fr 1fr;  /* 2 columns of equal width ("fr" = a share of the space) */
-  gap: 24px;                       /* space between the boxes */
+/* A little deeper sky blue when the mouse is over it (navy text on it is 5.3:1) */
+.about-button:hover {
+  background-color: var(--accent-hover);
 }
 
-/* ---------- Smaller screens ----------
-   @media (max-width: 640px) means "only use these styles when the screen
-   is 640px wide or less", which is roughly phone-sized. */
+/* The bigger Sign up button on the first screen */
+.about-button-big {
+  font-size: 18px;      /* bigger text */
+  padding: 14px 28px;   /* more space inside, so it's a big, easy target */
+}
 
-/* On small screens (phones), show one card per row */
-@media (max-width: 640px) {
-  /* 1 column instead of 2 */
-  .why-us-grid {
-    grid-template-columns: 1fr;
+/* The navy Sign up button in the sky-blue band at the bottom of the page
+   (a sky-blue button on sky blue would disappear, and white barely stands out) */
+.about-button-navy {
+  background-color: var(--about-ink); /* deep navy */
+  color: white;                       /* white text (12.9:1) */
+}
+
+/* The darker blue when the mouse is over it (white text on it is 6.9:1) */
+.about-button-navy:hover {
+  background-color: var(--primary-dark);
+}
+
+/* ---------- About page: top bar ---------- */
+
+/* The bar across the top. sticky + top: 0 keeps it at the top of the
+   screen while you scroll */
+.about-bar {
+  position: sticky;                          /* sticks to the top when you scroll */
+  top: 0;                                    /* ...right at the top edge */
+  z-index: 10;                               /* stays on top of the page content */
+  background-color: var(--about-bg);      /* same light blue as the page */
+  border-bottom: 1px solid var(--about-edge); /* thin line along the bottom */
+}
+
+/* Logo on the left, section links in the middle, Log in and Sign up on the right */
+.about-bar-row {
+  display: flex;       /* puts everything in one row */
+  align-items: center; /* lines them up in the middle, top-to-bottom */
+  gap: 24px;           /* space between the groups */
+  min-height: 68px;    /* the bar's height */
+}
+
+/* "ScoutSearch" with the diamond mark. It's a link back to the top of the page */
+.about-logo {
+  display: inline-flex;              /* puts the diamond and the name side by side */
+  align-items: center;               /* lines them up in the middle */
+  gap: 12px;                         /* space between the diamond and the name */
+  font-family: var(--font-display);  /* Overpass */
+  font-weight: 800;                  /* extra thick */
+  font-size: 22px;                   /* text size */
+  letter-spacing: -0.01em;           /* pulls the letters slightly closer */
+  color: var(--about-ink);           /* deep navy text */
+}
+
+/* The blue diamond. It looks like the painted marks on trees that show
+   hikers the trail ("trail blazes"), which fits a site about finding your way.
+   It's only decoration, so About.jsx hides it from screen readers */
+.about-blaze {
+  width: 14px;                     /* a 14px square... */
+  height: 14px;
+  background-color: var(--accent); /* sky blue */
+  border-radius: 2px;              /* barely rounded corners */
+  transform: rotate(45deg);        /* ...turned 45 degrees, so it's a diamond */
+}
+
+/* The list of section links ("Who it's for", ...) */
+.about-bar-links {
+  display: flex;  /* puts the links in a row */
+  gap: 4px;       /* small space between them */
+}
+
+/* Each section link */
+.about-bar-links a {
+  display: block;              /* lets the link have padding on all sides */
+  white-space: nowrap;         /* keeps each link on one line ("Who it's for" never splits) */
+  color: var(--about-ink-2);   /* blue (7.8:1) */
+  font-weight: 600;            /* semi-bold */
+  font-size: 15px;             /* text size */
+  padding: 8px 12px;           /* makes the clickable area bigger */
+  border-radius: 6px;          /* rounded corners for the hover box */
+}
+
+/* A section link brightens and gets a pale blue box when the mouse is over it */
+.about-bar-links a:hover {
+  color: var(--about-ink);
+  background-color: var(--about-panel);
+}
+
+/* Log in and Sign up, pushed to the right end of the bar */
+.about-bar-actions {
+  margin-left: auto;   /* takes up all the leftover space on its left, pushing it right */
+  display: flex;       /* puts the two in a row */
+  align-items: center; /* lines them up in the middle */
+  gap: 8px;            /* space between them */
+}
+
+/* "Log in": a plain link, quieter than Sign up next to it */
+.about-login-link {
+  color: var(--about-ink);  /* deep navy text */
+  font-weight: 700;         /* thick text */
+  font-size: 16px;          /* same size as the Sign up button's text */
+  padding: 10px 14px;       /* same height as the Sign up button */
+  border-radius: 8px;       /* rounded corners for the hover box */
+}
+
+/* A pale blue box behind Log in when the mouse is over it */
+.about-login-link:hover {
+  background-color: var(--about-panel);
+}
+
+/* ---------- About page: first screen ---------- */
+
+/* The first thing you see: the headline on the left, the example job
+   search on the right */
+.about-hero {
+  padding-top: 72px;     /* space below the top bar */
+  padding-bottom: 96px;  /* space before the next section */
+}
+
+/* The two columns. The right one (the example search) is at most 540px wide */
+.about-hero-grid {
+  display: grid;                                          /* turns on grid, so it can have 2 columns */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 540px); /* left: leftover space, right: up to 540px
+                                                             (minmax(0, ...) lets columns shrink instead of spilling out) */
+  gap: 56px;                                              /* space between the columns */
+  align-items: start;                                     /* both columns start at the top. (Not "center":
+                                                             the listings change height between tabs, and
+                                                             centering would make the headline jump) */
+}
+
+/* Nudges the headline down a little, so it lines up with the tabs
+   instead of the top edge of the example search */
+.about-hero-text {
+  padding-top: 24px;
+}
+
+/* The headline. clamp(smallest, preferred, biggest): it grows with the
+   screen width, but never gets smaller than 40px or bigger than 68px */
+.about-title {
+  font-size: clamp(40px, 5.4vw, 68px);
+  font-weight: 800;          /* extra thick */
+  line-height: 1.02;         /* tight lines, because big text looks loose otherwise */
+  letter-spacing: -0.025em;  /* pulls the letters slightly closer, so big text looks tighter */
+  color: var(--about-ink);   /* deep navy text */
+}
+
+/* "For high school and college students" */
+.about-subtitle {
+  font-size: clamp(19px, 2vw, 22px); /* between 19px and 22px depending on screen width */
+  color: var(--about-ink-2);         /* blue (7.8:1) */
+  margin-top: 20px;                  /* space below the headline */
+}
+
+/* The big Sign up button and the credit under it */
+.about-hero-actions {
+  margin-top: 36px;        /* space above the button */
+  display: flex;           /* stacks the button and the credit... */
+  flex-direction: column;  /* ...top to bottom */
+  align-items: flex-start; /* keeps the button only as wide as its words */
+  gap: 16px;               /* space between the button and the credit */
+}
+
+/* "A Northeastern Oasis Project" under the button */
+.about-credit {
+  font-size: 15px;           /* small text */
+  color: var(--about-ink-3); /* quiet soft blue (5.2:1 on the background) */
+}
+
+/* ---------- About page: example job search ---------- */
+/* The window on the right of the first screen. Clicking its tabs swaps the
+   example listings (the data is in the exampleSearches list in About.jsx) */
+
+/* The window itself: a raised pale blue box */
+.about-demo {
+  background-color: var(--about-panel);               /* pale blue box */
+  border: 1px solid var(--about-edge);                /* thin line around it */
+  border-radius: 16px;                                /* rounded corners */
+  padding: 16px;                                      /* space inside */
+  box-shadow: 0 24px 48px -24px rgb(15 42 68 / 0.18);     /* a soft shadow below, so it floats above the page:
+                                                         across, down, blur, spread, color (navy at 18%) */
+}
+
+/* The top row: "Example listings" on the left, the note on the right */
+.about-demo-head {
+  display: flex;                   /* puts them in a row */
+  flex-wrap: wrap;                 /* the note moves underneath if there isn't room */
+  justify-content: space-between;  /* one on each side */
+  align-items: baseline;           /* lines up the bottoms of the words */
+  gap: 4px 16px;                   /* space between them: up/down, left/right */
+  padding: 4px 4px 12px;           /* space inside: top, left/right, bottom */
+}
+
+/* "Example listings" */
+.about-demo-title {
+  font-size: 17px;          /* small for a heading, because the listings are the point */
+  font-weight: 700;         /* thick text */
+  color: var(--about-ink);  /* deep navy text */
+}
+
+/* "Made-up jobs, to show how it works" */
+.about-demo-note {
+  font-size: 14px;           /* small text */
+  color: var(--about-ink-2); /* blue (7.1:1 on the pale blue box) */
+}
+
+/* The white tray holding the three tabs (Internships, Co-ops, Research).
+   How the blue "selected" look works:
+   - .about-tab-list is the row of real tab buttons (blue words).
+   - .about-tab-highlight is an blue copy of the same row, laid exactly on top.
+   - clip-path cuts the copy down so only the selected tab's part shows.
+   When you pick another tab, the cut-out slides over to it, so the blue and
+   the navy words move together. (If we just colored the selected button,
+   the words would change color before the blue arrived under them) */
+.about-tabs {
+  position: relative;                   /* lets the blue copy sit on top of the buttons */
+  padding: 4px;                         /* space between the tray's edge and the tabs */
+  background-color: var(--card);               /* off-white tray, so it stands out on the blue box */
+  border-radius: 10px;                  /* rounded corners */
+}
+
+/* The row of tab buttons, and the blue copy on top of it, both use the
+   same 3 equal columns, so the words line up exactly */
+.about-tab-list,
+.about-tab-highlight {
+  display: grid;                          /* three equal columns... */
+  grid-template-columns: repeat(3, 1fr);  /* ...one per tab */
+  gap: 4px;                               /* small space between tabs */
+}
+
+/* Each tab. They're real <button>s, so they work with the keyboard too */
+.about-tab {
+  font-family: var(--font-body);   /* buttons don't inherit the font on their own */
+  font-size: 15px;                 /* text size */
+  font-weight: 700;                /* thick text */
+  line-height: 1.25;               /* set here AND on the blue copy, so the words line up */
+  color: var(--about-ink-2);       /* blue (8.3:1 on the off-white tray) */
+  background-color: transparent;   /* no box until hovered */
+  padding: 10px 8px;               /* space inside: top/bottom, left/right */
+  border: 0;                       /* no border */
+  border-radius: 7px;              /* rounded corners */
+  cursor: pointer;                 /* mouse turns into a pointing hand */
+  -webkit-tap-highlight-color: transparent; /* no gray flash when tapped on phones
+                                               (the blue sliding over is the feedback) */
+}
+
+/* A tab brightens when the mouse is over it */
+.about-tab:hover {
+  color: var(--about-ink);
+  background-color: var(--about-panel);
+}
+
+/* The blue copy of the tab row. aria-hidden in About.jsx hides it from
+   screen readers (they hear the real buttons and which one is selected) */
+.about-tab-highlight {
+  position: absolute;               /* placed on top of the buttons... */
+  inset: 4px;                       /* ...covering exactly the same area (inside the tray's 4px padding) */
+  pointer-events: none;             /* clicks go through it to the real buttons underneath */
+  background-color: var(--accent);  /* sky blue */
+  color: var(--accent-text);        /* navy text (6.2:1) */
+  border-radius: 7px;               /* rounded corners */
+}
+
+/* Each word in the blue copy, sized and placed like the real buttons */
+.about-tab-highlight span {
+  display: grid;          /* turns on grid so the word can be centered... */
+  place-items: center;    /* ...in both directions */
+  font-size: 15px;        /* same as .about-tab */
+  font-weight: 700;       /* same as .about-tab */
+  line-height: 1.25;      /* same as .about-tab */
+  padding: 10px 8px;      /* same as .about-tab */
+}
+
+/* Which part of the blue copy shows. clip-path: inset(top right bottom left)
+   cuts that much off each side. One tab is (100% - 8px) / 3 wide (the row
+   minus its two 4px gaps, split in 3), and "round 7px" rounds the corners.
+   data-selected (0, 1, or 2) is set by About.jsx */
+.about-tabs[data-selected="0"] .about-tab-highlight {
+  clip-path: inset(0 calc(2 * ((100% - 8px) / 3 + 4px)) 0 0 round 7px); /* only the 1st tab */
+}
+
+.about-tabs[data-selected="1"] .about-tab-highlight {
+  clip-path: inset(0 calc((100% - 8px) / 3 + 4px) 0 calc((100% - 8px) / 3 + 4px) round 7px); /* only the 2nd tab */
+}
+
+.about-tabs[data-selected="2"] .about-tab-highlight {
+  clip-path: inset(0 0 0 calc(2 * ((100% - 8px) / 3 + 4px)) round 7px); /* only the 3rd tab */
+}
+
+/* Windows High Contrast mode replaces colors, so the blue copy wouldn't
+   show which tab is selected. There, it's hidden and the selected tab's
+   word is underlined instead (WCAG) */
+@media (forced-colors: active) {
+  .about-tab-highlight {
+    display: none;
   }
 
-  /* Stack the "High School" and "College" boxes instead of side by side */
-  .side-by-side {
-    flex-direction: column;
-  }
-
-  /* Less empty space around the edges on a small screen */
-  .about-page {
-    padding: 32px 16px 40px;
-  }
-
-  /* Smaller ScoutSearch box text */
-  .site-name-box {
-    font-size: 24px;
-  }
-
-  /* Shorter About Us box with less space inside */
-  .about-us-box {
-    padding: 48px 20px;
-    margin-bottom: 40px;
-  }
-
-  /* Less space between sections */
-  .section {
-    margin-bottom: 40px;
-  }
-
-  /* "Who we are" text back to normal size */
-  .section > .white-box p {
-    font-size: 18px;
+  .about-tab[aria-selected="true"] {
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
 }
 
-/* Small screens: the tabs and buttons can't fit on one row, so they stack.
-   The bar also stops sticking to the top, so it doesn't cover half the phone screen */
+/* "Matches for an example student: ..." under the tabs, so the
+   "Why it matched" reasons make sense */
+.about-demo-student {
+  font-size: 14px;           /* small text */
+  color: var(--about-ink-2); /* blue (7.1:1 on the pale blue box) */
+  margin-top: 12px;          /* space below the tabs */
+  padding: 0 4px;            /* lines the words up with "Example listings" above */
+  text-wrap: balance;        /* if it wraps, makes the 2 lines about the same length
+                                (so one word isn't left alone on the second line) */
+}
+
+/* The list of example listings under the tabs */
+.about-listings {
+  list-style: none; /* no bullet points */
+  display: grid;    /* stacks the listings... */
+  gap: 10px;        /* ...with space between them */
+  margin-top: 10px; /* space below the example-student line */
+  padding: 0;       /* no extra space on the left (lists have some by default) */
+}
+
+/* One white job card. White like the light app pages, so the example looks
+   like the real thing you'd see after signing up */
+.about-listing {
+  background-color: var(--card);  /* off-white card (--card) */
+  color: var(--text);       /* navy text (12.3:1 on the off-white boxes) */
+  border-radius: 12px;      /* rounded corners */
+  padding: 18px;            /* space inside */
+}
+
+/* On the white card, keyboard focus uses the darker blue (6.9:1), like
+   everywhere else on the page (WCAG) */
+.about-listing a:focus-visible {
+  outline-color: var(--primary-dark);
+}
+
+/* The square with the company's initials, next to the job title */
+.about-listing-top {
+  display: flex;           /* puts the square and the words side by side */
+  align-items: flex-start; /* lines them up along the top */
+  gap: 14px;               /* space between them */
+}
+
+/* The square itself. Only decoration (the company name is written next to
+   it), so About.jsx hides it from screen readers */
+.about-listing-logo {
+  flex: none;                        /* never squished smaller */
+  display: grid;                     /* turns on grid so the letters can be centered... */
+  place-items: center;               /* ...in both directions */
+  width: 44px;                       /* same width and height makes a square */
+  height: 44px;
+  border-radius: 10px;               /* rounded corners */
+  background-color: var(--primary);  /* blue */
+  color: white;                      /* white letters (4.9:1) */
+  font-family: var(--font-display);  /* Overpass */
+  font-weight: 800;                  /* extra thick */
+  font-size: 16px;                   /* text size */
+}
+
+/* The job title ("Summer Research Assistant") */
+.about-listing-title {
+  font-size: 19px;      /* text size */
+  font-weight: 700;     /* thick text */
+  line-height: 1.25;    /* space between lines if it wraps */
+  color: var(--text);   /* deep navy */
+}
+
+/* The company or lab name */
+.about-listing-org {
+  font-size: 15px;      /* text size */
+  font-weight: 600;     /* semi-bold */
+  color: var(--muted);  /* blue (8.4:1) */
+}
+
+/* Location, pay, and schedule, each its own item in a row */
+.about-listing-facts {
+  list-style: none;     /* no bullet points */
+  display: flex;        /* puts them in a row */
+  flex-wrap: wrap;      /* wraps onto a second row when needed */
+  gap: 4px 16px;        /* space between items: up/down, left/right */
+  margin-top: 10px;     /* space above the row */
+  padding: 0;           /* no extra space on the left */
+  font-size: 14px;      /* small text */
+  color: var(--subtle); /* soft blue (6.1:1 on the boxes, WCAG) */
+}
+
+/* The "Why it matched" part, with a light line above it */
+.about-match {
+  margin-top: 14px;                 /* space above the line */
+  padding-top: 14px;                /* space between the line and the words */
+  border-top: 1px solid var(--line); /* thin light blue line */
+}
+
+/* "Why it matched" */
+.about-match-label {
+  font-size: 14px;      /* small text */
+  font-weight: 700;     /* thick text */
+  color: var(--text);   /* deep navy */
+}
+
+/* The reasons, as light blue pills */
+.about-match-list {
+  list-style: none;  /* no bullet points */
+  display: flex;     /* puts the pills in a row */
+  flex-wrap: wrap;   /* wraps onto a second row when needed */
+  gap: 6px;          /* space between pills */
+  margin-top: 8px;   /* space below the label */
+  padding: 0;        /* no extra space on the left */
+}
+
+/* Each reason ("Open to high school students") */
+.about-match-list li {
+  background-color: var(--accent-soft); /* very light blue */
+  color: var(--text);                   /* navy text (12:1) */
+  font-size: 14px;                      /* small text */
+  font-weight: 600;                     /* semi-bold */
+  padding: 4px 12px;                    /* space inside: top/bottom, left/right */
+  border-radius: 14px;                  /* rounded ends. (Not a full pill: a long reason can wrap
+                                           onto 2 lines on phones, and a full pill turns into a blob) */
+}
+
+/* "Sign up to apply" at the bottom of the first listing */
+.about-listing-link {
+  display: inline-block;               /* lets it have space above it */
+  margin-top: 14px;                    /* space above the link */
+  padding: 2px 0;                      /* a slightly taller target to click or tap */
+  color: var(--primary-dark);          /* darker blue (6.5:1) */
+  font-weight: 700;                    /* thick text */
+  text-decoration: underline;          /* underlined, so it looks like a link */
+  text-decoration-color: var(--border); /* a softer blue underline... */
+  text-underline-offset: 4px;          /* ...a little below the letters */
+}
+
+/* The underline turns darker when the mouse is over it */
+.about-listing-link:hover {
+  text-decoration-color: currentColor; /* "currentColor" = the same color as the text */
+}
+
+/* ---------- About page: sections ---------- */
+
+/* Each section below the first screen, with a thin line between them */
+.about-section {
+  padding-top: 96px;                         /* space above the content */
+  padding-bottom: 96px;                      /* space below the content */
+  border-top: 1px solid var(--about-edge);   /* thin line separating it from the section above */
+  scroll-margin-top: 68px;                   /* when a top-bar link jumps here, stop below the sticky bar
+                                                (68px = the bar's height) */
+}
+
+/* Section headings ("Who it's for", "Why use our platform?", ...) */
+.about-section-title {
+  font-size: clamp(30px, 3.4vw, 42px); /* between 30px and 42px depending on screen width */
+  font-weight: 800;                    /* extra thick */
+  line-height: 1.1;                    /* space between lines if it wraps */
+  letter-spacing: -0.02em;             /* pulls the letters slightly closer */
+  color: var(--about-ink);             /* deep navy text */
+}
+
+/* Sections with the heading on the left and the content on the right
+   ("Why use our platform?" and "Who we are") */
+.about-split {
+  display: grid;                                          /* turns on grid, so it can have 2 columns */
+  grid-template-columns: minmax(0, 340px) minmax(0, 1fr); /* left: up to 340px for the heading, right: the rest */
+  gap: 56px;                                              /* space between the columns */
+  align-items: start;                                     /* both columns start at the top */
+}
+
+/* ---------- About page: "Who it's for" ---------- */
+
+/* The two boxes, side by side */
+.about-audience-grid {
+  display: grid;                                     /* turns on grid... */
+  grid-template-columns: repeat(2, minmax(0, 1fr));  /* ...2 columns of equal width */
+  gap: 20px;                                         /* space between the boxes */
+  margin-top: 36px;                                  /* space below the heading */
+}
+
+/* One box ("High School Students" or "College Students") */
+.about-audience {
+  background-color: var(--about-panel); /* pale blue box */
+  border-radius: 16px;                  /* rounded corners */
+  padding: 32px;                        /* space inside */
+}
+
+/* The box's heading */
+.about-audience h3 {
+  font-size: 24px;          /* text size */
+  font-weight: 700;         /* thick text */
+  line-height: 1.2;         /* space between lines if it wraps */
+  color: var(--about-ink);  /* deep navy text */
+}
+
+/* The box's paragraph */
+.about-audience p {
+  color: var(--about-ink-2); /* blue (7.1:1 on the pale blue box) */
+  margin-top: 12px;          /* space below the heading */
+  max-width: 48ch;           /* stops lines at about 48 letters, so they're easy to read */
+}
+
+/* ---------- About page: "Why use our platform?" ---------- */
+
+/* The list of 4 features, with a thin line between them */
+.about-features {
+  list-style: none; /* no bullet points */
+  margin: 0;        /* no extra space around the list */
+  padding: 0;       /* no extra space on the left */
+}
+
+/* One feature: the icon on the left, the words on the right */
+.about-feature {
+  display: grid;                             /* turns on grid... */
+  grid-template-columns: 48px minmax(0, 1fr); /* ...a 48px column for the icon, the rest for the words */
+  gap: 20px;                                 /* space between the icon and the words */
+  padding-top: 28px;                         /* space above */
+  padding-bottom: 28px;                      /* space below */
+  border-bottom: 1px solid var(--about-edge); /* thin line under each feature */
+}
+
+/* The first feature lines up with the heading next to it, so no space above it */
+.about-feature:first-child {
+  padding-top: 0;
+}
+
+/* The last feature doesn't need a line under it */
+.about-feature:last-child {
+  border-bottom: 0;
+}
+
+/* The square behind each icon. The icons are decoration (the heading next
+   to them says the same thing), so About.jsx hides them from screen readers */
+.about-feature-icon {
+  display: grid;                        /* turns on grid so the icon can be centered... */
+  place-items: center;                  /* ...in both directions */
+  width: 48px;                          /* same width and height makes a square */
+  height: 48px;
+  border-radius: 12px;                  /* rounded corners */
+  background-color: var(--about-panel); /* pale blue square */
+  color: var(--about-ink);              /* the icon's lines use this color */
+}
+
+/* The feature's heading ("Filters") */
+.about-feature h3 {
+  font-size: 21px;          /* text size */
+  font-weight: 700;         /* thick text */
+  line-height: 1.25;        /* space between lines if it wraps */
+  color: var(--about-ink);  /* deep navy text */
+}
+
+/* The feature's paragraph */
+.about-feature p {
+  color: var(--about-ink-2); /* blue (7.8:1) */
+  margin-top: 6px;           /* space below the heading */
+  max-width: 60ch;           /* stops lines at about 60 letters, so they're easy to read */
+}
+
+/* ---------- About page: "How it works" ---------- */
+
+/* The 3 steps in a row. It's an <ol> (numbered list) because the order matters */
+.about-steps {
+  list-style: none;                                  /* hides the automatic numbers (we show our own) */
+  display: grid;                                     /* turns on grid... */
+  grid-template-columns: repeat(3, minmax(0, 1fr));  /* ...3 columns of equal width */
+  gap: 24px;                                         /* space between the steps */
+  margin-top: 36px;                                  /* space below the heading */
+  padding: 0;                                        /* no extra space on the left */
+}
+
+/* One step. The line on top of each step joins up into one long line,
+   like a trail you follow from left to right */
+.about-step {
+  position: relative;                      /* lets the diamond below sit on the line */
+  border-top: 3px solid var(--about-edge); /* the trail line */
+  padding-top: 20px;                       /* space between the line and the number */
+}
+
+/* A small soft-blue diamond where each step starts on the trail line, like the
+   trail marks the logo's diamond is based on. Soft blue, not sky blue, because sky blue
+   is only for things you can click. It's drawn by CSS with no words, so
+   screen readers skip it */
+.about-step::before {
+  content: "";                          /* an empty box (::before needs this to show up) */
+  position: absolute;                   /* placed with top/left below */
+  top: -6.5px;                          /* centers the diamond on the 3px line above */
+  left: 0;                              /* at the start of the step */
+  width: 10px;                          /* a 10px square... */
+  height: 10px;
+  background-color: var(--about-ink-3); /* quiet soft blue */
+  border-radius: 2px;                   /* barely rounded corners */
+  transform: rotate(45deg);             /* ...turned 45 degrees, so it's a diamond */
+}
+
+/* The big step number. About.jsx hides it from screen readers, because
+   the numbered list already tells them the order */
+.about-step-number {
+  font-family: var(--font-display); /* Overpass */
+  font-weight: 800;                 /* extra thick */
+  font-size: 40px;                  /* big */
+  line-height: 1;                   /* no extra space above or below */
+  color: var(--about-ink-3);        /* quiet soft blue (5.2:1), so the step's heading stands out more */
+}
+
+/* The step's heading ("Search and filter") */
+.about-step h3 {
+  font-size: 21px;          /* text size */
+  font-weight: 700;         /* thick text */
+  line-height: 1.25;        /* space between lines if it wraps */
+  margin-top: 12px;         /* space below the number */
+  color: var(--about-ink);  /* deep navy text */
+}
+
+/* The step's paragraph */
+.about-step p {
+  color: var(--about-ink-2); /* blue (7.8:1) */
+  margin-top: 6px;           /* space below the heading */
+}
+
+/* ---------- About page: "Who we are" ---------- */
+
+/* The paragraph about the team. Bigger, because it's the only text here */
+.about-team-text {
+  font-size: clamp(19px, 2vw, 22px); /* between 19px and 22px depending on screen width */
+  line-height: 1.55;                 /* space between lines */
+  color: var(--about-ink);           /* deep navy text */
+  max-width: 58ch;                   /* stops lines at about 58 letters, so they're easy to read */
+}
+
+/* ---------- About page: blue box at the bottom ---------- */
+
+/* The blue band at the very bottom. After reading everything, visitors get
+   one more chance to sign up. It's the one place blue fills a whole area */
+.about-ready {
+  background-color: var(--accent); /* sky blue */
+  color: var(--accent-text);       /* navy text (6.2:1) */
+}
+
+/* On the sky-blue band, the outline is navy so it stands out (6.2:1) (WCAG) */
+.about-ready a:focus-visible {
+  outline-color: var(--about-ink);
+}
+
+/* The heading on the left, the button on the right */
+.about-ready-row {
+  display: flex;                   /* puts them in a row */
+  flex-wrap: wrap;                 /* the button moves underneath if there isn't room */
+  align-items: center;             /* lines them up in the middle */
+  justify-content: space-between;  /* one on each side */
+  gap: 24px;                       /* space between them */
+  padding-top: 72px;               /* space above */
+  padding-bottom: 72px;            /* space below */
+}
+
+/* "Ready to find your first opportunity?" */
+.about-ready-title {
+  font-size: clamp(30px, 4vw, 48px); /* between 30px and 48px depending on screen width */
+  font-weight: 800;                  /* extra thick */
+  line-height: 1.05;                 /* tight lines */
+  letter-spacing: -0.02em;           /* pulls the letters slightly closer */
+  max-width: 18ch;                   /* wraps it onto 2 lines on wide screens */
+}
+
+/* ---------- About page: "At a glance" strip ---------- */
+/* Three short facts right under the headline, for people who only want a
+   quick look. Someone who reads only this strip still knows who the site is
+   for, what's on it, and how it works */
+
+/* The strip: one rounded box with the 3 facts side by side */
+.about-glance {
+  list-style: none;                                 /* no bullet points */
+  display: grid;                                    /* turns on grid... */
+  grid-template-columns: repeat(3, minmax(0, 1fr)); /* ...3 columns of equal width */
+  margin: 56px 0 0;                                 /* space above (below the headline and example search) */
+  padding: 0;                                       /* no extra space on the left */
+  background-color: var(--card);                    /* off-white box */
+  border: 1px solid var(--about-edge);              /* thin light blue line around it */
+  border-radius: 16px;                              /* rounded corners */
+}
+
+/* One fact: the icon on the left, the words on the right */
+.about-glance-item {
+  display: flex;                            /* puts the icon and words side by side */
+  align-items: center;                      /* lines them up in the middle */
+  gap: 14px;                                /* space between the icon and the words */
+  padding: 20px 24px;                       /* space inside: top/bottom, left/right */
+  font-size: 17px;                          /* text size */
+  line-height: 1.4;                         /* space between lines if it wraps */
+  color: var(--about-ink-2);                /* blue (8.3:1 on the box) */
+}
+
+/* A thin line between the facts (not before the first one) */
+.about-glance-item + .about-glance-item {
+  border-left: 1px solid var(--about-edge);
+}
+
+/* "For", "Find", "How": the first word of each fact, in navy and bold */
+.about-glance-item strong {
+  color: var(--about-ink);  /* navy (12:1 on the box) */
+  font-weight: 700;         /* thick text */
+}
+
+/* The square behind each icon (same look as the feature icons) */
+.about-glance-icon {
+  flex: none;                           /* never squished smaller */
+  display: grid;                        /* turns on grid so the icon can be centered... */
+  place-items: center;                  /* ...in both directions */
+  width: 44px;                          /* same width and height makes a square */
+  height: 44px;
+  border-radius: 12px;                  /* rounded corners */
+  background-color: var(--about-panel); /* blue square */
+  color: var(--about-ink);              /* the icon's lines use this color */
+}
+
+/* ---------- About page: Sign up links in "Who it's for" ---------- */
+
+/* "Sign up as a high school student": a plain link under each box's text,
+   so people who already know which one they are can go straight to signing up */
+.about-audience-link {
+  display: inline-block;                  /* lets it have space above it */
+  margin-top: 16px;                       /* space above the link */
+  padding: 2px 0;                         /* a slightly taller target to click or tap */
+  color: var(--primary-dark);             /* darker blue (5.2:1 on the blue box, WCAG) */
+  font-weight: 700;                       /* thick text */
+  text-decoration: underline;             /* underlined, so it looks like a link */
+  text-decoration-color: var(--border);   /* a softer underline... */
+  text-underline-offset: 4px;             /* ...a little below the letters */
+}
+
+/* The underline turns darker when the mouse is over it */
+.about-audience-link:hover {
+  text-decoration-color: currentColor;    /* "currentColor" = the same color as the text */
+}
+
+/* ---------- About page: Questions ---------- */
+/* Short answers to common questions. Each one is a <details> box: only the
+   question shows until you click or tap it, so people who don't need the
+   answers don't have to read them. <details> works with the keyboard and
+   screen readers without any extra code */
+
+/* The list of questions */
+.about-faq {
+  margin-top: 36px;                     /* space below the heading */
+  border-top: 1px solid var(--about-edge); /* thin line above the first question */
+}
+
+/* One question and its answer, with a thin line under it */
+.about-faq-item {
+  border-bottom: 1px solid var(--about-edge);
+}
+
+/* The question you click. list-style: none hides the browser's own arrow,
+   because we draw a + sign instead (below) */
+.about-faq-question {
+  display: flex;                     /* puts the question and the + sign in a row */
+  justify-content: space-between;    /* question on the left, + on the right */
+  align-items: center;               /* lines them up in the middle */
+  gap: 16px;                         /* space between them */
+  padding: 20px 4px;                 /* space inside: top/bottom, left/right (a big target) */
+  font-family: var(--font-display);  /* Overpass, like the other headings */
+  font-size: 20px;                   /* text size */
+  font-weight: 700;                  /* thick text */
+  color: var(--about-ink);           /* navy (10.4:1 on the page) */
+  cursor: pointer;                   /* mouse turns into a pointing hand */
+  list-style: none;                  /* hides the browser's arrow (most browsers) */
+}
+
+/* Hides the browser's arrow in Safari */
+.about-faq-question::-webkit-details-marker {
+  display: none;
+}
+
+/* The + sign on the right. It's drawn by CSS with no words, so screen
+   readers skip it (they already say "collapsed" or "expanded") */
+.about-faq-question::after {
+  content: "+";                     /* a plus sign */
+  flex: none;                       /* never squished */
+  font-size: 26px;                  /* big enough to see */
+  line-height: 1;                   /* no extra space above or below */
+  color: var(--primary-dark);       /* darker blue */
+}
+
+/* When the answer is open, the + turns into a − (minus) */
+.about-faq-item[open] .about-faq-question::after {
+  content: "−";
+}
+
+/* The question turns darker blue when the mouse is over it */
+.about-faq-question:hover {
+  color: var(--primary-dark);
+}
+
+/* The outline when you reach a question with the Tab key (WCAG) */
+.about-faq-question:focus-visible {
+  outline: 3px solid var(--primary-dark);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* The answer under an open question */
+.about-faq-answer {
+  padding: 0 4px 22px;       /* space inside: top, left/right, bottom */
+  color: var(--about-ink-2); /* blue (7.3:1 on the page) */
+  max-width: 68ch;           /* stops lines at about 68 letters, so they're easy to read */
+}
+
+/* ---------- About page: footer ---------- */
+
+/* The strip at the very bottom of the page */
+.about-footer {
+  position: relative;                       /* needed for z-index to work... */
+  z-index: 1;                               /* ...so it sits above the waves */
+  border-top: 1px solid var(--about-edge);  /* thin line above it */
+  padding-top: 40px;                        /* space above the content */
+  padding-bottom: 88px;                     /* extra space below, so the "Pause background"
+                                               button never covers the footer's links */
+  font-size: 16px;                          /* text size */
+  color: var(--about-ink-2);                /* blue (7.3:1 on the page) */
+}
+
+/* The name and credit on the left, the links on the right */
+.about-footer-row {
+  display: flex;                   /* puts them in a row */
+  flex-wrap: wrap;                 /* the links move underneath if there isn't room */
+  justify-content: space-between;  /* one on each side */
+  align-items: flex-start;         /* both start at the top */
+  gap: 24px;                       /* space between them */
+}
+
+/* "ScoutSearch" in the footer */
+.about-footer-name {
+  font-family: var(--font-display);  /* Overpass */
+  font-weight: 800;                  /* extra thick */
+  font-size: 20px;                   /* text size */
+  color: var(--about-ink);           /* navy */
+}
+
+/* The footer's links, in a row that wraps on small screens */
+.about-footer-links {
+  list-style: none;  /* no bullet points */
+  display: flex;     /* puts them in a row */
+  flex-wrap: wrap;   /* wraps onto more rows when needed */
+  gap: 4px 24px;     /* space between rows, and between links */
+  margin: 0;         /* no extra space around the list */
+  padding: 0;        /* no extra space on the left */
+}
+
+/* Each footer link */
+.about-footer-links a {
+  display: inline-block;           /* lets it have padding */
+  padding: 6px 0;                  /* a taller target to click or tap */
+  color: var(--about-ink);         /* navy */
+  font-weight: 600;                /* semi-bold */
+  text-decoration: underline;      /* underlined, so it looks like a link */
+  text-decoration-color: var(--about-edge); /* a soft underline... */
+  text-underline-offset: 4px;      /* ...a little below the letters */
+}
+
+/* The underline turns darker when the mouse is over a link */
+.about-footer-links a:hover {
+  text-decoration-color: currentColor;
+}
+
+/* Phones: the glance facts stack, and the line between them goes on top
+   instead of on the left */
 @media (max-width: 760px) {
-  /* "static" is the normal, non-sticky behavior */
-  .top-bar {
-    position: static;
+  .about-glance {
+    grid-template-columns: minmax(0, 1fr); /* just 1 column */
+    margin-top: 40px;                      /* a bit less space above */
   }
 
-  /* Tabs on top, buttons underneath */
-  .top-bar-row {
-    flex-direction: column;
-    gap: 8px;
-    padding: 12px 16px;
+  .about-glance-item + .about-glance-item {
+    border-left: 0;                          /* no line on the left... */
+    border-top: 1px solid var(--about-edge); /* ...a line on top instead */
   }
 
-  /* If the tabs don't fit in one row, they continue on the next row, centered */
-  .tabs {
+  .about-glance-item {
+    padding: 16px 20px; /* a bit less space inside */
+  }
+
+  /* No Pause button on phones (see Waves.jsx), so less space is needed */
+  .about-footer {
+    padding-bottom: 40px;
+  }
+}
+
+/* ---------- About page: smaller screens ---------- */
+
+/* Medium screens: the example search moves under the headline */
+@media (max-width: 960px) {
+  .about-hero-grid {
+    grid-template-columns: minmax(0, 1fr); /* just 1 column */
+    gap: 48px;                             /* space between the headline and the search */
+  }
+
+  /* Keeps the search from stretching too wide */
+  .about-demo {
+    max-width: 560px;
+  }
+}
+
+/* Medium screens and smaller: the logo, Log in, and Sign up stay on the
+   first row, and the section links move onto their own row underneath
+   (below about 960px they don't all fit on one row) */
+@media (max-width: 960px) {
+  .about-bar-row {
+    flex-wrap: wrap;     /* lets the links wrap onto a second row */
+    gap: 4px 16px;       /* space between rows, and between items */
+    padding-top: 12px;   /* space above the first row */
+    padding-bottom: 6px; /* space below the last row */
+  }
+
+  /* The <nav> holding the links goes last, across the whole width */
+  .about-bar-nav {
+    order: 3;           /* moves it after Log in and Sign up */
+    width: 100%;        /* takes the whole row */
+    margin-left: -12px; /* lines the first link's words up with the logo */
+  }
+
+  /* If the links don't fit (small phones), the last one moves onto
+     another row, so none of them get cut off */
+  .about-bar-links {
     flex-wrap: wrap;
-    justify-content: center;
+  }
+}
+
+/* Phones: everything stacks into 1 column, and the bar stops sticking to the
+   top so it doesn't cover the small screen */
+@media (max-width: 760px) {
+  .about-bar {
+    position: static; /* "static" is the normal, non-sticky behavior */
   }
 
-  /* Slightly smaller tabs */
-  .tabs a {
-    padding: 8px 12px;
+  .about-split,
+  .about-audience-grid,
+  .about-steps {
+    grid-template-columns: minmax(0, 1fr); /* just 1 column */
+  }
+
+  /* Less space between the heading and the content once they're stacked */
+  .about-split {
+    gap: 28px;
+  }
+
+  /* Less space above and below each section */
+  .about-section {
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
+
+  .about-hero {
+    padding-top: 48px;
+    padding-bottom: 64px;
+  }
+
+  .about-audience {
+    padding: 24px; /* less space inside the boxes */
+  }
+}
+
+/* Small phones: less space at the sides, and smaller tabs so all 3 fit */
+@media (max-width: 480px) {
+  .about-inner {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .about-demo {
+    padding: 12px;
+  }
+
+  /* The blue copy's words shrink the same way, so they stay lined up */
+  .about-tab,
+  .about-tab-highlight span {
+    font-size: 14px;
+    padding: 10px 4px;
+  }
+
+  .about-listing {
+    padding: 16px;
+  }
+
+  /* Only the logo, Log in, and Sign up fit in the first row, so the logo shrinks a bit */
+  .about-logo {
+    font-size: 20px;
+  }
+
+  /* Smaller section links, so all 3 fit on one row on most phones */
+  .about-bar-links a {
+    font-size: 14px;
+    padding: 8px;
+  }
+}
+
+/* ---------- About page: motion ----------
+   Everything that moves is in here, so it's skipped for people who turned on
+   "reduce motion" in their settings (WCAG). They get the simpler version in
+   the "reduce" block further down. */
+@media (prefers-reduced-motion: no-preference) {
+  /* Clicking a top-bar link glides down to the section instead of jumping.
+     ":has(.about-site)" keeps this to the About page, so no other page changes */
+  html:has(.about-site) {
+    scroll-behavior: smooth;
+  }
+
+  /* Hover colors fade in quickly instead of snapping on */
+  .about-button,
+  .about-login-link,
+  .about-bar-links a,
+  .about-tab {
+    transition:
+      background-color var(--time-hover) ease,  /* the box color */
+      color var(--time-hover) ease,             /* the word color */
+      transform var(--time-press) var(--ease-out); /* the press (below) */
+  }
+
+  /* The underline under "Sign up to apply" darkens smoothly */
+  .about-listing-link {
+    transition: text-decoration-color var(--time-hover) ease;
+  }
+
+  /* Buttons shrink very slightly while pressed, so it feels like the page
+     heard you. 0.97 = 97% of the normal size */
+  .about-button:active,
+  .about-login-link:active {
+    transform: scale(0.97);
+  }
+
+  /* The blue cut-out slides to the tab you picked. ease-in-out because it's
+     moving across the screen (speeds up, then slows down into place) */
+  .about-tab-highlight {
+    transition: clip-path var(--time-move) var(--ease-in-out);
+  }
+
+  /* New listings fade in and rise 8px when you switch tabs (and when the
+     page first loads), so the change is easy to notice */
+  .about-listing {
+    transition:
+      opacity var(--time-enter) var(--ease-out),
+      transform var(--time-enter) var(--ease-out);
+  }
+
+  /* The second listing starts 50ms after the first, so they arrive one after another */
+  .about-listing:nth-child(2) {
+    transition-delay: 50ms;
+  }
+
+  /* @starting-style is how a listing looks the moment it appears; the
+     transition above then animates it to its normal look */
+  @starting-style {
+    .about-listing {
+      opacity: 0;                    /* invisible... */
+      transform: translateY(8px);    /* ...and 8px lower */
+    }
+  }
+
+  /* "Why use our platform?" and "How it works" fade in as you scroll to
+     them (FadeContent, see "React Bits effects" below). On top of that,
+     their items arrive one after another instead of all at once:
+     the features top to bottom, and the steps left to right along the trail */
+  .fade-in-box .about-feature,
+  .fade-in-box .about-step {
+    opacity: 0;                    /* invisible... */
+    transform: translateY(16px);   /* ...and 16px lower, until the section is seen */
+    transition:
+      opacity var(--time-reveal) var(--ease-out),
+      transform var(--time-reveal) var(--ease-out);
+  }
+
+  /* Once the section has been seen, they rise into place */
+  .fade-in-box-shown .about-feature,
+  .fade-in-box-shown .about-step {
+    opacity: 1;
+    transform: none; /* back to where it normally sits */
+  }
+
+  /* Each one waits a little longer than the one before it */
+  .about-feature:nth-child(2) { transition-delay: 90ms; }
+  .about-feature:nth-child(3) { transition-delay: 180ms; }
+  .about-feature:nth-child(4) { transition-delay: 270ms; }
+  .about-step:nth-child(2) { transition-delay: 150ms; }
+  .about-step:nth-child(3) { transition-delay: 300ms; }
+}
+
+/* For people who turned on "reduce motion": no sliding or rising, but the
+   listings still fade in gently, since that helps show what changed */
+@media (prefers-reduced-motion: reduce) {
+  .about-listing {
+    transition: opacity var(--time-hover) ease;
+  }
+
+  @starting-style {
+    .about-listing {
+      opacity: 0;
+    }
+  }
+}
+
+
+/* ---------- React Bits effects ----------
+   Styles for the animated pieces in components/reactbits/. They're based on
+   React Bits (reactbits.dev), a free collection of animated React pieces,
+   rewritten without any extra packages. Only the About page uses them so far.
+   Their colors and timing are variables in :root (--shine-, --star-,
+   --spotlight-, --spark-, --wave-, --time-).
+
+   Every moving part is inside "prefers-reduced-motion: no-preference", so
+   people who turned on "reduce motion" get plain, still versions (WCAG).
+   Nothing that starts by itself keeps moving for more than 5 seconds
+   without a way to stop it: most effects stop on their own, and Waves
+   has a Pause button (WCAG 2.2.2). */
+
+/* ShinyText: the words sit in their own little box, so the shine (below)
+   covers exactly the words */
+.shiny-text {
+  display: inline-block;
+}
+
+/* StarBorder: the link around the button. Its 3px of padding is the ring
+   the lights shine through, and overflow: hidden cuts the lights off at
+   its rounded edge */
+.star-border {
+  position: relative;   /* lets the lights be placed inside it */
+  display: inline-block; /* only as wide as the button */
+  padding: 3px;         /* the ring around the button */
+  border-radius: 11px;  /* the button's 8px corners + the 3px ring */
+  overflow: hidden;     /* hides the parts of the lights outside the ring */
+}
+
+/* StarBorder: the button inside the ring, on top of the lights */
+.star-border-face {
+  position: relative; /* needed for z-index to work */
+  z-index: 1;         /* above the lights */
+  display: block;     /* fills the ring */
+}
+
+/* StarBorder: the two lights. Each one is a wide, see-through strip with a
+   small glowing dot in its middle (the radial-gradient), sitting just past
+   one end of the button until the animation slides it across */
+.star-border-light-bottom,
+.star-border-light-top {
+  position: absolute; /* placed with the lines below */
+  width: 300%;        /* 3 times the button's width */
+  height: 50%;        /* half the button's height */
+  border-radius: 50%; /* an oval */
+  background-image: radial-gradient(circle, var(--star-color), transparent 15%); /* a glowing dot that fades out */
+  opacity: 0;         /* hidden when there's no motion (see the motion block below) */
+}
+
+/* The bottom light starts off the right side, centered on the bottom edge */
+.star-border-light-bottom {
+  bottom: -12px;
+  right: -250%;
+}
+
+/* The top light starts off the left side, centered on the top edge */
+.star-border-light-top {
+  top: -12px;
+  left: -250%;
+}
+
+/* SpotlightCard: the box. overflow: hidden keeps the glow inside its
+   rounded corners */
+.spotlight-box {
+  position: relative; /* lets the glow (::before) be placed inside it */
+  overflow: hidden;
+}
+
+/* Lifts the box's words above the glow, so the glow sits behind them
+   instead of washing over them */
+.spotlight-box > * {
+  position: relative;
+}
+
+/* ClickSpark: a see-through layer over the whole window for the sparks to
+   be drawn on. pointer-events: none lets every click pass through it to the
+   links and buttons underneath */
+.click-spark-canvas {
+  position: fixed; /* stays put while the page scrolls */
+  inset: 0;        /* top, right, bottom, and left all 0: covers the window */
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 30;     /* above everything, including the top bar */
+}
+
+/* Waves: the flowing lines behind the whole page. They stay put while the
+   page scrolls past them, and clicks go through them */
+.waves-canvas {
+  position: fixed;       /* stays put while the page scrolls */
+  inset: 0;              /* covers the whole window */
+  width: 100%;
+  height: 100%;
+  pointer-events: none;  /* never gets in the way of the mouse */
+  z-index: 0;            /* behind the page's content (see .about-main) */
+}
+
+/* Waves: the "Pause background" button in the bottom left corner (WCAG 2.2.2) */
+.waves-pause {
+  position: fixed;                        /* stays in the corner while the page scrolls */
+  left: 16px;                             /* space from the left edge */
+  bottom: 16px;                           /* space from the bottom edge */
+  z-index: 20;                            /* above the page and the top bar */
+  font-family: var(--font-body);          /* buttons don't inherit the font on their own */
+  font-size: 14px;                        /* small text */
+  font-weight: 600;                       /* semi-bold */
+  color: var(--about-ink);                /* navy text (12:1 on the off-white pill) */
+  background-color: var(--card);                /* off-white pill (--card) */
+  border: 1px solid var(--about-edge);    /* thin pale blue line around it */
+  border-radius: 999px;                   /* pill shape */
+  padding: 8px 14px;                      /* space inside: top/bottom, left/right */
+  box-shadow: 0 4px 12px -6px rgb(15 42 68 / 0.3); /* a small shadow, so it floats above the lines */
+  cursor: pointer;                        /* mouse turns into a pointing hand */
+}
+
+/* Very light blue when the mouse is over it */
+.waves-pause:hover {
+  background-color: var(--soft);
+}
+
+/* The darker blue outline when you reach it with the Tab key (WCAG) */
+.waves-pause:focus-visible {
+  outline: 3px solid var(--primary-dark);
+  outline-offset: 3px;
+}
+
+/* Lifts the About page's content above the waves */
+.about-main {
+  position: relative; /* needed for z-index to work */
+  z-index: 1;         /* above the waves (0) */
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* ShinyText: the words are painted with a gradient (a slow change between
+     colors) that is blue, then a darker blue band, then blue again.
+     background-clip: text cuts the gradient to the shape of the letters, and
+     color: transparent lets it show through. The gradient is 3 times wider
+     than the words, so the bright band starts and ends off to the side */
+  .shiny-text {
+    background-image: linear-gradient(
+      120deg,                   /* tilted, like light hitting at an angle */
+      var(--shine-base) 40%,    /* normal color... */
+      var(--shine-light) 50%,   /* ...the bright band... */
+      var(--shine-base) 60%     /* ...normal color again */
+    );
+    background-size: 300% 100%;     /* 3 times as wide as the words */
+    background-repeat: no-repeat;   /* only one band */
+    -webkit-background-clip: text;  /* the same rule, for older Safari */
+    background-clip: text;
+    color: transparent;
+    /* Sweeps across twice, starting 400ms after the page opens, then stops.
+       "both" keeps the start look before it begins and the end look after
+       it's done, and both have the band off to the side */
+    animation: shiny-text-sweep var(--time-shine) linear 400ms 2 both;
+  }
+
+  /* Slides the gradient from right to left, which moves the bright band
+     from left to right across the words */
+  @keyframes shiny-text-sweep {
+    from { background-position: 100% 0; }
+    to   { background-position: 0 0; }
+  }
+
+  /* StarBorder: when the page opens, each light makes one trip across its
+     edge, then rests off to the side where it can't be seen */
+  .star-border-light-bottom,
+  .star-border-light-top {
+    opacity: 1; /* visible (it's hidden above for people who reduce motion) */
+    animation-duration: var(--time-star);
+    animation-timing-function: linear;    /* steady speed */
+    animation-delay: 600ms;               /* starts just after the page appears */
+    animation-iteration-count: 1;         /* one trip */
+    animation-direction: alternate;       /* when it repeats, it goes back the other way */
+    animation-fill-mode: both;
+  }
+
+  .star-border-light-bottom {
+    animation-name: star-border-bottom;
+  }
+
+  .star-border-light-top {
+    animation-name: star-border-top;
+  }
+
+  /* While the mouse is over the button, or it has the keyboard focus, the
+     lights keep circling, so it feels ready to be clicked. People only see
+     the loop when they point at it, so it doesn't distract (WCAG 2.2.2) */
+  .star-border:hover > .star-border-light-bottom,
+  .star-border:hover > .star-border-light-top,
+  .star-border:focus-visible > .star-border-light-bottom,
+  .star-border:focus-visible > .star-border-light-top {
+    animation-iteration-count: infinite;
+  }
+
+  /* The bottom light slides from right to left (-100% = its own width) */
+  @keyframes star-border-bottom {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-100%); }
+  }
+
+  /* The top light slides from left to right, so together they circle the button */
+  @keyframes star-border-top {
+    from { transform: translateX(0); }
+    to   { transform: translateX(100%); }
+  }
+
+  /* SpotlightCard: the glow. A soft circle centered on the mouse
+     (--spot-x and --spot-y are set by SpotlightCard.jsx as the mouse moves;
+     50% puts it in the middle until then). Hidden until the mouse is over
+     the box. It's decoration only, so it doesn't need a keyboard version */
+  .spotlight-box::before {
+    content: "";           /* an empty box (::before needs this to show up) */
+    position: absolute;
+    inset: 0;              /* covers the whole box */
+    background-image: radial-gradient(
+      circle at var(--spot-x, 50%) var(--spot-y, 50%),
+      var(--spotlight-color),
+      transparent 80%      /* fades to nothing toward the edges */
+    );
+    opacity: 0;            /* hidden... */
+    pointer-events: none;  /* never gets in the way of the mouse */
+    transition: opacity var(--time-glow) ease;
+  }
+
+  /* ...and fades in while the mouse is over the box */
+  .spotlight-box:hover::before {
+    opacity: 1;
+  }
+
+  /* FadeContent: the box starts invisible and 12px lower... */
+  .fade-in-box {
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity var(--time-reveal) var(--ease-out),
+      transform var(--time-reveal) var(--ease-out);
+  }
+
+  /* ...and rises into place once FadeContent.jsx sees it on the screen */
+  .fade-in-box-shown {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Windows High Contrast mode picks its own colors, so the shine and star
+   lights could look wrong there. Show plain text and no lights (WCAG) */
+@media (forced-colors: active) {
+  .shiny-text {
+    background-image: none;
+    color: CanvasText; /* the High Contrast text color */
+  }
+
+  .star-border-light-bottom,
+  .star-border-light-top {
+    display: none;
   }
 }
 
@@ -396,14 +1674,14 @@ body {
 /* Everything below styles the Feed page (Feed.jsx, yoursite.com/feed).
    Every class name starts with "feed-" so it can't clash with other pages.
 
-   The gray text uses #64748b. A lighter gray (like #94a3b8) is too faint
-   to read on white. Text needs a contrast of at least 4.5 to 1 against
-   its background (WCAG), and #64748b on white is about 4.8 to 1. */
+   The quiet small text uses var(--subtle). A lighter blue would be too faint
+   to read on the boxes. Text needs a contrast of at least 4.5 to 1 against its
+   background (WCAG), and var(--subtle) on the boxes is about 6.1 to 1. */
 
 /* The white profile card box */
 .feed-profile-card {
-  background-color: white;    /* white box */
-  border: 1px solid #e5e7eb;  /* thin light-gray line around it */
+  background-color: var(--card);    /* off-white box (--card) */
+  border: 1px solid var(--line);  /* thin light blue line around it */
   border-radius: 16px;        /* rounded corners */
   max-width: 300px;           /* never wider than 300px */
   overflow: hidden;           /* hides anything poking out past the rounded corners */
@@ -419,13 +1697,13 @@ body {
 /* Profile Bio Display */
 .feed-profile-bio {
   font-size: 16px;      /* text size */
-  color: var(--muted);  /* dark gray (set at the top of this file) */
+  color: var(--muted);  /* blue (set at the top of this file) */
 }
 
 /* School Display */
 .feed-profile-school {
   font-size: 14px;      /* a bit smaller than the bio */
-  color: #64748b;       /* medium gray, so it looks less important */
+  color: var(--subtle);       /* soft blue, so it looks less important */
 }
 
 /* The circle with initials */
@@ -433,7 +1711,7 @@ body {
   width: 72px;                  /* circle size... */
   height: 72px;                 /* ...same width and height makes a square */
   border-radius: 50%;           /* 50% rounds a square into a circle */
-  background-color: #2563eb;    /* circle color (use yours) */
+  background-color: var(--primary);    /* circle color: blue (--primary) */
   color: white;                 /* white initials */
   font-size: 22px;
   font-weight: bold;
@@ -447,7 +1725,7 @@ body {
 /* The blue strip across the top of the profile card */
 .feed-profile-banner {
   height: 72px;                 /* how tall the strip is */
-  background-color: #1d4ed8;    /* dark blue (the same color as --primary-dark) */
+  background-color: var(--primary-dark);    /* darker blue (--primary-dark) */
 }
 
 /* Same left/right spacing for the name, bio, and school */
@@ -461,8 +1739,8 @@ body {
 .feed-profile-stats {
   display: flex;                    /* put the two stats side by side */
   margin-top: 16px;                 /* space between the school and the row */
-  border-top: 1px solid #e5e7eb;    /* light line above the row */
-  border-bottom: 1px solid #e5e7eb; /* light line below the row */
+  border-top: 1px solid var(--line);    /* light line above the row */
+  border-bottom: 1px solid var(--line); /* light line below the row */
 }
 
 /* Each stat (number + label) */
@@ -475,7 +1753,7 @@ body {
    :first-child means "only the FIRST .feed-profile-stat",
    so only the left stat gets a line on its right side */
 .feed-profile-stat:first-child {
-  border-right: 1px solid #e5e7eb;
+  border-right: 1px solid var(--line);
 }
 
 /* The big number in each stat (like 222) */
@@ -487,7 +1765,7 @@ body {
 /* The small word under each number (like "Connections") */
 .feed-profile-stat-label {
   font-size: 13px;      /* small text */
-  color: #64748b;       /* medium gray */
+  color: var(--subtle);       /* soft blue */
 }
 
 /* The "View your profile →" link at the bottom of the card */
@@ -495,13 +1773,15 @@ body {
   display: flex;                    /* turns on flexbox... */
   justify-content: space-between;   /* ...pushes the words left and the arrow right */
   padding: 14px 20px;               /* space inside: top/bottom, left/right */
-  color: var(--primary);            /* blue text */
+  color: var(--primary-dark);            /* darker blue text (6.6:1 on the box, WCAG) */
   font-weight: bold;                /* thick text */
 }
 
 /* The link turns a darker blue when the mouse is over it */
 .feed-profile-link:hover {
   color: var(--primary-dark);
+  text-decoration: underline;  /* the two blues are close, so the underline makes the hover easy to see */
+  text-underline-offset: 3px;  /* moves the underline a bit lower so it doesn't touch the letters */
 }
 
 /* The layout of the whole page: 3 columns side by side */
@@ -517,19 +1797,19 @@ body {
 
 /* The white "Your space" box under the profile card */
 .feed-space-card {
-  background-color: white;      /* white box */
-  border: 1px solid #e5e7eb;    /* thin light-gray line around it */
+  background-color: var(--card);      /* off-white box (--card) */
+  border: 1px solid var(--line);    /* thin light blue line around it */
   border-radius: 16px;          /* rounded corners */
   padding: 20px;                /* space inside the box */
   margin-top: 16px;             /* space between it and the profile card above */
 }
 
-/* The small gray heading at the top of a box (like "YOUR SPACE").
+/* The small blue heading at the top of a box (like "YOUR SPACE").
    "People to know" and "Trending Topics" use it too */
 .feed-space-title {
   font-size: 12px;              /* small text */
   font-weight: bold;            /* thick text */
-  color: #64748b;               /* medium gray */
+  color: var(--subtle);               /* soft blue */
   text-transform: uppercase;    /* shows the words in ALL CAPS (Feed.jsx still says "Your space") */
   letter-spacing: 1px;          /* a little extra space between letters */
   margin-bottom: 12px;          /* space under the heading */
@@ -540,7 +1820,7 @@ body {
   display: flex;                    /* turns on flexbox... */
   justify-content: space-between;   /* ...words on the left, number on the right */
   padding: 6px 0;                   /* space above and below each row */
-  color: var(--muted);              /* dark gray */
+  color: var(--muted);              /* blue */
 }
 
 /* The top of a post: the circle next to the name, headline, and time */
@@ -552,10 +1832,10 @@ body {
 
 /* The white box around each post */
 .feed-post {
-  background-color: white;      /* white box */
+  background-color: var(--card);      /* off-white box (--card) */
   border-radius: 16px;          /* rounded corners */
   padding: 20px;                /* space inside the box */
-  border: 1px solid #e5e7eb;    /* thin light-gray line around it */
+  border: 1px solid var(--line);    /* thin light blue line around it */
 }
 
 /* Small circle with initials on each post.
@@ -564,7 +1844,7 @@ body {
   width: 48px;                  /* same width and height = a square */
   height: 48px;
   border-radius: 50%;           /* rounds the square into a circle */
-  background-color: #2563eb;    /* fills the circle so you can see it */
+  background-color: var(--primary);    /* fills the circle so you can see it */
   color: white;                 /* white initials */
   font-size: 16px;
   font-weight: bold;
@@ -581,13 +1861,13 @@ body {
 
 /* The line under the name (like their school or job) */
 .feed-post-headline {
-  color: #64748b;       /* medium gray */
+  color: var(--subtle);       /* soft blue */
   font-size: 14px;      /* smaller text */
 }
 
 /* How long ago it was posted (like "1h") */
 .feed-post-time {
-  color: #64748b;       /* medium gray */
+  color: var(--subtle);       /* soft blue */
   font-size: 12px;      /* even smaller text */
 }
 
@@ -601,7 +1881,7 @@ body {
 .feed-post-counts {
   display: flex;                    /* turns on flexbox... */
   justify-content: space-between;   /* ...pushes one to each side */
-  color: #64748b;                   /* medium gray */
+  color: var(--subtle);                   /* soft blue */
   font-size: 14px;                  /* smaller text */
 }
 
@@ -609,7 +1889,7 @@ body {
    The post box uses it too (Photo, Event, Article) */
 .feed-post-actions {
   display: flex;                  /* puts the buttons side by side */
-  border-top: 1px solid #e5e7eb;  /* light line above the buttons */
+  border-top: 1px solid var(--line);  /* light line above the buttons */
   margin-top: 8px;                /* space above the line */
 }
 
@@ -618,14 +1898,14 @@ body {
   flex: 1;                /* every button gets an equal share of the row's width */
   border: none;           /* no line around the button */
   background: none;       /* see-through, so it looks like plain words */
-  color: var(--muted);    /* dark gray */
+  color: var(--muted);    /* blue */
   padding: 10px;          /* space inside the button, so it's easier to click */
   cursor: pointer;        /* the mouse turns into a pointing hand over it */
 }
 
-/* A button gets a light gray background when the mouse is over it */
+/* A button gets a light blue background when the mouse is over it */
 .feed-post-actions button:hover {
-  background-color: #f1f5f9;
+  background-color: var(--soft);
 }
 
 /* Stacks the posts with space between them */
@@ -637,8 +1917,8 @@ body {
 
 /* The white boxes in the right column ("People to know" and "Trending Topics") */
 .feed-side-card {
-  background-color: white;      /* white box */
-  border: 1px solid #e5e7eb;    /* thin light-gray line around it */
+  background-color: var(--card);      /* off-white box (--card) */
+  border: 1px solid var(--line);    /* thin light blue line around it */
   border-radius: 16px;          /* rounded corners */
   padding: 20px;                /* space inside the box */
 }
@@ -659,7 +1939,7 @@ body {
 /* The "Connect" button */
 .feed-connect-btn {
   border: 1px solid var(--primary);   /* blue line around it */
-  color: var(--primary);              /* blue words */
+  color: var(--primary-dark);              /* darker blue words (6:1 or more, even on the light hover color, WCAG) */
   border-radius: 999px;               /* a huge number gives it fully rounded "pill" ends */
   padding: 4px 12px;                  /* space inside: top/bottom, left/right */
   font-size: 14px;                    /* smaller text */
@@ -682,10 +1962,10 @@ body {
 
 /* The white "start a post" box at the top of the middle column */
 .feed-composer {
-  background-color: white;      /* white box */
+  background-color: var(--card);      /* off-white box (--card) */
   border-radius: 16px;          /* rounded corners */
   padding: 20px;                /* space inside the box */
-  border: 1px solid #e5e7eb;    /* thin light-gray line around it */
+  border: 1px solid var(--line);    /* thin light blue line around it */
 }
 
 /* The top row of the post box: your circle next to the typing box */
@@ -699,7 +1979,7 @@ body {
 /* The "Type here..." box */
 .feed-composer-input {
   flex: 1;                      /* stretches to fill the rest of the row */
-  border: 1px solid #e5e7eb;    /* thin light-gray line around it */
+  border: 1px solid var(--line);    /* thin light blue line around it */
   border-radius: 999px;         /* pill shape */
   padding: 10px 16px;           /* space inside, so the words don't touch the edge */
 }
@@ -712,8 +1992,8 @@ body {
   display: flex;                    /* turns on flexbox... */
   justify-content: space-between;   /* ...left side on the left, right side on the right */
   padding: 8px 24px;                /* space inside: top/bottom, left/right */
-  border-bottom: 1px solid #e5e7eb; /* light line along the bottom */
-  background-color: white;          /* solid white, so posts don't show through when they scroll under it */
+  border-bottom: 1px solid var(--line); /* light line along the bottom */
+  background-color: var(--card);          /* solid off-white, so posts don't show through when they scroll under it */
   align-items: center;              /* lines everything up in the middle, top-to-bottom */
 }
 
@@ -734,7 +2014,7 @@ body {
 /* The search box in the top bar */
 .feed-nav-search {
   width: 260px;                 /* how wide the box is */
-  border: 1px solid #e5e7eb;    /* thin light-gray line around it */
+  border: 1px solid var(--line);    /* thin light blue line around it */
   border-radius: 999px;         /* pill shape */
   padding: 10px 16px;           /* space inside, so the words don't touch the edge */
 }
@@ -748,20 +2028,23 @@ body {
 
 /* The links in the top bar (Home, Network, Messages) */
 .feed-nav-right a {
-  color: var(--muted);    /* dark gray */
+  color: var(--muted);    /* blue */
   padding: 10px;          /* space around the words, so they're easier to click */
   font-weight: 600;       /* semi-bold: thicker than normal (400), thinner than bold (700) */
 }
 
-/* A link turns blue when the mouse is over it */
+/* A link gets darker and underlined when the mouse is over it.
+   The two colors are close, so the underline is what shows the hover */
 .feed-nav-right a:hover {
-  color: var(--primary);
+  color: var(--text);          /* deep navy */
+  text-decoration: underline;
+  text-underline-offset: 4px;  /* moves the underline a bit lower so it doesn't touch the letters */
 }
 
 /* The Like button after you click it.
    Feed.jsx adds the "feed-liked" class to the button while the post is liked */
 .feed-post-actions .feed-liked {
-  color: var(--primary);    /* blue */
+  color: var(--primary-dark);    /* darker blue (with bold, so it doesn't rely on color alone) */
   font-weight: bold;        /* thick text */
 }
 
@@ -798,9 +2081,9 @@ body {
 
 /* The big white box at the top of the left column */
 .profile-header {
-  background-color: white;      /* white box */
+  background-color: var(--card);      /* off-white box (--card) */
   border-radius: 16px;          /* rounded corners */
-  border: 1px solid #e5e7eb;    /* thin light-gray line around it */
+  border: 1px solid var(--line);    /* thin light blue line around it */
   overflow: hidden;             /* hides anything poking out past the rounded corners */
   position: relative;           /* lets the "Edit profile" button place itself inside this box
                                    (see .profile-edit-btn below) */
@@ -809,7 +2092,7 @@ body {
 /* The blue strip across the top of the header */
 .profile-banner {
   height: 150px;                /* how tall the strip is */
-  background-color: #1d4ed8;    /* dark blue (the same color as --primary-dark) */
+  background-color: var(--primary-dark);    /* darker blue (--primary-dark) */
 }
 
 /* The big circle with initials */
@@ -820,7 +2103,7 @@ body {
   height: 120px;                /* same width and height makes a square... */
   width: 120px;
   border-radius: 50%;           /* ...and 50% rounds the square into a circle */
-  background-color: #2563eb;    /* blue (the same color as --primary) */
+  background-color: var(--primary);    /* blue (--primary) */
   font-weight: bold;            /* thick text */
   color:white;                  /* white initials */
   font-size: 32px;              /* big text */
@@ -831,21 +2114,23 @@ body {
 
 /* The "Edit profile" button */
 .profile-edit-btn {
-  position: absolute;
-  top: 165px;
-  right: 32px;
-  background: white;
-  border: 1px solid #64748b;
-  cursor: pointer;
-  font-weight: bold;
-  padding: 8px 16px;
-  border-radius: 16px;
-  text-decoration: none;
-  color: inherit;
+  position: absolute;           /* takes it out of the normal top-to-bottom order, so it can sit
+                                   anywhere inside .profile-header (because that box is "relative") */
+  top: 165px;                   /* 165px down from the top of the box: just under the 150px strip */
+  right: 32px;                  /* 32px in from the right edge */
+  background: var(--card);            /* off-white button (--card) */
+  border: 1px solid var(--border);    /* blue line around it */
+  cursor: pointer;              /* the mouse turns into a pointing hand over it */
+  font-weight: bold;            /* thick text */
+  padding: 8px 16px;            /* space inside: top/bottom, left/right */
+  border-radius: 16px;          /* rounded corners */
+  text-decoration: none;       /* it's a Link, so remove the link underline */
+  color: inherit;               /* use the normal text color, not link blue */
 }
 
+/* The Edit profile button gets a light blue background when the mouse is over it */
 .profile-edit-btn:hover {
-  background-color: #e5e5e5;
+  background-color: var(--soft);
 }
 
 /* Same left/right spacing for the name, bio, info row, and Connect button,
@@ -868,14 +2153,14 @@ body {
 /* Your major and school, under your name */
 .profile-bio {
   font-size: 17px;
-  color: var(--muted);  /* dark gray (set at the top of this file) */
+  color: var(--muted);  /* blue (set at the top of this file) */
 }
 
 /* The row of small details (school and city) */
 .profile-info {
   display: flex;        /* puts them side by side */
   gap: 22px;            /* space between them */
-  color: #949494;       /* light gray */
+  color: var(--subtle);       /* soft blue (6.1:1 on the boxes, WCAG) */
   font-size: 14px;      /* smaller text */
   margin-top: 8px;      /* space above the row */
 }
@@ -887,24 +2172,24 @@ body {
 
 /* A white button with a blue outline (Connect, View, View Project) */
 .profile-btn-outline {
-  color: var(--primary);          /* blue words */
+  color: var(--primary-dark);          /* darker blue words (6:1 or more, even on the light hover color, WCAG) */
   font-weight: bold;              /* thick text */
-  background-color: white;        /* white button */
+  background-color: var(--card);        /* off-white button (--card) */
   border-radius: 999px;           /* a huge number gives it fully rounded "pill" ends */
   padding: 8px 16px;              /* space inside: top/bottom, left/right */
   cursor: pointer;                /* the mouse turns into a pointing hand over it */
-  border: 1px solid #2563eb;      /* blue line around it (the same color as --primary) */
+  border: 1px solid var(--primary);      /* blue line around it (--primary) */
 }
 /* The outline button turns light blue when the mouse is over it */
 .profile-btn-outline:hover {
-  background-color: #e7edfc;
+  background-color: var(--soft);
 }
 
 /* The row of 3 numbers along the bottom of the header */
 .profile-stats {
   display: flex;                  /* puts the stats side by side */
   margin-top: 16px;               /* space between the Connect button and the row */
-  border-top: 1px solid #e5e7eb;  /* light line above the row */
+  border-top: 1px solid var(--line);  /* light line above the row */
 }
 
 /* Each stat (number + label) */
@@ -921,7 +2206,7 @@ body {
 /* :not(:last-child) means "every .profile-stat that is NOT the last one",
    so the left and middle stats get a line on their right side */
 .profile-stat:not(:last-child) {
-  border-right: 1px solid #e5e7eb;
+  border-right: 1px solid var(--line);
 }
 
 /* The big number in each stat (like 222) */
@@ -933,14 +2218,14 @@ body {
 /* The small word next to each number (like "Connections") */
 .profile-stat-label {
   font-size: 14px;      /* smaller text */
-  color: #94a3b8;       /* light gray */
+  color: var(--subtle);       /* soft blue (6.1:1 on the boxes, WCAG) */
 }
 
 /* The white box used for every card on this page
    (About, Education, Experience, Projects, Resume, Skills, and the right column) */
 .profile-card {
-  background-color: white;      /* white box */
-  border: 1px solid #e5e7eb;    /* thin light-gray line around it */
+  background-color: var(--card);      /* off-white box (--card) */
+  border: 1px solid var(--line);    /* thin light blue line around it */
   border-radius: 16px;          /* rounded corners */
   padding: 32px;                /* space inside the box */
 }
@@ -951,16 +2236,16 @@ body {
   font-size: 22px;      /* big text */
 }
 
-/* The small gray line under a card's title (like "A quick introduction") */
+/* The small blue line under a card's title (like "A quick introduction") */
 .profile-card-subtitle {
-  color: #949494;       /* light gray */
+  color: var(--subtle);       /* soft blue (6.1:1 on the boxes, WCAG) */
   font-size: 12px;      /* small text */
   margin-top: 6px;      /* space between the title and this line */
 }
 
 /* The paragraph in the About card */
 .profile-about-text {
-  color: var(--muted);  /* dark gray */
+  color: var(--muted);  /* blue */
   margin-top: 16px;     /* space above the paragraph */
   line-height: 1.6;     /* space between lines: 1.6 times the text size, so it's easier to read */
 }
@@ -981,7 +2266,7 @@ body {
   height: 56px;                 /* same width and height makes a square */
   width: 56px;
   border-radius: 12px;          /* rounded corners */
-  background-color: #2563eb;    /* blue (the same color as --primary) */
+  background-color: var(--primary);    /* blue (--primary) */
   color: white;                 /* white letters */
   font-weight: bold;            /* thick text */
   align-items: center;          /* ...centered top-to-bottom */
@@ -998,7 +2283,7 @@ body {
 
 /* The line under it (like the major or the company) */
 .profile-item-subtitle {
-  color: var(--muted);  /* dark gray */
+  color: var(--muted);  /* blue */
 }
 
 /* The dates (like "2026 - 2029").
@@ -1006,19 +2291,19 @@ body {
 .profile-item-date {
   font-size: 12px;      /* small text */
   margin-top: 6px;      /* space above */
-  color: #949494;       /* light gray */
+  color: var(--subtle);       /* soft blue (6.1:1 on the boxes, WCAG) */
 }
 
 /* The sentence about a job in the Experience card */
 .profile-item-text {
-  color:var(--muted);   /* dark gray */
+  color:var(--muted);   /* blue */
   margin-top: 8px;      /* space above */
 }
 
 /* creates a divider for every experience but the last one */
 /* :not(:last-child) means "every row that is NOT the last one" */
 .profile-item:not(:last-child) {
-  border-bottom: 1px solid #e5e5e5;   /* light line under the row */
+  border-bottom: 1px solid var(--line);   /* light line under the row */
   padding-bottom: 20px;               /* space between the words and the line */
 }
 
@@ -1032,10 +2317,10 @@ body {
 
 /* Each skill box (like "✓ React") */
 .profile-skill {
-  border: 1px solid #e5e5e5;    /* thin light-gray line around it */
+  border: 1px solid var(--line);    /* thin light blue line around it */
   border-radius: 12px;          /* rounded corners */
   padding: 14px 18px;           /* space inside: top/bottom, left/right */
-  color: var(--muted);          /* dark gray */
+  color: var(--muted);          /* blue */
   font-weight: bold;            /* thick text */
 }
 
@@ -1044,8 +2329,8 @@ body {
   width: 56px;                  /* same width and height makes a square */
   height: 56px;
   border-radius: 12px;          /* rounded corners */
-  border: 1px solid #e5e5e5;    /* thin light-gray line around it */
-  background-color: #e7edfc;    /* light blue */
+  border: 1px solid var(--line);    /* thin light blue line around it */
+  background-color: var(--soft);    /* very light blue */
   display: flex;                /* turns on flexbox so we can center the icon... */
   align-items: center;          /* ...centered top-to-bottom */
   justify-content: center;      /* ...centered left-to-right */
@@ -1069,7 +2354,7 @@ body {
 .profile-resume-label {
   font-size: 12px;
   font-weight: bold;
-  color: var(--primary);
+  color: var(--primary-dark); /* darker blue (6.6:1 on the box, WCAG) */
   letter-spacing: 1px;    /* spreads the letters apart */
 }
 
@@ -1112,12 +2397,12 @@ body {
   padding: 8px 0;         /* 8px above and below each row, 0 on the sides */
 }
 
-/* The empty gray square on the left of each row, saving space for a logo later */
+/* The empty light blue square on the left of each row, saving space for a logo later */
 .profile-company-logo,
 .profile-community-logo {
   height: 40px;                 /* same width and height makes a square */
   width: 40px;
-  background-color: #f1f5f9;    /* very light gray, so you can see the square */
+  background-color: var(--soft);    /* very light blue, so you can see the square */
   flex-shrink: 0;               /* keeps the square from getting squished */
   border-radius: 10px;          /* rounded corners */
 }
@@ -1130,8 +2415,8 @@ body {
 
 /* How many members a community has (like "80 members") */
 .profile-community-members {
-  font-size: 13px;
-  color: #949494;
+  font-size: 13px;      /* small text */
+  color: var(--subtle);       /* soft blue (6.1:1 on the boxes, WCAG) */
 }
 
 /* EditProfile Page */
@@ -1302,8 +2587,8 @@ body {
 
 /* The white boxes */
 .network-box {
-  background-color: white;      /* white box */
-  border: 1px solid #e5e7eb;    /* thin light-gray line around it */
+  background-color: var(--card);      /* off-white box (--card) */
+  border: 1px solid var(--line);    /* thin light blue line around it */
   border-radius: 16px;          /* rounded corners */
   padding: 20px;                /* space inside the box */
 }
@@ -1330,7 +2615,7 @@ body {
   text-align: center;          /* centers the words too */
   gap: 8px;                    /* space between each piece */
   padding: 20px 16px;          /* space inside: top/bottom, left/right */
-  border: 1px solid #e5e7eb;   /* thin light-gray line around it */
+  border: 1px solid var(--line);   /* thin light blue line around it */
   border-radius: 12px;         /* rounded corners */
 }
 
@@ -1341,7 +2626,7 @@ body {
 
 /* The line under the name (like their school) */
 .network-person-headline {
-  color: #64748b;       /* medium gray (dark enough to read on white, WCAG) */
+  color: var(--subtle);       /* soft blue (6.1:1 on the boxes, WCAG) */
   font-size: 14px;      /* smaller text */
   flex: 1;              /* takes up the extra space, which pushes every button to the bottom so they line up */
 }
@@ -1349,7 +2634,7 @@ body {
 /* The "Connect" button */
 .network-connect-button {
   border: 1px solid var(--primary);   /* blue line around it */
-  color: var(--primary);              /* blue words */
+  color: var(--primary-dark);              /* darker blue words (6:1 or more, even on the light hover color, WCAG) */
   border-radius: 999px;               /* pill shape */
   padding: 6px 16px;                  /* space inside: top/bottom, left/right */
   font-weight: 600;                   /* semi-bold */
@@ -1358,7 +2643,7 @@ body {
 
 /* The button gets a very light blue background when the mouse is over it */
 .network-connect-button:hover {
-  background-color: #eff6ff;
+  background-color: var(--soft);
 }
 
 /* Small screens: 2 columns don't fit side by side on a phone, so they stack */
