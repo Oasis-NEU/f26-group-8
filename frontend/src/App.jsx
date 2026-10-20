@@ -13,6 +13,7 @@ import Feed from "./pages/Feed.jsx";
 import Profile from "./pages/Profile.jsx";
 import Network from "./pages/Network.jsx";
 import Messages from "./pages/Messages.jsx";
+import Settings from "./pages/Settings.jsx";
 
 // A "component" is a function that returns what should appear on the screen.
 function App() {
@@ -34,6 +35,8 @@ function App() {
       <Route path="/network" element={<Network />} />
       {/* yoursite.com/messages shows the Messages page */}
       <Route path="/messages" element={<Messages />} />
+      {/* yoursite.com/settings shows the Settings page */}
+      <Route path="/settings" element={<Settings />} />
     </Routes>
   );
 }

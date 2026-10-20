@@ -13,13 +13,21 @@ import { BrowserRouter } from 'react-router'
 import './index.css'
 // App is the component that decides which page to show (see App.jsx).
 import App from './App.jsx'
+// The choices from the Settings page (colors, fonts, text size, ...), see settings.js
+import { loadSettings, applySettings } from './settings.js'
+
+// Put the saved Settings choices into effect before anything is drawn,
+// so the page doesn't flash in the default colors first
+applySettings(loadSettings())
 
 // index.html has an empty <div id="root"></div>. This line finds that div
 // and tells React to draw the app inside it.
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    {/* Everything inside BrowserRouter can use pages and links */}
-    <BrowserRouter>
+    {/* Everything inside BrowserRouter can use pages and links.
+        useTransitions={false} makes a page change happen right away instead of
+        a moment later, which the smooth fade between pages (SmoothLink) needs */}
+    <BrowserRouter useTransitions={false}>
       <App />
     </BrowserRouter>
   </StrictMode>,

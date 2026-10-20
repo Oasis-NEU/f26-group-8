@@ -9,6 +9,8 @@
 
 // Link makes a clickable link to another page of our site.
 import { Link } from "react-router";
+// AccountMenu is your circle and the dropdown it opens (components/AccountMenu.jsx).
+import AccountMenu from "./AccountMenu.jsx";
 // The top bar
 function NavBar() {
   return (
@@ -16,7 +18,9 @@ function NavBar() {
     <nav className="feed-nav">
       {/* Left side: the site name and the search box */}
       <div className="feed-nav-left">
-        <span className="feed-nav-logo">ScoutSearch</span>
+        {/* The site name. Clicking it goes to the About page. Since you're
+            logged in, its top bar shows a Home button and your circle there */}
+        <Link to="/about" className="feed-nav-logo">ScoutSearch</Link>
         {/* A hidden label for screen readers, like the one in the post box (WCAG) */}
         <label htmlFor="feed-search" className="sr-only">
           Search
@@ -34,8 +38,9 @@ function NavBar() {
         <Link to="/feed">Home</Link>
         <Link to="/network">Network</Link>
         <Link to="/messages">Messages</Link>
-        {/* Your circle. It borrows the circle style from the Feed posts */}
-        <div className="feed-post-avatar">RMV</div>
+        {/* Your circle. Clicking it opens a dropdown with Settings,
+            Preferences, Profile picture, and Log out */}
+        <AccountMenu />
       </div>
     </nav>
   );

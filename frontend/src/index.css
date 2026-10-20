@@ -86,10 +86,33 @@
   --wave-color: color-mix(in srgb, var(--primary) 10%, transparent); /* Waves: the flowing background
                                         lines. Very faint (blue at 10% strength), so they never get in
                                         the way of the text on top of them */
+  --signup-grid: color-mix(in srgb, var(--primary) 12%, transparent); /* Sign up page: the faint
+                                        graph-paper lines in the background (blue at 12% strength,
+                                        so they never get in the way of the form) */
+  --signup-glow: color-mix(in srgb, var(--accent) 35%, transparent); /* Sign up page: the soft sky-blue
+                                        glow at the top of the page */
+  --time-signup-box: 300ms;  /* Sign up page: the box fading in when the page opens */
+  --time-signup-rise: 260ms; /* Sign up page: each piece inside the box fading in */
+  --signup-start: 40ms;      /* Sign up page: how long the pieces wait before the first one starts */
+  --signup-stagger: 25ms;    /* Sign up page: extra wait for each piece after the first, so they arrive in order */
+  --signup-error: #9b1c1c;   /* Sign up page: the "passwords don't match" message and its box outline.
+                                A deep red, so it's clearly different from the blues (6.5:1 on the
+                                box, 7.3:1 on the off-white input, WCAG) */
+  --text-type-word: var(--primary-dark); /* TextType: the typed words (5.8:1 on the page, WCAG) */
+  --text-type-cursor: var(--primary);    /* TextType: the blinking bar after them */
   --time-shine: 2.2s;    /* one sweep of the shine. It runs twice (4.4s), then stops */
   --time-star: 3s;       /* the star lights making one trip around the button */
   --time-glow: 300ms;    /* the spotlight fading in and out */
   --time-reveal: 300ms;  /* sections fading in as you scroll to them (quick, so nobody waits on a blank area) */
+
+  /* Settings page: the little two-color circles on the "Color theme" choices.
+     They always show each theme's own colors, whichever theme is on */
+  --swatch-blue-page: #d7e9fb;       /* Blue theme: page color */
+  --swatch-blue-button: #2a74ba;     /* Blue theme: button color */
+  --swatch-mint-page: #d3efe4;       /* Mint theme: page color */
+  --swatch-mint-button: #1d7563;     /* Mint theme: button color */
+  --swatch-lavender-page: #e4dff7;   /* Lavender theme: page color */
+  --swatch-lavender-button: #5a49b5; /* Lavender theme: button color */
 }
 
 /* body is the whole web page */
@@ -1670,6 +1693,49 @@ html:has(.about-site) {
   }
 }
 
+/* TextType: a line that types itself (components/reactbits/TextType.jsx).
+   It's two lines: the words that stay in place ("Join now to find"), and
+   under them the typed words with a blinking bar after them */
+
+/* The words that stay in place, on a line of their own */
+.text-type-prefix {
+  display: block;  /* its own line, so the typed words are always on the line below */
+}
+
+/* The typed words. min-height keeps the line's space reserved while it's
+   empty (at the start, and between words), so nothing below it jumps */
+.text-type-line {
+  display: block;
+  min-height: 1.2em;               /* one line tall, even with no letters yet */
+  color: var(--text-type-word);    /* darker blue, so it stands out from the words above */
+}
+
+/* The bar after the last letter: a thin vertical line, drawn as an empty box */
+.text-type-cursor {
+  display: inline-block;
+  width: 2px;                           /* thin */
+  height: 0.95em;                       /* about as tall as the letters */
+  margin-left: 3px;                     /* small gap after the last letter */
+  vertical-align: -0.1em;               /* sits level with the letters */
+  background-color: var(--text-type-cursor); /* blue */
+  border-radius: 1px;                   /* barely rounded ends */
+}
+
+/* The bar blinks 5 times, then stays on, so it never blinks for more than
+   about 5 seconds (WCAG 2.2.2). Skipped for "reduce motion" (the bar isn't
+   drawn then anyway) */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes text-type-blink {
+    50% {
+      opacity: 0;  /* off for the second half of each second */
+    }
+  }
+
+  .text-type-cursor {
+    animation: text-type-blink 1s steps(1) 5;  /* 1 second per blink, "steps" = on/off with no fade, 5 times */
+  }
+}
+
 /* ---------- Feed page ---------- */
 /* Everything below styles the Feed page (Feed.jsx, yoursite.com/feed).
    Every class name starts with "feed-" so it can't clash with other pages.
@@ -2009,6 +2075,20 @@ html:has(.about-site) {
 .feed-nav-logo {
   font-weight: bold;    /* thick text */
   font-size: 32px;      /* big text */
+  border-radius: 6px;   /* rounded corners for the keyboard outline below */
+}
+
+/* The name is a link to the About page, so it gets underlined when the
+   mouse is over it, to show it can be clicked */
+.feed-nav-logo:hover {
+  text-decoration: underline;
+  text-underline-offset: 6px;  /* moves the underline a bit lower so it doesn't touch the letters */
+}
+
+/* Blue outline when you reach the name with the Tab key (WCAG) */
+.feed-nav-logo:focus-visible {
+  outline: 3px solid var(--primary-dark); /* a 3px darker blue line around it */
+  outline-offset: 4px;                    /* a small gap between it and the line */
 }
 
 /* The search box in the top bar */
@@ -2048,6 +2128,145 @@ html:has(.about-site) {
   font-weight: bold;        /* thick text */
 }
 
+/* ---------- Top bar: account menu ---------- */
+/* The dropdown that opens when you click your circle in the top bar
+   (components/AccountMenu.jsx). It's on every page that has the top bar.
+   Every class name starts with "account-menu-" so it can't clash with other pages. */
+
+/* The wrapper around the circle and the dropdown. "relative" lets the
+   dropdown be placed right under the circle */
+.account-menu {
+  position: relative;
+}
+
+/* The circle you click. It's a <button> so it works with the keyboard
+   (WCAG). It also has the "feed-post-avatar" class for the blue circle look */
+.account-menu-button {
+  border: none;          /* buttons get a gray border from the browser otherwise */
+  font-family: inherit;  /* buttons don't copy the page's font on their own */
+  cursor: pointer;       /* mouse turns into a pointing hand */
+}
+
+/* Darker blue when the mouse is over the circle, or while the menu is open */
+.account-menu-button:hover,
+.account-menu-button[aria-expanded="true"] {
+  background-color: var(--primary-dark);
+}
+
+/* Blue outline when you reach the circle with the Tab key (WCAG) */
+.account-menu-button:focus-visible {
+  outline: 3px solid var(--primary-dark); /* a 3px darker blue line around it */
+  outline-offset: 2px;                    /* a small gap between it and the line */
+}
+
+/* The dropdown box itself. It floats just under the circle, lined up with
+   its right edge, so it never spills off the right side of the screen */
+.account-menu-list {
+  position: absolute;               /* placed on top of the page, not pushing anything down */
+  top: calc(100% + 8px);            /* 8px below the bottom of the circle */
+  right: 0;                         /* right edges lined up */
+  z-index: 20;                      /* above the top bar (10) and the posts */
+  min-width: 240px;                 /* wide enough for "Profile picture" */
+  padding: 6px;                     /* space inside the box, around the items */
+  background-color: var(--card);    /* off-white (--card) */
+  border: 1px solid var(--line);    /* thin light blue line around it */
+  border-radius: 12px;              /* rounded corners */
+  box-shadow: 0 16px 32px -12px rgb(15 42 68 / 0.25); /* a soft shadow below, so it floats */
+  transform-origin: top right;      /* the opening animation grows out of the circle's corner */
+  font-size: 16px;                  /* the same text size on every page (the About page's text is bigger) */
+  line-height: 1.5;                 /* the same line spacing on every page too */
+}
+
+/* The top of the dropdown: your name and "View profile" */
+.account-menu-header {
+  padding: 8px 12px 10px;                 /* space inside: top, left/right, bottom */
+  margin-bottom: 6px;                     /* space before the line below */
+  border-bottom: 1px solid var(--line);   /* thin line between it and the items */
+}
+
+/* Your name, in the header */
+.account-menu-name {
+  font-weight: 700;       /* thick text */
+  color: var(--text);     /* deep navy */
+}
+
+/* One item in the dropdown (Settings, Preferences, ...).
+   ".account-menu" in front makes this rule win over the top bar's own link
+   styles (".feed-nav-right a"), which would otherwise add padding and an underline */
+.account-menu .account-menu-item {
+  display: block;            /* fills the whole row, so the whole row is clickable */
+  padding: 10px 12px;        /* space inside: top/bottom, left/right (a big, easy target) */
+  border-radius: 8px;        /* rounded corners for the hover color */
+  color: var(--text);        /* deep navy (12:1 on the box) */
+  font-weight: 600;          /* semi-bold */
+  text-decoration: none;     /* no underline */
+}
+
+/* The "View profile" link in the header: smaller and blue */
+.account-menu .account-menu-profile-link {
+  padding: 2px 0;              /* less space, since it sits under your name */
+  font-size: 14px;             /* small text */
+  color: var(--primary-dark);  /* darker blue (6.5:1 on the box) */
+}
+
+/* Very light blue behind an item when the mouse is over it */
+.account-menu .account-menu-item:hover {
+  background-color: var(--soft);
+  text-decoration: none;  /* keeps the top bar's hover underline away */
+}
+
+/* The "View profile" link gets an underline instead, since it has no box around it */
+.account-menu .account-menu-profile-link:hover {
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+/* Blue outline when you reach an item with the Tab key (WCAG) */
+.account-menu .account-menu-item:focus-visible {
+  outline: 3px solid var(--primary-dark);
+  outline-offset: -3px;  /* draws the line just inside the edge, so it isn't cut off by the box */
+}
+
+/* The thin line above "Log out" */
+.account-menu-divider {
+  height: 1px;                        /* a thin line */
+  margin: 6px 0;                      /* space above and below */
+  background-color: var(--line);      /* light blue */
+}
+
+/* Motion: skipped for people who turned on "reduce motion" (WCAG).
+   The dropdown grows quickly out of the circle's corner, so it's clear where
+   it came from. It's fast (0.15 seconds) because people open menus a lot */
+@media (prefers-reduced-motion: no-preference) {
+  /* The recipe: starts invisible, slightly smaller, and a bit higher */
+  @keyframes account-menu-in {
+    from {
+      opacity: 0;
+      transform: translateY(-4px) scale(0.97);
+    }
+  }
+
+  .account-menu-list {
+    animation: account-menu-in var(--time-hover) var(--ease-out);
+  }
+
+  /* The items' hover color fades in instead of snapping */
+  .account-menu .account-menu-item {
+    transition: background-color var(--time-hover) ease;
+  }
+
+  /* The circle's color fades too, and it shrinks very slightly while
+     pressed, like the other buttons */
+  .account-menu-button {
+    transition:
+      background-color var(--time-hover) ease,
+      transform var(--time-press) var(--ease-out);
+  }
+
+  .account-menu-button:active {
+    transform: scale(0.95);
+  }
+}
 
 /* ---------- Profile page ---------- */
 /* Everything below styles the Profile page (Profile.jsx, yoursite.com/profile).
@@ -2500,4 +2719,947 @@ html:has(.about-site) {
   .network-page {
     grid-template-columns: 1fr;   /* just 1 column */
   }
+}
+
+/* ---------- Sign up page ---------- */
+/* Everything below styles the Sign up page (Signup.jsx, yoursite.com/signup).
+   It matches the About page: the same light blue page, top bar, fonts, and
+   sky-blue button. Its background is a calmer take: a faint graph-paper grid and a soft glow. The page's wrapper also has the
+   "about-site" class, which is what gives it those fonts and colors.
+   Every class name starts with "signup-" so it can't clash with other pages.
+   The Log in page (Login.jsx) uses these same classes, so the two pages always
+   look alike. A change here changes both. */
+
+/* The page's background: the same light blue, with a soft sky-blue glow at
+   the top. It's calm and still (no moving lines), so it feels more like a
+   work screen than the About page's front door */
+.signup-site {
+  display: flex;                /* lets the top bar and the content stack top to bottom... */
+  flex-direction: column;
+  min-height: 100vh;            /* ...and fill the window exactly, so there's no extra scrolling,
+                                   even when the top bar gets taller on narrow screens */
+  background-image: radial-gradient(
+    ellipse 70% 45% at 50% 0%,  /* an oval glow, centered along the top edge */
+    var(--signup-glow),         /* sky blue in the middle... */
+    transparent 100%            /* ...fading out to nothing */
+  );
+  background-repeat: no-repeat; /* one glow, not tiled */
+}
+
+/* A faint graph-paper grid over the whole window. It stays put while the
+   page scrolls, and fades out toward the edges so it never looks busy.
+   ::before makes a decoration that isn't in the HTML, so screen readers
+   never see it */
+.signup-site::before {
+  content: "";                   /* needed for ::before to appear */
+  position: fixed;               /* stays put while the page scrolls */
+  inset: 0;                      /* covers the whole window */
+  z-index: 0;                    /* behind the page's content */
+  pointer-events: none;          /* never gets in the way of the mouse */
+  background-image:
+    linear-gradient(var(--signup-grid) 1px, transparent 1px),         /* horizontal lines */
+    linear-gradient(90deg, var(--signup-grid) 1px, transparent 1px);  /* vertical lines */
+  background-size: 48px 48px;    /* each square is 48px wide and tall */
+  mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%); /* lines are
+                                    visible in the middle and fade out toward the edges */
+}
+
+/* The page content under the top bar. It sits above the grid behind the
+   page, and the box inside is centered on the screen */
+.signup-main {
+  position: relative;       /* needed for z-index to work */
+  z-index: 1;               /* above the grid (0) */
+  display: flex;            /* turns on flexbox, a way to line things up */
+  flex-direction: column;   /* stack the box and the link top to bottom */
+  align-items: center;      /* center them left-to-right */
+  flex: 1;                  /* takes all the space under the top bar */
+  padding: 24px 24px 24px;  /* space inside the edges: top, left/right, bottom (small, so everything fits on one screen) */
+}
+
+/* "Join now to find ..." above the box. It's as wide as the box and
+   left-aligned with it, so the typing grows to the right without the text
+   shifting around. (It's a normal line of text, not a heading: the page's
+   one <h1> is "Sign up" inside the box) */
+.signup-banner {
+  width: 100%;                          /* fill the available width... */
+  max-width: 440px;                     /* ...but line up with the box below */
+  margin-bottom: 14px;                  /* space between it and the box */
+  font-family: var(--font-display);     /* Overpass, the same highway-sign font as the headlines */
+  font-size: clamp(22px, 4vw, 28px);    /* grows with the screen, between 22px and 28px */
+  font-weight: 800;                     /* extra thick */
+  line-height: 1.15;                    /* tight lines, because big text looks loose otherwise */
+  letter-spacing: -0.02em;              /* pulls the letters slightly closer */
+  color: var(--about-ink);              /* deep navy text */
+}
+
+/* The box around the form: a slightly deeper blue box that floats above
+   the page, like the example job search on the About page */
+.signup-box {
+  width: 100%;                                  /* fill the available width... */
+  max-width: 440px;                             /* ...but never get wider than 440px */
+  background-color: var(--about-panel);         /* pale blue box */
+  border: 1px solid var(--about-edge);          /* thin line around it */
+  border-radius: 16px;                          /* rounded corners */
+  padding: 22px 28px;                           /* space inside the box: top/bottom, left/right */
+  box-shadow: 0 24px 48px -24px rgb(15 42 68 / 0.18); /* a soft shadow below, so it floats
+                                                   (the same one the About page's example search has) */
+}
+
+/* "Sign up", in the same highway-sign font as the About page's headings.
+   (This is the page's one <h1>) */
+.signup-title {
+  font-size: 30px;           /* big text, but smaller than the About headline */
+  font-weight: 800;          /* extra thick */
+  line-height: 1.1;          /* tight lines, because big text looks loose otherwise */
+  letter-spacing: -0.025em;  /* pulls the letters slightly closer */
+  color: var(--about-ink);   /* deep navy text */
+}
+
+/* The short line under the title */
+.signup-intro {
+  margin-top: 4px;            /* space below the title */
+  margin-bottom: 14px;        /* space before the first label */
+  font-size: 16px;            /* text size */
+  color: var(--about-ink-2);  /* blue (6.5:1 on the box) */
+}
+
+/* The two "Continue with ..." buttons (Google, Microsoft), side by side below the form.
+   They're off-white with a blue line, so they're a quieter choice than the
+   sky-blue Sign up button, which stays the main action */
+.signup-social-list {
+  display: grid;                          /* puts the buttons in columns... */
+  grid-template-columns: 1fr 1fr;         /* ...2 of them, side by side, each half the width */
+  gap: 10px;                              /* space between the buttons */
+}
+
+/* One "Continue with ..." button: the logo, then the words */
+.signup-social-button,
+.signup-secondary-button {
+  display: flex;                     /* puts the logo and the words in a row */
+  align-items: center;               /* lines them up in the middle, top-to-bottom */
+  justify-content: center;           /* centers the pair inside the button */
+  gap: 8px;                          /* space between the logo and the words */
+  width: 100%;                       /* as wide as the box, so it's an easy target */
+  padding: 8px 12px;                 /* space inside: top/bottom, left/right */
+  font-family: inherit;              /* buttons don't copy the page's font on their own */
+  font-size: 16px;                   /* text size */
+  font-weight: 700;                  /* thick text */
+  color: var(--about-ink);           /* deep navy text (12:1 on the off-white) */
+  background-color: var(--card);     /* off-white (--card) */
+  border: 1px solid var(--border);   /* thin blue line (3.5:1, enough for borders, WCAG) */
+  border-radius: 8px;                /* rounded corners, like the other buttons */
+  cursor: pointer;                   /* mouse turns into a pointing hand */
+}
+
+/* Very light blue when the mouse is over it */
+.signup-social-button:hover,
+.signup-secondary-button:hover {
+  background-color: var(--soft);
+}
+
+/* The logo picture. Its size is fixed so both logos line up */
+.signup-social-logo {
+  flex-shrink: 0;  /* never squashed when the button is narrow */
+}
+
+/* The "or" line between the form and the buttons: a thin line, the words,
+   and another thin line */
+.signup-divider {
+  display: flex;               /* puts the line, the word, and the line in a row */
+  align-items: center;         /* lines them up in the middle */
+  gap: 12px;                   /* space between the lines and the word */
+  margin: 14px 0;              /* space above and below */
+  font-size: 15px;             /* small text */
+  color: var(--about-ink-2);   /* blue (6.5:1 on the box) */
+}
+
+/* The two thin lines, drawn as empty boxes that stretch to fill the row */
+.signup-divider::before,
+.signup-divider::after {
+  content: "";                                  /* needed for ::before and ::after to appear */
+  flex: 1;                                      /* each line takes half the leftover space */
+  height: 1px;                                  /* a thin line */
+  background-color: var(--about-edge);          /* light blue */
+}
+
+/* The labels above each input ("Name", "Email", "Password") */
+.signup-label {
+  display: block;            /* put the label on its own line, above the input */
+  margin-bottom: 4px;        /* small space between the label and its input */
+  font-size: 16px;           /* text size */
+  font-weight: 700;          /* thick text */
+  color: var(--about-ink);   /* deep navy text */
+}
+
+/* The boxes you type into. Off-white, so they stand out from the blue box */
+.signup-input {
+  display: block;                    /* each input on its own line */
+  width: 100%;                       /* as wide as the box */
+  margin-bottom: 12px;               /* space before the next label */
+  padding: 8px 12px;                 /* space between the text and the input's edge */
+  font-family: inherit;              /* inputs don't copy the page's font on their own */
+  font-size: 16px;                   /* text size (16px also stops phones from zooming in) */
+  color: var(--about-ink);           /* deep navy text */
+  background-color: var(--card);     /* off-white (--card) */
+  border: 1px solid var(--border);   /* thin blue line (3.5:1, enough for borders, WCAG) */
+  border-radius: 8px;                /* rounded corners, like the buttons */
+}
+
+/* The darker blue outline when you click into or Tab to an input (WCAG).
+   It's the same outline the About page's links and buttons get */
+.signup-input:focus-visible,
+.signup-social-button:focus-visible,
+.signup-secondary-button:focus-visible {
+  outline: 3px solid var(--primary-dark); /* a 3px darker blue line around it */
+  outline-offset: 2px;                    /* a small gap between it and the line */
+}
+
+/* The Sign up button. It also has the About page's "about-button" look
+   (sky blue, navy words); this just makes it fill the box and act like a
+   button instead of a link */
+.signup-submit {
+  width: 100%;         /* as wide as the box, so it's a big, easy target */
+  margin-top: 2px;     /* a little extra space above it */
+  cursor: pointer;     /* mouse turns into a pointing hand */
+}
+
+/* The Continue button while it says "Signing you up...". It's still sky
+   blue, but deeper (navy text on it is 5.3:1), the mouse shows the "busy"
+   pointer, and it doesn't react to hovering, so it's clear to wait */
+.signup-submit[aria-disabled="true"] {
+  background-color: var(--accent-hover);  /* a little deeper sky blue */
+  cursor: progress;                       /* mouse turns into the "working" pointer */
+}
+
+/* The message above the Sign up button on the password step. It has no
+   height while it's empty, so it leaves no gap; it keeps its place on the
+   page so screen readers can announce it when text appears */
+.signup-message {
+  font-size: 16px;            /* text size */
+  color: var(--about-ink-2);  /* blue (6.5:1 on the box) */
+}
+
+/* Once it has words in it, it gets space below, before the buttons */
+.signup-message:not(:empty) {
+  margin-bottom: 16px;
+}
+
+/* The "passwords don't match" version: bold deep red, so it can't be missed */
+.signup-message-error {
+  font-weight: 700;              /* thick text, so it doesn't rely on color alone */
+  color: var(--signup-error);    /* deep red */
+}
+
+/* An input that has a problem (the retyped password) gets a deep red outline.
+   aria-invalid="true" is set in Signup.jsx, which also tells screen readers */
+.signup-input[aria-invalid="true"] {
+  border-color: var(--signup-error);
+}
+
+/* The small "Step 1 of 2" line above the title */
+.signup-step {
+  margin-bottom: 2px;          /* space below it */
+  font-size: 13px;             /* small text */
+  font-weight: 700;            /* thick text */
+  letter-spacing: 0.04em;      /* spreads the letters a little, like a label */
+  text-transform: uppercase;   /* ALL CAPS */
+  color: var(--about-ink-3);   /* soft blue (4.8:1 on the box) */
+}
+
+/* The "Back" button on the password step. It uses the same look as the
+   "Continue with" buttons (see above); this just adds space above it */
+.signup-secondary-button {
+  margin-top: 8px;
+}
+
+/* The "Already have an account? Log in" line under the box */
+.signup-switch {
+  margin-top: 14px;           /* space above the line */
+  font-size: 16px;            /* text size */
+  color: var(--about-ink-2);  /* blue (7.3:1 on the page) */
+}
+
+/* The "Log in" link inside it: bold, darker blue, and underlined, so it looks like a link */
+.signup-switch a {
+  padding: 2px 4px;            /* makes the clickable area (and the hover box) a bit bigger */
+  border-radius: 4px;          /* rounded corners for the hover box */
+  font-weight: 700;            /* thick text */
+  color: var(--primary-dark);  /* darker blue (5.8:1 on the page) */
+  text-decoration: underline;  /* underlined */
+}
+
+/* A pale blue box behind it when the mouse is over it */
+.signup-switch a:hover {
+  background-color: var(--about-panel);
+}
+
+/* Phones: less space around and inside the box, so the form has room */
+@media (max-width: 640px) {
+  .signup-main {
+    padding: 16px 16px 20px;  /* smaller top and side space */
+  }
+
+  .signup-box {
+    padding: 18px 16px;       /* smaller space inside the box */
+  }
+}
+
+/* Motion: skipped for people who turned on "reduce motion" (WCAG).
+   When the page opens, the background and the box fade in, and then everything
+   inside follows one piece after another, top to bottom. It's kept small and
+   quick (a few pixels of movement, about a quarter of a second) so it feels
+   calm and professional instead of showy. The top
+   bar doesn't move at all, so coming from the About page feels like only the
+   content underneath changed, not like a whole new page loading. */
+@media (prefers-reduced-motion: no-preference) {
+  /* The recipe for "ease in": starts invisible and just a touch lower, then
+     settles into its normal spot. (@keyframes names a recipe; "animation"
+     below says which recipe to play, how long, and after what delay) */
+  @keyframes signup-rise {
+    from {
+      opacity: 0;                     /* invisible... */
+      transform: translateY(6px);     /* ...and 6px lower */
+    }
+  }
+
+  /* The recipe for the box: the same, with a little less movement */
+  @keyframes signup-box-in {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+  }
+
+  /* The recipe for the background: a plain fade */
+  @keyframes signup-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  /* The grid fades in gently, so the page doesn't flash on */
+  .signup-site::before {
+    animation: signup-fade 500ms ease-out backwards;
+  }
+
+  /* The box eases into place. "backwards" means it stays
+     invisible during any delay, before it starts playing */
+  .signup-box {
+    animation: signup-box-in var(--time-signup-box) var(--ease-out) backwards;
+  }
+
+  /* Everything inside the box eases in, each starting a little after the
+     one above it. "calc(40ms + 25ms * 3)" means "40ms, plus 25ms for
+     each step down the page" */
+  .signup-title,
+  .signup-intro,
+  .signup-label,
+  .signup-input,
+  .signup-submit,
+  .signup-divider,
+  .signup-social-button,
+  .signup-secondary-button,
+  .signup-step,
+  .signup-banner,
+  .signup-switch {
+    animation: signup-rise var(--time-signup-rise) var(--ease-out) backwards;
+  }
+
+  .signup-title { animation-delay: calc(var(--signup-start) + var(--signup-stagger) * 0); }
+  .signup-intro { animation-delay: calc(var(--signup-start) + var(--signup-stagger) * 1); }
+
+  /* The "Join now" line arrives first, just before the box */
+  .signup-banner { animation-delay: 0ms; }
+
+  /* The "Step 1 of 2" line arrives with the title */
+  .signup-step { animation-delay: calc(var(--signup-start) + var(--signup-stagger) * 0); }
+
+  /* Each label arrives together with its input. :nth-of-type counts labels
+     and inputs separately, so the 1st label and the 1st input go together.
+     The first step has Name and Email; the password step has Password and
+     Confirm password, so the same two delays work for both */
+  .signup-label:nth-of-type(1),
+  .signup-input:nth-of-type(1) { animation-delay: calc(var(--signup-start) + var(--signup-stagger) * 2); }
+  .signup-label:nth-of-type(2),
+  .signup-input:nth-of-type(2) { animation-delay: calc(var(--signup-start) + var(--signup-stagger) * 3); }
+
+  /* The big button under the inputs */
+  .signup-submit { animation-delay: calc(var(--signup-start) + var(--signup-stagger) * 4); }
+
+  /* The "or continue with" line, then both "Continue with" buttons together.
+     (On the password step, the Back button arrives right after the big button) */
+  .signup-divider,
+  .signup-secondary-button { animation-delay: calc(var(--signup-start) + var(--signup-stagger) * 5); }
+  .signup-social-button { animation-delay: calc(var(--signup-start) + var(--signup-stagger) * 6); }
+
+  /* The "Already have an account?" line under the box arrives last */
+  .signup-switch { animation-delay: calc(var(--signup-start) + var(--signup-stagger) * 7); }
+
+  /* Typing boxes: the border color and a soft blue glow fade in when you
+     click into one (the keyboard outline from before is still there too) */
+  .signup-input {
+    transition:
+      border-color var(--time-hover) ease,
+      box-shadow var(--time-hover) ease;
+  }
+
+  .signup-input:focus {
+    border-color: var(--primary-dark);                          /* darker blue line */
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 18%, transparent); /* soft glow, 4px wide */
+  }
+
+  /* The "Continue with" buttons fade to their hover colors and shrink very
+     slightly while pressed, like the About page's buttons */
+  .signup-social-button,
+  .signup-secondary-button {
+    transition:
+      background-color var(--time-hover) ease,
+      border-color var(--time-hover) ease,
+      transform var(--time-press) var(--ease-out);
+  }
+
+  .signup-social-button:hover,
+  .signup-secondary-button:hover {
+    border-color: var(--primary-dark);  /* darker blue line, so hover shows without color alone */
+  }
+
+  .signup-social-button:active,
+  .signup-secondary-button:active {
+    transform: scale(0.98);  /* 98% of the normal size: a small, quiet press */
+  }
+
+  /* The "Log in" link's pale blue box fades in on hover */
+  .signup-switch a {
+    transition: background-color var(--time-hover) ease;
+  }
+}
+
+/* ---------- Settings page ---------- */
+/* Everything below styles the Settings page (Settings.jsx, yoursite.com/settings).
+   The page has a column of tabs on the left (Account, Preferences,
+   Appearance, Privacy & data, Accessibility) and the open tab's box on the right.
+   On phones, the tabs move into a row above the box.
+   Every class name starts with "settings-" so it can't clash with other pages.
+   (What the choices actually DO to the site is further down, under
+   "Settings: site-wide choices") */
+
+/* The page content under the top bar */
+.settings-page {
+  max-width: 1000px;     /* never wider than 1000px, so lines stay easy to read */
+  margin: 0 auto;        /* centers it left-to-right */
+  padding: 24px;         /* space around the edges */
+}
+
+/* "Settings" at the top */
+.settings-title {
+  margin-bottom: 16px;   /* space before the tabs and the box */
+  font-size: 28px;       /* big text */
+  font-weight: bold;     /* thick text */
+}
+
+/* The tabs and the box, side by side: tabs 220px wide, the box gets the rest */
+.settings-layout {
+  display: grid;                        /* turns on grid, a way to make rows and columns */
+  grid-template-columns: 220px 1fr;     /* 2 columns */
+  gap: 24px;                            /* space between them */
+  align-items: start;                   /* the tabs don't stretch to the box's height */
+}
+
+/* The column of tabs. "sticky" keeps it in view while a long tab scrolls */
+.settings-tabs {
+  position: sticky;                  /* stays in view while you scroll... */
+  top: 96px;                         /* ...just under the sticky top bar */
+  display: flex;                     /* stacks the tabs... */
+  flex-direction: column;            /* ...top to bottom */
+  gap: 4px;                          /* small space between tabs */
+  padding: 8px;                      /* space inside the box, around the tabs */
+  background-color: var(--card);     /* off-white (--card) */
+  border: 1px solid var(--line);     /* thin light blue line around it */
+  border-radius: 16px;               /* rounded corners */
+}
+
+/* One tab */
+.settings-tab {
+  display: block;                       /* fills the whole row, so the whole row is clickable */
+  width: 100%;                          /* as wide as the column */
+  padding: 10px 14px;                   /* space inside: top/bottom, left/right (a big, easy target) */
+  border-left: 4px solid transparent;   /* an invisible bar on the left; the open tab colors it in */
+  border-radius: 8px;                   /* rounded corners for the hover color */
+  font-family: inherit;                 /* buttons don't copy the page's font on their own */
+  font-size: 16px;                      /* text size */
+  font-weight: 600;                     /* semi-bold */
+  color: var(--muted);                  /* blue (8.3:1 on the box) */
+  text-align: left;                     /* words on the left, like a list */
+  background-color: transparent;        /* no color until hovered or open */
+  cursor: pointer;                      /* mouse turns into a pointing hand */
+}
+
+/* Very light blue when the mouse is over a tab */
+.settings-tab:hover {
+  background-color: var(--soft);
+}
+
+/* The open tab. aria-selected="true" is set in Settings.jsx (it also tells
+   screen readers which tab is open). It gets a blue bar on the left and
+   bolder, darker text, so it doesn't rely on color alone (WCAG) */
+.settings-tab[aria-selected="true"] {
+  border-left-color: var(--primary);     /* the blue bar */
+  font-weight: 700;                      /* thick text */
+  color: var(--text);                    /* deep navy */
+  background-color: var(--soft);         /* very light blue */
+}
+
+/* Blue outline when you reach a tab with the Tab key (WCAG) */
+.settings-tab:focus-visible {
+  outline: 3px solid var(--primary-dark); /* a 3px darker blue line around it */
+  outline-offset: 2px;                    /* a small gap between it and the line */
+}
+
+/* The box for the open tab */
+.settings-panel {
+  padding: 24px;                     /* space inside the box */
+  background-color: var(--card);     /* off-white (--card) */
+  border: 1px solid var(--line);     /* thin light blue line around it */
+  border-radius: 16px;               /* rounded corners */
+}
+
+/* The title at the top of the box ("Appearance", "Accessibility", ...) */
+.settings-panel-title {
+  margin-bottom: 4px;    /* small space before the line under it */
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* Plain text inside the box, like the line under the title */
+.settings-text {
+  margin-bottom: 20px;   /* space before the first group of choices */
+  color: var(--muted);   /* blue (8.3:1 on the box) */
+}
+
+/* One group of choices ("Color theme", "Text size", ...), with a thin line above it */
+.settings-group {
+  padding-top: 20px;                     /* space between the line and the group's title */
+  margin-bottom: 20px;                   /* space before the next group */
+  border-top: 1px solid var(--line);     /* thin light blue line between groups */
+}
+
+/* The group's title. <legend> is the title of a <fieldset> (a group of
+   choices), and screen readers read it before each choice in the group (WCAG) */
+.settings-legend {
+  float: left;           /* browsers normally draw a <legend> ON the group's top line;
+                            "float" moves it inside the group, under the line, instead */
+  width: 100%;           /* ...and keeps it on a line of its own */
+  margin-bottom: 4px;    /* small space before the hint or the choices */
+  font-size: 17px;       /* a little bigger than normal text */
+  font-weight: 700;      /* thick text */
+  color: var(--text);    /* deep navy */
+}
+
+/* Whatever comes right after the title starts on a new line below it
+   ("clear" undoes the float above) */
+.settings-legend + * {
+  clear: both;
+}
+
+/* The small line under a group's title, explaining it */
+.settings-hint {
+  margin-bottom: 10px;     /* space before the choices */
+  font-size: 15px;         /* small text */
+  color: var(--subtle);    /* soft blue (6.1:1 on the box) */
+}
+
+/* The choices in a group, in a grid that fits as many per row as there's room for */
+.settings-choices {
+  display: grid;                                              /* turns on grid */
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* each choice at least 180px wide */
+  gap: 10px;                                                  /* space between choices */
+}
+
+/* One choice you can pick (a radio button) or turn on (a checkbox), shown as
+   a small box. The whole box is the <label>, so clicking anywhere on it picks it */
+.settings-choice {
+  display: flex;                     /* puts the button and the words in a row */
+  align-items: flex-start;           /* lines them up at the top */
+  gap: 10px;                         /* space between them */
+  padding: 12px;                     /* space inside the box */
+  border: 1px solid var(--line);     /* thin light blue line around it */
+  border-radius: 10px;               /* rounded corners */
+  cursor: pointer;                   /* mouse turns into a pointing hand */
+}
+
+/* Very light blue when the mouse is over a choice */
+.settings-choice:hover {
+  background-color: var(--soft);
+}
+
+/* The choice that's picked or turned on gets a thicker blue line.
+   ":has(input:checked)" means "a choice whose button inside is picked" */
+.settings-choice:has(input:checked) {
+  border-color: var(--primary);                 /* blue line... */
+  box-shadow: inset 0 0 0 1px var(--primary);   /* ...made twice as thick, so it doesn't rely on color alone */
+  background-color: var(--soft);                /* very light blue */
+}
+
+/* The round or square button inside a choice. "accent-color" colors the
+   browser's own buttons, so they still work with the keyboard and screen readers */
+.settings-choice input {
+  flex-shrink: 0;                   /* never squashed */
+  width: 20px;                      /* a bit bigger than the browser's default, so it's easy to see */
+  height: 20px;
+  margin-top: 1px;                  /* lines it up with the first line of words */
+  accent-color: var(--primary);     /* blue when picked */
+}
+
+/* Blue outline when you reach a choice with the Tab key (WCAG).
+   ":has(input:focus-visible)" puts it around the whole box, not just the tiny button */
+.settings-choice:has(input:focus-visible) {
+  outline: 3px solid var(--primary-dark);
+  outline-offset: 2px;
+}
+
+/* The words in a choice: the name, then a short line under it */
+.settings-choice-text {
+  display: flex;
+  flex-direction: column;   /* name on top, line under it */
+  gap: 2px;                 /* small space between them */
+}
+
+/* The choice's name */
+.settings-choice-label {
+  font-weight: 700;       /* thick text */
+  color: var(--text);     /* deep navy */
+}
+
+/* The short line under a choice's name */
+.settings-choice-description {
+  font-size: 14px;         /* small text */
+  color: var(--subtle);    /* soft blue (6.1:1 on the box) */
+}
+
+/* The color circles on the Color theme choices, showing each theme's colors.
+   It's a two-color circle: the page color on the left, the button color on the right */
+.settings-swatch {
+  flex-shrink: 0;                     /* never squashed */
+  width: 28px;                        /* same width and height = a square... */
+  height: 28px;
+  border-radius: 50%;                 /* ...rounded into a circle */
+  border: 1px solid var(--border);    /* thin line, so the light half doesn't disappear */
+}
+
+/* Each theme's two colors (the colors are in :root, under "Settings page") */
+.settings-swatch-blue {
+  background: linear-gradient(90deg, var(--swatch-blue-page) 50%, var(--swatch-blue-button) 50%);
+}
+
+.settings-swatch-mint {
+  background: linear-gradient(90deg, var(--swatch-mint-page) 50%, var(--swatch-mint-button) 50%);
+}
+
+.settings-swatch-lavender {
+  background: linear-gradient(90deg, var(--swatch-lavender-page) 50%, var(--swatch-lavender-button) 50%);
+}
+
+/* The row at the bottom of a tab: the Reset button and its message */
+.settings-footer {
+  display: flex;               /* puts them side by side */
+  flex-wrap: wrap;             /* lets them go onto 2 lines on small screens */
+  align-items: center;         /* lines them up in the middle */
+  gap: 12px;                   /* space between them */
+  padding-top: 20px;           /* space between the line and the buttons */
+  border-top: 1px solid var(--line); /* thin line above */
+}
+
+/* The quieter buttons (Reset, Download my data) */
+.settings-button {
+  padding: 8px 16px;                  /* space inside: top/bottom, left/right */
+  font-family: inherit;               /* buttons don't copy the page's font on their own */
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary-dark);         /* darker blue (6.5:1 on the box) */
+  background-color: var(--card);      /* off-white (--card) */
+  border: 1px solid var(--border);    /* blue line (3.5:1, enough for borders, WCAG) */
+  border-radius: 999px;               /* pill shape */
+  cursor: pointer;                    /* mouse turns into a pointing hand */
+}
+
+/* Very light blue and a darker line when the mouse is over it */
+.settings-button:hover {
+  background-color: var(--soft);
+  border-color: var(--primary-dark);
+}
+
+/* The "Delete my account" button: red words and line, so it's clearly different */
+.settings-button-danger {
+  color: var(--signup-error);          /* deep red (6.5:1 or more) */
+  border-color: var(--signup-error);
+}
+
+.settings-button-danger:hover {
+  border-color: var(--signup-error);   /* keeps the red line when hovered */
+}
+
+/* Blue outline when you reach a button with the Tab key (WCAG) */
+.settings-button:focus-visible {
+  outline: 3px solid var(--primary-dark);
+  outline-offset: 2px;
+}
+
+/* The message next to the buttons ("Back to the defaults.") */
+.settings-message {
+  font-size: 15px;
+  color: var(--muted);   /* blue (8.3:1 on the box) */
+}
+
+/* Account tab: your circle next to the text */
+.settings-picture-row {
+  display: flex;          /* puts them side by side */
+  align-items: center;    /* lines them up in the middle, top-to-bottom */
+  gap: 16px;              /* space between them */
+}
+
+/* The text next to the circle doesn't need the usual space below */
+.settings-picture-row .settings-text {
+  margin-bottom: 0;
+}
+
+/* Phones and narrow windows: the tabs move into a row above the box.
+   If they don't all fit, the row scrolls sideways */
+@media (max-width: 760px) {
+  .settings-page {
+    padding: 16px;                    /* less space around the edges */
+  }
+
+  .settings-layout {
+    grid-template-columns: 1fr;       /* one column: tabs, then the box */
+    gap: 12px;
+  }
+
+  .settings-tabs {
+    position: static;                 /* not sticky (it's a short row now) */
+    flex-direction: row;              /* tabs side by side */
+    overflow-x: auto;                 /* scrolls sideways if they don't fit */
+  }
+
+  .settings-tab {
+    width: auto;                      /* only as wide as its words */
+    flex-shrink: 0;                   /* never squashed */
+    border-left: none;                /* no left bar... */
+    border-bottom: 4px solid transparent; /* ...a bottom bar instead */
+    border-radius: 8px 8px 0 0;       /* only the top corners rounded */
+  }
+
+  .settings-tab[aria-selected="true"] {
+    border-bottom-color: var(--primary); /* the blue bar under the open tab */
+  }
+
+  .settings-panel {
+    padding: 18px 16px;               /* less space inside the box */
+  }
+}
+
+/* Motion: skipped for people who turned on "reduce motion" (WCAG).
+   When you switch tabs, the new box fades in and rises a few pixels.
+   It's quick (0.2 seconds) so switching never feels slow */
+@media (prefers-reduced-motion: no-preference) {
+  /* The recipe: starts invisible and 4px lower */
+  @keyframes settings-panel-in {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+  }
+
+  /* The box plays it every time it appears. (Each tab's box is hidden
+     while its tab is closed, and showing it again starts the animation over) */
+  .settings-panel {
+    animation: settings-panel-in 200ms var(--ease-out);
+  }
+
+  /* Tabs, choices, and buttons fade to their hover colors instead of snapping */
+  .settings-tab,
+  .settings-choice,
+  .settings-button {
+    transition:
+      background-color var(--time-hover) ease,
+      border-color var(--time-hover) ease;
+  }
+}
+
+/* ---------- Page transitions ---------- */
+/* The smooth fade between the About, Sign up, and Log in pages (the code is
+   in components/SmoothLink.jsx). The browser takes a picture of the old page
+   and fades it into the new one. */
+
+/* The top bar gets its own name, so the browser treats it as a separate
+   piece: it stays where it is while the page under it fades, instead of
+   the whole page (bar and all) dissolving */
+.about-bar {
+  view-transition-name: site-bar;
+}
+
+/* Skipped for people who turned on "reduce motion" (SmoothLink doesn't
+   start a fade for them at all) */
+@media (prefers-reduced-motion: no-preference) {
+  /* How long the old page takes to fade out and the new one to fade in:
+     quick, so it feels smooth but nobody waits. "ease" starts and ends gently */
+  ::view-transition-old(root),
+  ::view-transition-new(root),
+  ::view-transition-group(site-bar) {
+    animation-duration: 220ms;
+    animation-timing-function: ease;
+  }
+}
+
+/* ---------- Settings: site-wide choices ---------- */
+/* What the choices on the Settings page do to the WHOLE site.
+   settings.js writes each choice onto the <html> tag, like
+   <html data-theme="mint" data-text-size="large">, and the rules below
+   react to those. ":root" is the <html> tag, so
+   :root[data-theme="mint"] means "when the theme is Mint".
+   These are at the very end of the file on purpose: when two rules are
+   equally strong, the later one wins, so these win over the normal styles. */
+
+/* --- Appearance: color themes ---
+   Each theme swaps the color variables from the top of the file, so every
+   page changes at once. Blue is the normal one, so it needs no rule.
+   Every pair was checked for contrast like the Blue theme (WCAG) */
+
+/* Mint: soft green-blue */
+:root[data-theme="mint"] {
+  --bg: #d3efe4;           /* page background */
+  --card: #effaf5;         /* boxes */
+  --text: #0e3a32;         /* headings and main text (11.8:1 on boxes, 10.3:1 on the page) */
+  --muted: #1b5649;        /* paragraph text (8:1 on boxes, 7:1 on the page) */
+  --primary: #1d7563;      /* buttons (white text on it is 5.6:1) */
+  --primary-dark: #155c4d; /* hover, keyboard outlines, colored text (7.4:1 on boxes) */
+  --border: #4d8f7f;       /* input borders (3.5:1 on boxes) */
+  --line: #a9dac8;         /* thin lines around boxes */
+  --soft: #dff4ec;         /* hover colors and tags */
+  --subtle: #2b6658;       /* small text (6.3:1 on boxes, 5.5:1 on the page) */
+  --accent: #6fcfb2;       /* the main button (dark text on it is 6.7:1) */
+  --accent-hover: #5bc4a4;
+  --accent-text: #0e3a32;
+  --accent-soft: #c6ebdd;
+  --about-bg: #d3efe4;
+  --about-panel: #bfe5d6;
+  --about-edge: #a9dac8;
+  --about-ink: #0e3a32;
+  --about-ink-2: #1b5649;  /* 6.2:1 on the deeper boxes */
+  --about-ink-3: #2b6658;  /* 4.9:1 on the deeper boxes */
+}
+
+/* Lavender: soft purple-blue */
+:root[data-theme="lavender"] {
+  --bg: #e4dff7;
+  --card: #f6f3ff;
+  --text: #271c58;         /* 13.8:1 on boxes, 11.6:1 on the page */
+  --muted: #41357f;        /* 9.4:1 on boxes */
+  --primary: #5a49b5;      /* white text on it is 6.9:1 */
+  --primary-dark: #463797; /* 8.5:1 on boxes */
+  --border: #7b6ebf;       /* 4:1 on boxes */
+  --line: #cac1ec;
+  --soft: #eeeafc;
+  --subtle: #51459a;       /* 7.2:1 on boxes */
+  --accent: #b2a3ef;       /* dark text on it is 6.7:1 */
+  --accent-hover: #a291e9;
+  --accent-text: #271c58;
+  --accent-soft: #dcd4f9;
+  --about-bg: #e4dff7;
+  --about-panel: #d5ccf3;
+  --about-edge: #cac1ec;
+  --about-ink: #271c58;
+  --about-ink-2: #41357f;  /* 6.7:1 on the deeper boxes */
+  --about-ink-3: #51459a;  /* 5.2:1 on the deeper boxes */
+}
+
+/* --- Appearance: heading style ---
+   "Road sign" uses Overpass (the About page's headline font) for the big
+   headings on every page, not only the About page */
+:root[data-headings="sign"] h1,
+:root[data-headings="sign"] h2 {
+  font-family: var(--font-display);  /* Overpass */
+  letter-spacing: -0.01em;           /* pulls the letters slightly closer */
+}
+
+/* --- Accessibility: font ---
+   "Easy to read" is Atkinson Hyperlegible, a font made for people with low
+   vision (it's already loaded in index.html). "Wide letters" is Verdana,
+   which every computer has. ".about-site" is listed too, because the About,
+   Sign up, and Log in pages set their own font */
+:root[data-font="readable"] body,
+:root[data-font="readable"] .about-site,
+:root[data-font="readable"] h1,
+:root[data-font="readable"] h2,
+:root[data-font="readable"] h3 {
+  font-family: "Atkinson Hyperlegible Next", system-ui, sans-serif;
+}
+
+:root[data-font="wide"] body,
+:root[data-font="wide"] .about-site,
+:root[data-font="wide"] h1,
+:root[data-font="wide"] h2,
+:root[data-font="wide"] h3 {
+  font-family: Verdana, Tahoma, sans-serif;
+}
+
+/* --- Accessibility: text size ---
+   "zoom" makes everything bigger, like the browser's own zoom (Ctrl +),
+   so the layout grows with the text and nothing overlaps (WCAG) */
+:root[data-text-size="large"] body {
+  zoom: 1.125;   /* 112.5% of the normal size */
+}
+
+:root[data-text-size="larger"] body {
+  zoom: 1.25;    /* 125% of the normal size */
+}
+
+/* --- Accessibility: high contrast ---
+   All the softer blues become the darkest text color, and the thin light
+   lines become dark too, so everything stands out more. It comes after the
+   themes, so it works with any theme */
+:root[data-high-contrast="on"] {
+  --muted: var(--text);          /* paragraph text as dark as headings */
+  --subtle: var(--text);         /* small text too */
+  --about-ink-2: var(--about-ink);
+  --about-ink-3: var(--about-ink);
+  --border: var(--text);         /* input borders: dark */
+  --line: var(--muted);          /* lines around boxes: dark (--muted is now --text) */
+  --about-edge: var(--text);
+  --primary: var(--primary-dark); /* buttons a step darker (white text on them is 6.5:1 or more) */
+}
+
+/* --- Accessibility: text spacing ---
+   More room between lines, letters, and words, which makes long text
+   easier to follow. These are close to the amounts WCAG 1.4.12 asks sites
+   to handle. "!important" makes these win over every other rule */
+:root[data-text-spacing="on"] body * {
+  line-height: 1.7 !important;        /* more space between lines */
+  letter-spacing: 0.04em !important;  /* a little more space between letters */
+  word-spacing: 0.12em !important;    /* more space between words */
+}
+
+/* --- Accessibility: underline links ---
+   Every link is underlined, so links don't rely on color alone (WCAG) */
+:root[data-underline-links="on"] a {
+  text-decoration: underline !important;
+  text-underline-offset: 3px;          /* moves the underline a bit lower so it doesn't touch the letters */
+}
+
+/* --- Accessibility: reduce motion ---
+   Turns off every animation and transition on the site, the same as the
+   computer's own "reduce motion" setting. TextType and SmoothLink check
+   for this too (see wantsReducedMotion in settings.js) */
+:root[data-reduce-motion="on"] *,
+:root[data-reduce-motion="on"] *::before,
+:root[data-reduce-motion="on"] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;    /* jumps instead of smooth scrolling */
+}
+
+/* --- Accessibility: stronger keyboard outline ---
+   A thicker, darker outline around whatever the Tab key reached (WCAG) */
+:root[data-strong-focus="on"] :focus-visible {
+  outline: 4px solid var(--text) !important;  /* thick, darkest color */
+  outline-offset: 3px !important;             /* a bit more space around it */
 }

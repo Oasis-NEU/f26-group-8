@@ -15,6 +15,11 @@ import { useRef, useState } from "react";
 // Link makes a clickable link to another page of OUR site (like /signup).
 // It changes the page without reloading the whole website.
 import { Link } from "react-router";
+// AccountMenu is your circle and its dropdown, shown in the top bar when
+// you're logged in (components/AccountMenu.jsx).
+import AccountMenu from "../components/AccountMenu.jsx";
+// isLoggedIn tells the page if you're logged in (login-status.js).
+import { isLoggedIn } from "../login-status.js";
 
 // Animated pieces based on React Bits (reactbits.dev). Each file explains
 // what it does, and their styles are in index.css under "React Bits effects".
@@ -426,6 +431,10 @@ function ExampleSearch() {
 
 // About is the whole page. It puts the pieces above together.
 function About() {
+    // true if you're logged in (login-status.js). It's read once when the
+    // page opens. (Passing isLoggedIn without () means "only check the first time")
+    const [loggedIn] = useState(isLoggedIn);
+
     return (
         // "about-site" wraps the whole page, so index.css can give it its colors and
         // give it its own fonts without changing any other page
@@ -467,11 +476,24 @@ function About() {
                         </ul>
                     </nav>
 
-                    {/* Log in and Sign up, on the right */}
+                    {/* The right side. "loggedIn ? (...) : (...)" means "if you're
+                        logged in, show the first part; if not, show the second" */}
                     <div className="about-bar-actions">
-                        <Link to="/login" className="about-login-link">Log in</Link>
-                        {/* Sign up is bright blue, the accent color, so it's the one that stands out */}
-                        <Link to="/signup" className="about-button">Sign up</Link>
+                        {loggedIn ? (
+                            <>
+                                {/* Logged in: a Home button back to the Feed, and your
+                                    circle with the dropdown (components/AccountMenu.jsx) */}
+                                <Link to="/feed" className="about-button">Home</Link>
+                                <AccountMenu />
+                            </>
+                        ) : (
+                            <>
+                                {/* Not logged in: Log in and Sign up */}
+                                <Link to="/login" className="about-login-link">Log in</Link>
+                                {/* Sign up is bright blue, the accent color, so it's the one that stands out */}
+                                <Link to="/signup" className="about-button">Sign up</Link>
+                            </>
+                        )}
                     </div>
                 </div>
             </header>
