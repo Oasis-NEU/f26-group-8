@@ -11,6 +11,7 @@ import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import Feed from "./pages/Feed.jsx";
 import Profile from "./pages/Profile.jsx";
+import EditProfile from "./pages/EditProfile.jsx";
 import Network from "./pages/Network.jsx";
 import Messages from "./pages/Messages.jsx";
 import Settings from "./pages/Settings.jsx";
@@ -31,6 +32,8 @@ function App() {
       <Route path="/feed" element={<Feed />} />
       {/* yoursite.com/profile shows the Profile page */}
       <Route path="/profile" element={<Profile />} />
+      {/* yoursite.com/profile shows the EditProfile page */}
+      <Route path="/editprofile" element={<EditProfile />} />
       {/* yoursite.com/network shows the Network page */}
       <Route path="/network" element={<Network />} />
       {/* yoursite.com/messages shows the Messages page */}

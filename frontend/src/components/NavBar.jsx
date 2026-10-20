@@ -14,8 +14,10 @@ import AccountMenu from "./AccountMenu.jsx";
 // The top bar
 function NavBar() {
   return (
-    // <nav> tells screen readers this is the site's navigation (WCAG)
-    <nav className="feed-nav">
+    // <nav> tells screen readers this is the site's navigation (WCAG).
+    // aria-label="Main" names it, so it can be told apart from other
+    // sets of links on a page (like "Profile sections" on the Profile page)
+    <nav className="feed-nav" aria-label="Main">
       {/* Left side: the site name and the search box */}
       <div className="feed-nav-left">
         {/* The site name. Clicking it goes to the About page. Since you're
@@ -32,14 +34,13 @@ function NavBar() {
           placeholder="Search..."
         />
       </div>
-      {/* Right side: links to other pages, then your circle.
-          href="#" means the links don't go anywhere yet */}
+      {/* Right side: links to other pages, then your circle */}
       <div className="feed-nav-right">
         <Link to="/feed">Home</Link>
         <Link to="/network">Network</Link>
         <Link to="/messages">Messages</Link>
-        {/* Your circle. Clicking it opens a dropdown with Settings,
-            Preferences, Profile picture, and Log out */}
+{/* Your circle. Clicking it opens a dropdown with View profile,
+            Settings, Preferences, Profile picture, and Log out */}
         <AccountMenu />
       </div>
     </nav>
