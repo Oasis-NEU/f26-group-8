@@ -8,9 +8,9 @@
 // start with "feed-" because the bar was first made for the Feed page.
 
 // Link makes a clickable link to another page of our site.
-// NavLink is the same, but it also knows when you're already on its page:
-// it adds aria-current="page", so screen readers say "current page" (WCAG)
-import { Link, NavLink } from "react-router";
+import { Link } from "react-router";
+// AccountMenu is your circle and the dropdown it opens (components/AccountMenu.jsx).
+import AccountMenu from "./AccountMenu.jsx";
 // The top bar
 function NavBar() {
   return (
@@ -20,7 +20,9 @@ function NavBar() {
     <nav className="feed-nav" aria-label="Main">
       {/* Left side: the site name and the search box */}
       <div className="feed-nav-left">
-        <span className="feed-nav-logo">ScoutSearch</span>
+        {/* The site name. Clicking it goes to the About page. Since you're
+            logged in, its top bar shows a Home button and your circle there */}
+        <Link to="/about" className="feed-nav-logo">ScoutSearch</Link>
         {/* A hidden label for screen readers, like the one in the post box (WCAG) */}
         <label htmlFor="feed-search" className="sr-only">
           Search
@@ -37,16 +39,9 @@ function NavBar() {
         <Link to="/feed">Home</Link>
         <Link to="/network">Network</Link>
         <Link to="/messages">Messages</Link>
-        {/* Your circle. It's a link to your profile, and it borrows the circle
-            style from the Feed posts. aria-label is what screen readers say,
-            instead of reading the letters "R M V" (WCAG) */}
-        <NavLink
-          to="/profile"
-          className="feed-post-avatar feed-nav-avatar"
-          aria-label="Your profile"
-        >
-          RMV
-        </NavLink>
+{/* Your circle. Clicking it opens a dropdown with View profile,
+            Settings, Preferences, Profile picture, and Log out */}
+        <AccountMenu />
       </div>
     </nav>
   );
