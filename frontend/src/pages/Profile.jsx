@@ -399,8 +399,11 @@ function ProfileSection(props) {
             readers can tell the Add buttons apart. It starts with the
             visible word, so voice control users can still say "Add" (WCAG) */}
         {isOwnProfile && props.action && (
+          // props.edit is the card to open on the Edit profile page, like
+          // "education" → /editprofile#education. Cards without one just
+          // open the top of the page
           <Link
-            to="/editprofile"
+            to={"/editprofile" + (props.edit ? "#" + props.edit : "")}
             className="profile-card-action"
             aria-label={props.action + " " + props.title.toLowerCase()}
           >
@@ -508,7 +511,7 @@ function ReadyChecklist() {
 // The "About" card: a few sentences in your own words
 function AboutCard() {
   return (
-    <ProfileSection title="About" action="Update">
+    <ProfileSection title="About" action="Update" edit="about">
       <p className="profile-about-text">
         I'm a first-year student who likes building things people actually use.
         Right now I'm learning React by helping build ScoutSearch, and I fence
@@ -523,7 +526,12 @@ function AboutCard() {
 // and your major in a column with a thin line on its left
 function EducationCard() {
   return (
-    <ProfileSection id="education" title="Education" action="Add">
+    <ProfileSection
+      id="education"
+      title="Education"
+      action="Add"
+      edit="education"
+    >
       <div className="profile-education">
         {/* The square with your school's initials (decoration, WCAG) */}
         <div className="profile-logo" aria-hidden="true">
@@ -550,7 +558,12 @@ function EducationCard() {
 // It uses the same row look as Projects and Resume
 function ExperienceCard() {
   return (
-    <ProfileSection id="experience" title="Work Experience" action="Add">
+    <ProfileSection
+      id="experience"
+      title="Work Experience"
+      action="Add"
+      edit="experience"
+    >
       {/* If the list is empty, say so instead of showing a blank card.
           "? :" means "if ... then show this, otherwise show that" */}
       {experiences.length === 0 ? (
@@ -612,7 +625,7 @@ function resetTilt(event) {
 // The whole tile is clickable: the CSS stretches the arrow's link over it
 function ProjectsCard() {
   return (
-    <ProfileSection id="projects" title="Projects" action="Add">
+    <ProfileSection id="projects" title="Projects" action="Add" edit="projects">
       {/* If the list is empty, say so instead of showing a blank card */}
       {projects.length === 0 ? (
         <p className="profile-empty">
@@ -689,7 +702,7 @@ function ProjectsCard() {
 // here yet. You can update it from the Edit profile page
 function ResumeCard() {
   return (
-    <ProfileSection id="resume" title="Resume" action="Update">
+    <ProfileSection id="resume" title="Resume" action="Update" edit="resume">
       <div className="profile-row">
         {/* The square with the file icon (decoration, WCAG) */}
         <div className="profile-logo" aria-hidden="true">
@@ -724,7 +737,7 @@ function ResumeCard() {
 // The Skills card: one tag for each skill
 function SkillsCard() {
   return (
-    <ProfileSection title="Skills" action="Add">
+    <ProfileSection title="Skills" action="Add" edit="skills">
       {/* If the list is empty, say so instead of showing a blank card */}
       {skills.length === 0 ? (
         <p className="profile-empty">No skills listed yet.</p>

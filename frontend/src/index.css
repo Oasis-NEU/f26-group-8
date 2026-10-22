@@ -3363,148 +3363,353 @@ html:has(.about-site) {
   }
 }
 
-/* EditProfile Page */
+/* ---------- EditProfile Page ---------- */
+/* Everything below styles the Edit Profile page (EditProfile.jsx,
+   yoursite.com/editprofile). Every class name starts with "edit-".
+   The cards match the Profile page's cards, so the two pages feel like one.
+   Contrast ratios in the comments are on the off-white boxes (--card). */
 
+/* The layout of the whole page: the parts list on the left, the cards on the right */
+.edit-page {
+  display: grid;                      /* turns on grid, a way to make columns */
+  grid-template-columns: 260px 1fr;   /* left column 260px, the cards get the rest */
+  align-items: start;                 /* each column is only as tall as its contents */
+  gap: 16px 24px;                     /* space between rows, then between columns */
+  max-width: 1100px;                  /* never wider than 1100px */
+  margin: 0 auto;                     /* centers the page on the screen */
+  padding: 24px 24px 48px;            /* space inside the edges: top, left/right, bottom */
+}
+
+/* "← Back to profile", at the top of the left column. The left column stays
+   on screen while you scroll (see .edit-profile-tracker), so this does too */
+.edit-back-link {
+  display: inline-block;        /* lets it have space below it */
+  margin-bottom: 12px;          /* space between the link and the parts list */
+  color: var(--primary-dark);   /* darker blue words (5.8:1 on the light blue page, WCAG) */
+  font-weight: 600;             /* semi-bold */
+  text-decoration: none;        /* no underline until you hover */
+  padding: 6px 0;               /* a bit taller, so it's easier to click */
+}
+
+/* Underline on hover and keyboard focus, so you can tell it's a link (WCAG) */
+.edit-back-link:hover,
+.edit-back-link:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 4px;   /* moves the line a little below the letters */
+}
+
+/* The left column stays on screen while you scroll through the cards.
+   top: 88px keeps it below the sticky top bar */
+.edit-profile-tracker {
+  position: sticky;
+  top: 88px;
+  max-height: calc(100vh - 100px);  /* never taller than the screen (minus the top bar).
+                                       100vh = the screen's full height */
+  overflow-y: auto;             /* if it is taller (a short laptop screen), the column
+                                   scrolls by itself, so the last steps aren't cut off */
+}
+
+/* ----- The parts list on the left ----- */
+
+/* The box around the list */
 .edit-tracker-card {
-  background: white;
-  padding: 16px 24px;
-  max-width: 300px;
-  border: 1px solid #e5e5e5;
-  border-radius: 16px;
+  background-color: var(--card);      /* off-white box (--card) */
+  border: 1px solid var(--line);      /* thin light blue line around it */
+  border-radius: 16px;                /* rounded corners */
+  padding: 24px;                      /* space inside the box */
 }
 
+/* "Edit profile", the page's title */
 .edit-tracker-header {
-  font-weight: bold;
-  font-size: 28px;
+  font-weight: bold;            /* thick text */
+  font-size: 26px;              /* big text */
+  color: var(--text);           /* navy (12:1, WCAG) */
 }
 
+/* "Keep your profile up to date" */
 .edit-tracker-subtitle {
-  font-size: 13px;
-  color: #949494;
-  margin-top: 6px;
+  font-size: 14px;              /* small text */
+  color: var(--subtle);         /* soft blue (6.1:1, WCAG) */
+  margin-top: 4px;              /* space above */
 }
 
+/* The numbered list. <ol> adds its own numbers and space, so take them away
+   (our circles show the numbers instead) */
+.edit-tracker-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 16px;             /* space between the subtitle and the list */
+  display: flex;                /* turns on flexbox... */
+  flex-direction: column;       /* ...stacked top-to-bottom */
+  gap: 4px;                     /* a little space between steps */
+}
+
+/* One step: the number circle and the word, side by side. It's a link */
 .edit-tracker-steps {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 12px;
+  display: flex;                /* circle and word side by side */
+  align-items: center;          /* lined up in the middle */
+  gap: 12px;                    /* space between them */
+  padding: 8px 10px;            /* space inside, so the whole row is easy to click */
+  margin: 0 -10px;              /* lines the circles up with the title above */
+  border-radius: 10px;          /* rounded corners for the hover color */
+  color: var(--muted);          /* blue words (8.3:1, WCAG) */
+  text-decoration: none;        /* no underline */
 }
 
+/* The number in a circle */
 .edit-tracker-id {
-  width: 28px;
-  height: 28px;
-  border-radius: 999px;
-  background-color: #e5e5e5;
-  display: flex;
+  display: flex;                /* centers the number... */
   justify-content: center;
   align-items: center;
-  font-size: 13px;
-  font-weight: bold;
+  width: 28px;                  /* same width and height... */
+  height: 28px;
+  flex-shrink: 0;               /* never gets squished */
+  border-radius: 50%;           /* ...and 50% makes a circle */
+  background-color: var(--soft);      /* very light blue (--soft) */
+  color: var(--primary-dark);   /* darker blue number (6:1 on --soft, WCAG) */
+  font-size: 13px;              /* small number */
+  font-weight: bold;            /* thick */
 }
 
+/* The word, like "Education" */
 .edit-tracker-label {
   font-size: 15px;
-  color: #111827;
+  font-weight: 600;             /* semi-bold */
 }
 
-.edit-page {
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 12px;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 32px 24px;
+/* Hover (mouse only): a light blue background and navy words.
+   On phones a tap would leave this stuck on, so they skip it */
+@media (hover: hover) and (pointer: fine) {
+  .edit-tracker-steps:hover {
+    background-color: var(--soft);    /* very light blue (--soft) */
+    color: var(--text);               /* navy (about 11:1 on --soft) */
+  }
 }
 
+/* ----- The cards on the right ----- */
 
-/* Basic Information Card */ 
-
-.edit-card {
-  background: white;
-  padding: 16px 24px;
-  border: 1px solid #e5e5e5;
-  border-radius: 16px;
-  display: flex;
-  flex-direction: column;
-}
-
-.edit-card-title {
-  font-weight: bold;
-  font-size: 22px;
-  margin-bottom: 4px;
-}
-
-.edit-label {
-  font-size: 13px;
-  font-weight: 600;
-  margin-top: 8px;
-  margin-bottom: 6px;
-}
-
-.edit-input {
-  padding: 10px 12px;
-  border: 1px solid #e5e5e5;
-  border-radius: 16px;
-  font-size: 14px;
-}
-
-.edit-save-btn {
-  margin-top: 18px;
-}
-
-/* About Card */
-
-.edit-textarea {
-  height: 120px;
-  resize: vertical;
-}
-
+/* The cards, stacked with space between them */
 .edit-section {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  flex-direction: column;       /* stacked top-to-bottom */
+  gap: 16px;                    /* space between cards */
+  min-width: 0;                 /* lets the column shrink on narrow screens */
 }
 
-/* Education Card */
+/* One card. It looks like the cards on the Profile page */
+.edit-card {
+  display: flex;                /* turns on flexbox... */
+  flex-direction: column;       /* ...everything stacked top-to-bottom */
+  background-color: var(--card);      /* off-white box (--card) */
+  border: 1px solid var(--line);      /* thin light blue line around it */
+  border-radius: 16px;                /* rounded corners */
+  padding: 28px 32px;                 /* space inside: top/bottom, left/right */
+  scroll-margin-top: 88px;      /* when the list on the left jumps here, stop
+                                   below the sticky top bar instead of under it */
+}
 
+/* The card's title, like "Education" */
+.edit-card-title {
+  font-weight: bold;            /* thick text */
+  font-size: 20px;              /* big text */
+  color: var(--text);           /* navy (12:1, WCAG) */
+}
+
+/* The line under the title, like "What are your strengths?" */
+.edit-card-subtitle {
+  font-size: 14px;              /* small text */
+  color: var(--subtle);         /* soft blue (6.1:1, WCAG) */
+  margin-top: 4px;              /* space between the title and this line */
+  margin-bottom: 8px;           /* space before the first box */
+}
+
+/* Two boxes side by side, like School and Degree */
 .edit-row {
-  display: flex;
-  gap: 16px;
+  display: flex;                /* side by side */
+  gap: 16px;                    /* space between them */
 }
 
+/* One label + box, stacked */
 .edit-field {
   display: flex;
-  flex-direction: column;
-  flex: 1;
+  flex-direction: column;       /* label on top, box underneath */
+  flex: 1;                      /* the boxes in a row share the width equally */
+  min-width: 0;                 /* lets them shrink on narrow screens */
 }
 
-/* Card Subtitles */
-
-.edit-card-subtitle {
-  font-size: 13px;
-  color: #949494;
-  margin-bottom: 6px;
+/* The name above a box, like "School" */
+.edit-label {
+  font-size: 14px;              /* small text */
+  font-weight: 600;             /* semi-bold */
+  color: var(--text);           /* navy (12:1, WCAG) */
+  margin-top: 12px;             /* space above, separating it from the box before */
+  margin-bottom: 6px;           /* space between the name and its box */
 }
 
-/* Skills Card */
+/* Every typing box (and the bigger text areas) */
+.edit-input {
+  padding: 10px 12px;           /* space inside: top/bottom, left/right */
+  border: 1px solid var(--border);    /* blue line around it (3.5:1, enough for a box edge, WCAG) */
+  border-radius: 10px;          /* rounded corners */
+  background-color: var(--card);      /* off-white, the same as the card */
+  color: var(--text);           /* navy words you type (12:1, WCAG) */
+  font-family: inherit;         /* the same font as the rest of the page
+                                   (boxes don't do this by themselves) */
+  font-size: 16px;              /* 16px, so iPhones don't zoom in when you tap the box */
+}
 
+/* The example words inside an empty box, like "e.g. Boston, MA".
+   They start with "e.g." so they don't look like something already typed */
+.edit-input::placeholder {
+  color: var(--subtle);         /* soft blue (6.1:1, WCAG), so it's readable */
+}
+
+/* Keyboard and click focus: a blue ring around the box you're typing in (WCAG) */
+.edit-input:focus-visible {
+  outline: 2px solid var(--primary);  /* blue ring (4.5:1 on the box) */
+  outline-offset: 2px;                /* a little gap between the box and the ring */
+}
+
+/* The taller boxes for longer writing (About, What you did) */
+.edit-textarea {
+  min-height: 120px;            /* at least this tall */
+  resize: vertical;             /* you can drag it taller, but not wider */
+  line-height: 1.5;             /* space between lines */
+}
+
+/* "Save all changes" at the bottom of the page, under the last card */
+.edit-save-all {
+  padding: 14px 20px;           /* bigger than the card buttons, since it saves everything */
+  font-size: 16px;
+}
+
+/* ----- The Skills card ----- */
+
+/* The box and the Add button side by side */
+.edit-skill-form {
+  margin-top: 8px;              /* space above */
+}
+
+/* The box stretches; the Add button stays its normal size */
 .edit-skill-input {
   flex: 1;
+  min-width: 0;                 /* lets it shrink on narrow screens */
 }
 
+/* The list of added skills, wrapping onto new lines when they run out of room.
+   <ul> adds dots and space, so take them away */
 .edit-skills {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 12px;
+  gap: 8px;                     /* space between tags */
+  margin-top: 12px;             /* space above */
+  list-style: none;
+  padding: 0;
 }
 
+/* One skill tag, like "React ×" */
 .edit-skill-pill {
-  background-color: #e5e5e5;
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-size: 13px;
+  display: flex;                /* word and × side by side */
+  align-items: center;          /* lined up in the middle */
+  gap: 2px;                     /* a little space between them */
+  background-color: var(--soft);      /* very light blue (--soft) */
+  color: var(--text);           /* navy words (about 11:1 on --soft, WCAG) */
+  font-size: 14px;              /* small text */
+  font-weight: 600;             /* semi-bold */
+  padding: 4px 4px 4px 12px;    /* less space on the right, where the × is */
+  border-radius: 999px;         /* pill shape */
+}
+
+/* The × that removes a skill */
+.edit-skill-remove {
+  display: flex;                /* centers the × ... */
+  align-items: center;
+  justify-content: center;
+  width: 26px;                  /* same width and height makes a circle */
+  height: 26px;                 /* (at least 24px, so it's easy to tap, WCAG) */
+  border: none;                 /* no line around it */
+  border-radius: 50%;           /* round */
+  background-color: transparent;    /* no color until you hover */
+  color: var(--primary-dark);   /* darker blue × (6:1 on --soft) */
+  font-size: 18px;              /* a big enough × to see */
+  cursor: pointer;              /* the mouse turns into a pointing hand */
+}
+
+/* The × gets a circle behind it when the mouse is over it */
+@media (hover: hover) and (pointer: fine) {
+  .edit-skill-remove:hover {
+    background-color: var(--accent-soft);   /* light sky blue (--accent-soft) */
+  }
+}
+
+/* ----- Keyboard focus ----- */
+
+/* Keyboard users see a clear blue ring on every link and button here (WCAG) */
+.edit-back-link:focus-visible,
+.edit-tracker-steps:focus-visible,
+.edit-skill-remove:focus-visible {
+  outline: 2px solid var(--primary);  /* blue ring */
+  outline-offset: 2px;                /* a little gap */
+}
+
+/* ----- Motion ----- */
+
+/* Only for people who haven't turned on "reduce motion" (WCAG) */
+@media (prefers-reduced-motion: no-preference) {
+  /* Glide to a card instead of jumping. ":has(.edit-page)" keeps this
+     to the Edit Profile page */
+  html:has(.edit-page) {
+    scroll-behavior: smooth;
+  }
+
+  /* Hover colors fade in quickly instead of snapping on */
+  .edit-tracker-steps,
+  .edit-skill-remove {
+    transition:
+      background-color var(--time-hover) ease,
+      color var(--time-hover) ease;
+  }
+
+  /* The Save and Add buttons shrink very slightly while pressed,
+     like the buttons on the Profile page */
+  .edit-card .profile-btn-primary {
+    transition:
+      background-color var(--time-hover) ease,
+      transform var(--time-press) var(--ease-out);
+  }
+
+  .edit-card .profile-btn-primary:active {
+    transform: scale(0.97);
+  }
+}
+
+/* ----- Phones and small tablets ----- */
+
+/* 760px wide or less: one column. The parts list goes on top, and it
+   stops sticking (there's no room to keep it on screen) */
+@media (max-width: 760px) {
+  .edit-page {
+    grid-template-columns: 1fr;
+    padding: 16px 16px 40px;    /* less space at the edges */
+  }
+
+  .edit-profile-tracker {
+    position: static;           /* scrolls away normally */
+    max-height: none;           /* no height limit when it isn't sticky */
+    overflow-y: visible;
+  }
+
+  /* Less space inside each card */
+  .edit-card {
+    padding: 20px;
+  }
+
+  /* Boxes that were side by side stack instead (but the Skills box and
+     its Add button stay side by side, since the button is small) */
+  .edit-row:not(.edit-skill-form) {
+    flex-direction: column;
+    gap: 0;
+  }
 }
 
 /* ---------- Network page ---------- */
