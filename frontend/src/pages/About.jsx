@@ -129,7 +129,7 @@ const glanceFacts = [
 // To add a fifth feature, just add another { title, description, icon } here.
 const features = [
     {
-        title: "Made for Students",
+        title: "Made for Students by Students",
         description: "Built for high school and college students looking for internships, co-ops, and research positions.",
         icon: "graduation-cap",
     },

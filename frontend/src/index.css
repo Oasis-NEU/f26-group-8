@@ -4440,6 +4440,165 @@ html:has(.about-site) {
   background: linear-gradient(90deg, var(--swatch-lavender-page) 50%, var(--swatch-lavender-button) 50%);
 }
 
+/* Accessibility tab: the Text size slider, with a small "A" on the left,
+   a big "A" on the right, and the size it's on (like "125%") at the end */
+.settings-slider-row {
+  display: flex;           /* puts them all in a row */
+  align-items: center;     /* lines them up in the middle, top-to-bottom */
+  gap: 12px;               /* space between them */
+  max-width: 480px;        /* so the slider isn't super long on big screens */
+}
+
+/* The slider itself. It's still the browser's own slider underneath, so it
+   works with the mouse, a finger, the keyboard, and screen readers. We only
+   change how it looks: a thin rounded track and a round knob.
+   "appearance: none" turns off the browser's look so ours can replace it */
+.settings-slider {
+  --knob: 22px;                     /* how wide the round knob is (used a few times below) */
+  flex: 1;                          /* takes up all the space left in the row */
+  min-width: 0;                     /* lets it shrink on small phones instead of spilling off */
+  height: 28px;                     /* a tall area to grab, so it's easy to tap (WCAG) */
+  margin: 0;                        /* browsers add a little space around sliders; this removes it */
+  appearance: none;                 /* turns off the browser's own look */
+  -webkit-appearance: none;         /* the same, for Chrome, Edge, and Safari */
+  background: transparent;          /* only the track below is drawn */
+  cursor: pointer;                  /* mouse turns into a pointing hand */
+}
+
+/* Tab key: the ring goes around the knob (below), not around the whole slider */
+.settings-slider:focus-visible {
+  outline: none;
+}
+
+/* Browsers name the track and knob differently, so each rule below comes twice:
+   "-webkit-" for Chrome, Edge, and Safari, and "-moz-" for Firefox.
+   (They can't share one rule: a browser skips a whole rule if it sees a name it doesn't know) */
+
+/* The track: a thin rounded line. It's blue up to the knob and light blue after it,
+   so you can see how far along it is at a glance.
+   --slider-fill comes from Settings.jsx: 0 at 100%, 1 at 150%.
+   The calc() lines the blue edge up with the middle of the knob */
+.settings-slider::-webkit-slider-runnable-track {
+  height: 8px;                       /* thin */
+  border-radius: 999px;              /* fully rounded ends */
+  background: linear-gradient(
+    to right,
+    var(--primary) 0 calc(var(--knob) / 2 + var(--slider-fill, 0) * (100% - var(--knob))),
+    var(--line) 0                    /* "0" means "start right where the blue stops", for a clean edge */
+  );
+}
+
+/* Firefox: the light blue track, plus its own "progress" part for the blue bit */
+.settings-slider::-moz-range-track {
+  height: 8px;
+  border-radius: 999px;
+  background-color: var(--line);     /* light blue */
+}
+
+.settings-slider::-moz-range-progress {
+  height: 8px;
+  border-radius: 999px;
+  background-color: var(--primary);  /* blue, up to the knob */
+}
+
+/* The round knob you drag: off-white with a blue ring and a soft shadow under it,
+   so it looks like it sits on top of the track */
+.settings-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;          /* turns off the browser's knob */
+  width: var(--knob);                /* same width and height... */
+  height: var(--knob);
+  margin-top: calc((8px - var(--knob)) / 2); /* moves it up so it's centered on the 8px track */
+  border: 2px solid var(--primary);  /* blue ring (4.5:1 on the box, so it's easy to see, WCAG) */
+  border-radius: 50%;                /* ...rounded into a circle */
+  background-color: var(--card);     /* off-white */
+  box-shadow: 0 1px 3px color-mix(in srgb, var(--text) 30%, transparent); /* soft shadow (navy, 30% see-through) */
+}
+
+.settings-slider::-moz-range-thumb {
+  box-sizing: border-box;            /* Firefox counts the ring inside the 22px, like Chrome does */
+  width: var(--knob);
+  height: var(--knob);
+  border: 2px solid var(--primary);
+  border-radius: 50%;
+  background-color: var(--card);
+  box-shadow: 0 1px 3px color-mix(in srgb, var(--text) 30%, transparent);
+}
+
+/* Mouse over the knob: a soft blue glow appears around it, showing it can be grabbed.
+   "(hover: hover)" skips this on phones, where a tap would leave it stuck on */
+@media (hover: hover) and (pointer: fine) {
+  .settings-slider:hover::-webkit-slider-thumb {
+    box-shadow:
+      0 1px 3px color-mix(in srgb, var(--text) 30%, transparent),
+      0 0 0 6px color-mix(in srgb, var(--primary) 15%, transparent); /* 6px glow, 15% blue */
+  }
+
+  .settings-slider:hover::-moz-range-thumb {
+    box-shadow:
+      0 1px 3px color-mix(in srgb, var(--text) 30%, transparent),
+      0 0 0 6px color-mix(in srgb, var(--primary) 15%, transparent);
+  }
+}
+
+/* While you're holding the knob: a bigger, stronger glow, so it feels "picked up",
+   and the mouse turns into a closed hand */
+.settings-slider:active {
+  cursor: grabbing;
+}
+
+.settings-slider:active::-webkit-slider-thumb {
+  box-shadow:
+    0 1px 3px color-mix(in srgb, var(--text) 30%, transparent),
+    0 0 0 8px color-mix(in srgb, var(--primary) 22%, transparent);  /* 8px glow, 22% blue */
+}
+
+.settings-slider:active::-moz-range-thumb {
+  box-shadow:
+    0 1px 3px color-mix(in srgb, var(--text) 30%, transparent),
+    0 0 0 8px color-mix(in srgb, var(--primary) 22%, transparent);
+}
+
+/* Tab key: a thick darker blue ring around the knob, with a thin off-white gap
+   between them so it stands out on the blue track (WCAG) */
+.settings-slider:focus-visible::-webkit-slider-thumb {
+  box-shadow:
+    0 0 0 3px var(--card),           /* the off-white gap */
+    0 0 0 6px var(--primary-dark);   /* the 3px darker blue ring */
+}
+
+.settings-slider:focus-visible::-moz-range-thumb {
+  box-shadow:
+    0 0 0 3px var(--card),
+    0 0 0 6px var(--primary-dark);
+}
+
+/* The small "A" on the left */
+.settings-slider-small-a {
+  font-size: 14px;          /* small */
+  font-weight: 700;         /* thick text */
+  color: var(--subtle);     /* soft blue, so the slider stands out more than the letters */
+}
+
+/* The big "A" on the right */
+.settings-slider-big-a {
+  font-size: 24px;          /* big */
+  font-weight: 700;
+  color: var(--subtle);
+}
+
+/* The size it's on now, like "125%", in a small light blue pill */
+.settings-slider-value {
+  min-width: 5.5ch;                    /* room for "150%", so the row doesn't wiggle as it changes */
+  padding: 2px 10px;                   /* space inside: top/bottom, left/right */
+  border-radius: 999px;                /* pill shape */
+  background-color: var(--accent-soft); /* light blue (navy text on it is 9.9:1) */
+  font-size: 15px;
+  font-weight: 700;                    /* thick text */
+  font-variant-numeric: tabular-nums;  /* every number is the same width, for the same reason */
+  color: var(--text);                  /* deep navy */
+  text-align: center;                  /* number in the middle of the pill */
+}
+
 /* The row at the bottom of a tab: the Reset button and its message */
 .settings-footer {
   display: flex;               /* puts them side by side */
@@ -4564,6 +4723,18 @@ html:has(.about-site) {
       background-color var(--time-hover) ease,
       border-color var(--time-hover) ease;
   }
+
+  /* The text size knob's glow grows in smoothly when you hover over or grab it.
+     Only the glow fades; the knob itself always follows your mouse right away.
+     ":not([data-reduce-motion="on"])" also skips it when "Reduce motion" is on in
+     our Settings (the site-wide rule for that doesn't reach the knob) */
+  :root:not([data-reduce-motion="on"]) .settings-slider::-webkit-slider-thumb {
+    transition: box-shadow var(--time-hover) var(--ease-out);
+  }
+
+  :root:not([data-reduce-motion="on"]) .settings-slider::-moz-range-thumb {
+    transition: box-shadow var(--time-hover) var(--ease-out);
+  }
 }
 
 /* ---------- Page transitions ---------- */
@@ -4594,7 +4765,7 @@ html:has(.about-site) {
 /* ---------- Settings: site-wide choices ---------- */
 /* What the choices on the Settings page do to the WHOLE site.
    settings.js writes each choice onto the <html> tag, like
-   <html data-theme="mint" data-text-size="large">, and the rules below
+   <html data-theme="mint" data-font="readable">, and the rules below
    react to those. ":root" is the <html> tag, so
    :root[data-theme="mint"] means "when the theme is Mint".
    These are at the very end of the file on purpose: when two rules are
@@ -4684,14 +4855,11 @@ html:has(.about-site) {
 }
 
 /* --- Accessibility: text size ---
-   "zoom" makes everything bigger, like the browser's own zoom (Ctrl +),
-   so the layout grows with the text and nothing overlaps (WCAG) */
-:root[data-text-size="large"] body {
-  zoom: 1.125;   /* 112.5% of the normal size */
-}
-
-:root[data-text-size="larger"] body {
-  zoom: 1.25;    /* 125% of the normal size */
+   settings.js turns the slider's number into --text-zoom on the <html> tag
+   (125% becomes 1.25). "zoom" makes everything bigger, like the browser's own
+   zoom (Ctrl +), so the layout grows with the text and nothing overlaps (WCAG) */
+body {
+  zoom: var(--text-zoom, 1);   /* the ", 1" means "normal size" if it was never set */
 }
 
 /* --- Accessibility: high contrast ---

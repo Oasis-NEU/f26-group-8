@@ -381,18 +381,53 @@ function Settings() {
                                 ]}
                             />
 
-                            <ChoiceGroup
-                                legend="Text size"
-                                hint="Makes the text and everything around it bigger."
-                                name="textSize"
-                                value={settings.textSize}
-                                onChange={(value) => changeSetting('textSize', value)}
-                                options={[
-                                    { value: 'normal', label: 'Normal', description: '100%' },
-                                    { value: 'large', label: 'Large', description: '112%' },
-                                    { value: 'larger', label: 'Larger', description: '125%' },
-                                ]}
-                            />
+                            {/* Text size: a slider you drag left (smaller) or right (bigger).
+                                The <label> is its title, and htmlFor ties it to the slider,
+                                so screen readers say "Text size" when they reach it (WCAG) */}
+                            <div className="settings-group">
+                                <label htmlFor="settings-text-size" className="settings-legend">Text size</label>
+                                <p id="settings-text-size-hint" className="settings-hint">
+                                    Drag the slider, or use the arrow keys, to make the text and everything around it bigger.
+                                </p>
+                                <div className="settings-slider-row">
+                                    {/* A small "A" and a big "A" at each end, showing which way is bigger.
+                                        They're decoration, so screen readers skip them (WCAG) */}
+                                    <span className="settings-slider-small-a" aria-hidden="true">A</span>
+                                    {/* type="range" is the browser's own slider, so it already works
+                                        with the mouse, a finger, and the arrow keys.
+                                        min/max/step: from 100% to 150%, 1% at a time, so you can pick any size in between.
+                                        aria-valuetext makes screen readers say "125%", not just "125" (WCAG) */}
+                                    <input
+                                        type="range"
+                                        id="settings-text-size"
+                                        className="settings-slider"
+                                        min="100"
+                                        max="150"
+                                        step="1"
+                                        value={settings.textSize}
+                                        aria-describedby="settings-text-size-hint"
+                                        aria-valuetext={settings.textSize + '%'}
+                                        // How far along the knob is: 0 at 100%, 1 at 150%.
+                                        // index.css uses it to color the track blue up to the knob.
+                                        // (This is the only style set in JSX, because it changes
+                                        // as you drag. The look itself stays in index.css)
+                                        style={{ '--slider-fill': (settings.textSize - 100) / 50 }}
+                                        // While you drag, only the number next to the slider changes.
+                                        // (The slider grows with the page, so changing the size mid-drag
+                                        // would make it jump around under the mouse.)
+                                        // Number() turns the slider's text "125" into the number 125
+                                        onChange={(event) => setSettings({ ...settings, textSize: Number(event.target.value) })}
+                                        // When you let go, or press an arrow key, the new size is saved and put into effect.
+                                        // onBlur (leaving the slider) is a backup, in case the mouse was let go somewhere else
+                                        onPointerUp={(event) => changeSetting('textSize', Number(event.target.value))}
+                                        onKeyUp={(event) => changeSetting('textSize', Number(event.target.value))}
+                                        onBlur={(event) => changeSetting('textSize', Number(event.target.value))}
+                                    />
+                                    <span className="settings-slider-big-a" aria-hidden="true">A</span>
+                                    {/* The size it's on now, like "125%" */}
+                                    <span className="settings-slider-value">{settings.textSize}%</span>
+                                </div>
+                            </div>
 
                             <fieldset className="settings-group">
                                 <legend className="settings-legend">Reading and seeing</legend>
