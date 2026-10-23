@@ -7,7 +7,7 @@
 //   only saved in this browser for now. Once the site has a backend, they
 //   should be saved to your account instead, so they follow you everywhere.)
 // - applySettings() writes each choice onto the page's <html> tag, like
-//   <html data-theme="mint" data-text-size="large">. index.css has rules
+//   <html data-theme="mint" data-font="readable">. index.css has rules
 //   for each one (under "Settings: site-wide choices"), so the whole site changes.
 // - main.jsx runs applySettings() once when the site opens, and the
 //   Settings page runs it again every time something is changed.
@@ -32,7 +32,7 @@ export const defaultSettings = {
 
     // Accessibility
     font: 'default',            // 'default', 'readable' (Atkinson Hyperlegible), or 'wide' (Verdana)
-    textSize: 'normal',         // 'normal', 'large', or 'larger'
+    textSize: 100,              // how big the text is, in percent: 100 (normal) up to 150
     highContrast: false,        // darker text and lines
     textSpacing: false,         // more space between lines, letters, and words
     underlineLinks: false,      // underline every link
@@ -47,7 +47,15 @@ export function loadSettings() {
     try {
         const saved = JSON.parse(localStorage.getItem(storageKey));
         // "...": copy everything from defaultSettings, then everything saved on top
-        return { ...defaultSettings, ...saved };
+        const settings = { ...defaultSettings, ...saved };
+        // The text size used to be saved as a word ('normal', 'large', 'larger').
+        // The slider needs a number, so anyone who picked a word before gets
+        // the matching number instead
+        const oldSizes = { normal: 100, large: 112, larger: 125 };
+        if (typeof settings.textSize !== 'number') {
+            settings.textSize = oldSizes[settings.textSize] || 100;
+        }
+        return settings;
     } catch {
         return { ...defaultSettings };
     }
@@ -64,14 +72,16 @@ export function saveSettings(settings) {
 }
 
 // Puts the choices into effect by writing them onto the <html> tag.
-// dataset.textSize = 'large' becomes data-text-size="large" in the HTML.
+// dataset.textSpacing = 'on' becomes data-text-spacing="on" in the HTML.
 // On/off choices are written as "on" or "off"
 export function applySettings(settings) {
     const html = document.documentElement;
     html.dataset.theme = settings.theme;
     html.dataset.headings = settings.headings;
     html.dataset.font = settings.font;
-    html.dataset.textSize = settings.textSize;
+    // The text size is a number, so it goes in a CSS variable instead:
+    // 125 becomes --text-zoom: 1.25, which index.css uses to zoom the page
+    html.style.setProperty('--text-zoom', settings.textSize / 100);
     html.dataset.highContrast = settings.highContrast ? 'on' : 'off';
     html.dataset.textSpacing = settings.textSpacing ? 'on' : 'off';
     html.dataset.underlineLinks = settings.underlineLinks ? 'on' : 'off';
