@@ -24,6 +24,9 @@ import ServiceLogo from '../components/ServiceLogo.jsx';
 import TextType from '../components/reactbits/TextType.jsx';
 // markLoggedIn remembers that you're logged in (login-status.js)
 import { markLoggedIn } from '../login-status.js';
+// supabase is our one shared connection to Supabase (supabase.js).
+// The Google button uses it to sign up
+import { supabase } from '../supabase.js';
 
 // The words typed after "Join now to find" at the top of the page. It types
 // through them once and stops on the last one. (This list lives outside
@@ -88,6 +91,34 @@ function Signup() {
     // Runs when step 1 is submitted (the Continue button is clicked, or Enter
     // is pressed). The browser has already checked that Name and Email are
     // filled in, because they're "required".
+    // Runs when the Google button is clicked.
+    // With Google there's no separate "sign up": the first time someone logs
+    // in with Google, Supabase makes their account. So this is the same as
+    // the Log in page's Google button.
+    // "async" lets us "await": wait for Supabase to answer before going on
+    async function handleGoogle() {
+        // supabase is null when .env.local is missing (see supabase.js)
+        if (!supabase) {
+            console.error('Google sign up: VITE_SUPABASE_URL or VITE_SUPABASE_PUBLISHABLE_KEY is missing from .env.local');
+            return;
+        }
+        // This leaves our site and goes to Google's sign-in page.
+        // redirectTo is where Google sends you back afterward. It's the Log in
+        // page on purpose: that page finishes logging you in and then goes
+        // to the feed (see the useEffect in Login.jsx).
+        // window.location.origin is the start of our address (http://localhost:5173)
+        const { error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: { redirectTo: window.location.origin + '/login' },
+        });
+        // An error here means Supabase isn't set up right (for example, the
+        // keys in .env.local are missing). Step 1 has no message box to show
+        // it in, so the reason goes to the console (F12)
+        if (error) {
+            console.error('Google sign up failed:', error);
+        }
+    }
+
     function handleContinue(event) {
         // Normally submitting a form reloads the whole page. This stops that.
         event.preventDefault();
@@ -268,16 +299,16 @@ function Signup() {
                                     decoration, so screen readers skip it (WCAG) */}
                                 <p className="signup-divider" aria-hidden="true">or continue with</p>
 
-                                {/* The Google and Microsoft buttons, side by side. They're only for looks right now:
-                                    type="button" means they don't send the form, and they don't
-                                    do anything yet when clicked. Later they would start the
-                                    Google or Microsoft sign-in */}
+                                {/* The Google and Microsoft buttons, side by side.
+                                    type="button" means they don't send the form.
+                                    Google signs you up (handleGoogle above). Microsoft
+                                    doesn't do anything yet; it gets turned on later */}
                                 <div className="signup-social-list">
                                     {/* The "or continue with" line above already says
                                         "continue with", so each button only needs the name.
                                         aria-label gives screen readers (and voice control) the
                                         full words (WCAG) */}
-                                    <button type="button" className="signup-social-button" aria-label="Continue with Google">
+                                    <button type="button" className="signup-social-button" aria-label="Continue with Google" onClick={handleGoogle}>
                                         <ServiceLogo name="google" />
                                         Google
                                     </button>

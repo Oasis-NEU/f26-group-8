@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 secrets.env
+# any .env file can hold keys (e.g. frontend/.env, backend/.env), so never commit them
+.env
+.env.*
+# but an example file with fake values is fine to share
+!.env.example
 
 # Editor directories and files
 .vscode/*

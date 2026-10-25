@@ -12,6 +12,10 @@
 // decided, only this file needs to change: isLoggedIn() would check for
 // the token instead, and the pages that use it stay the same.
 
+// supabase is our shared connection (supabase.js). Logging in with Google
+// makes a real Supabase login, so Log out has to end that too (see markLoggedOut)
+import { supabase } from './supabase.js';
+
 // The name it's saved under in localStorage
 const storageKey = 'scoutsearch-logged-in';
 
@@ -37,6 +41,11 @@ export function markLoggedIn() {
 
 // Forgets the login (the dropdown's "Log out" runs this)
 export function markLoggedOut() {
+    // End the real Google login too. Without this, the Log in page would
+    // still find the old login and send you right back to the feed.
+    // scope: 'local' logs out only this browser, not your other devices.
+    // supabase is null when .env.local is missing, so "?." skips it then
+    supabase?.auth.signOut({ scope: 'local' });
     try {
         localStorage.removeItem(storageKey);
     } catch {

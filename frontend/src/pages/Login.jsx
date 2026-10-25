@@ -6,7 +6,8 @@
 // The styles for this page are in index.css, under "Sign up page".
 
 // useState lets the page remember a value and redraw itself when it changes.
-import { useState } from 'react';
+// useEffect runs a bit of code after the page has been drawn.
+import { useEffect, useState } from 'react';
 // useNavigate lets the page send the user to another page of our site.
 import { useNavigate } from 'react-router';
 // SmoothLink is a Link that fades smoothly to the next page (components/SmoothLink.jsx).
@@ -17,6 +18,9 @@ import ServiceLogo from '../components/ServiceLogo.jsx';
 import TextType from '../components/reactbits/TextType.jsx';
 // markLoggedIn remembers that you're logged in (login-status.js)
 import { markLoggedIn } from '../login-status.js';
+// supabase is our one shared connection to Supabase (supabase.js).
+// The Google button uses it to log in
+import { supabase } from '../supabase.js';
 
 // The words typed after "Log in to find" at the top of the page. It types
 // through them once and stops on the last one. (This list lives outside
@@ -30,6 +34,48 @@ function Login() {
 
     // navigate('/feed') // Sends the user to the Feed page after Logging in
     const navigate = useNavigate();
+
+    // After you pick your account on Google's site, Google sends you back to
+    // THIS page with a one-time code in the address bar (?code=...).
+    // Importing supabase.js above is enough for Supabase to see that code and
+    // swap it for a real login. getSession() waits for that swap to finish,
+    // then tells us if someone is logged in. If they are, go to the feed.
+    // (This also sends people who are already logged in straight to the feed.)
+    useEffect(() => {
+        // supabase is null when .env.local is missing (see supabase.js), so skip this
+        if (!supabase) return;
+        supabase.auth.getSession().then(({ data }) => {
+            if (data.session) {
+                markLoggedIn();
+                navigate('/feed');
+            }
+        });
+    }, [navigate]);
+
+    // Runs when the Google button is clicked.
+    // "async" lets us "await": wait for Supabase to answer before going on
+    async function handleGoogle() {
+        // supabase is null when .env.local is missing (see supabase.js)
+        if (!supabase) {
+            console.error('Google log in: VITE_SUPABASE_URL or VITE_SUPABASE_PUBLISHABLE_KEY is missing from .env.local');
+            setMessage("Couldn't start Google log in. Please try again.");
+            return;
+        }
+        // This leaves our site and goes to Google's sign-in page.
+        // redirectTo is where Google sends you back afterward: this Log in
+        // page, so the useEffect above can finish logging you in.
+        // window.location.origin is the start of our address (http://localhost:5173)
+        const { error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: { redirectTo: window.location.origin + '/login' },
+        });
+        // An error here means Supabase isn't set up right (for example, the
+        // keys in .env.local are missing). The real reason goes to the console (F12)
+        if (error) {
+            console.error('Google log in failed:', error);
+            setMessage("Couldn't start Google log in. Please try again.");
+        }
+    }
 
     // Runs when the form is submitted (the Log in button is clicked,
     // or Enter is pressed).
@@ -142,14 +188,14 @@ function Login() {
                         decoration, so screen readers skip it (WCAG) */}
                     <p className="signup-divider" aria-hidden="true">or continue with</p>
 
-                    {/* The Google and Microsoft buttons, side by side. They're only for looks right now:
-                        type="button" means they don't send the form, and they don't
-                        do anything yet when clicked. Later they would start the
-                        Google or Microsoft log in */}
+                    {/* The Google and Microsoft buttons, side by side.
+                        type="button" means they don't send the form.
+                        Google logs you in (handleGoogle above). Microsoft
+                        doesn't do anything yet; it gets turned on later */}
                     <div className="signup-social-list">
                         {/* aria-label gives screen readers (and voice control) the
                             full words, since the button only shows the name (WCAG) */}
-                        <button type="button" className="signup-social-button" aria-label="Continue with Google">
+                        <button type="button" className="signup-social-button" aria-label="Continue with Google" onClick={handleGoogle}>
                             <ServiceLogo name="google" />
                             Google
                         </button>
