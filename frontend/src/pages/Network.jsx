@@ -1,5 +1,3 @@
-// useState lets the page remember a value and redraw itself when it changes.
-import {useState} from 'react';
 // NavBar is the bar across the top of the page. It lives in its own file
 // (components/NavBar.jsx) because the Feed page uses it too.
 import NavBar from '../components/NavBar.jsx';
@@ -16,6 +14,8 @@ const suggestedPeople = [
 function Network() {
     return (
         <>
+            {/* <title> is the name shown on the browser tab (WCAG) */}
+            <title>My Network | ScoutSearch</title>
             <NavBar />
             {/* "network-page" splits the page into the 2 columns*/}
             <main className="network-page">

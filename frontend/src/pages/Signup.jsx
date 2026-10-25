@@ -1,6 +1,6 @@
 // Signup.jsx is the Sign up page (yoursite.com/signup).
 // Signing up takes 2 steps, both shown in the same box on this page:
-//   Step 1: Name and Email (or Google / Microsoft), then "Continue".
+//   Step 1: Name and Email (or Google), then "Continue".
 //   Step 2: Password and "Confirm password" (typed twice, so a typo is caught).
 // For now it only shows a thank-you message. It doesn't really create an
 // account yet, because the site doesn't have a backend (server and database) yet.
@@ -16,7 +16,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 // SmoothLink is a Link that fades smoothly to the next page (components/SmoothLink.jsx).
 import SmoothLink from '../components/SmoothLink.jsx';
-// ServiceLogo draws the Google and Microsoft logos (components/ServiceLogo.jsx).
+// ServiceLogo draws the Google logo (components/ServiceLogo.jsx).
 import ServiceLogo from '../components/ServiceLogo.jsx';
 // TextType: a line that types itself out, one word after another
 import TextType from '../components/reactbits/TextType.jsx';
@@ -297,22 +297,17 @@ function Signup() {
                                     decoration, so screen readers skip it (WCAG) */}
                                 <p className="signup-divider" aria-hidden="true">or continue with</p>
 
-                                {/* The Google and Microsoft buttons, side by side.
-                                    type="button" means they don't send the form.
-                                    Google signs you up (handleGoogle above). Microsoft
-                                    doesn't do anything yet; it gets turned on later */}
+                                {/* The "Continue with Google" button.
+                                    type="button" means it doesn't send the form.
+                                    It signs you up with Google (handleGoogle above) */}
                                 <div className="signup-social-list">
                                     {/* The "or continue with" line above already says
-                                        "continue with", so each button only needs the name.
+                                        "continue with", so the button only needs the name.
                                         aria-label gives screen readers (and voice control) the
                                         full words (WCAG) */}
                                     <button type="button" className="signup-social-button" aria-label="Continue with Google" onClick={handleGoogle}>
                                         <ServiceLogo name="google" />
                                         Google
-                                    </button>
-                                    <button type="button" className="signup-social-button" aria-label="Continue with Microsoft">
-                                        <ServiceLogo name="microsoft" />
-                                        Microsoft
                                     </button>
                                 </div>
                             </>

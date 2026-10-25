@@ -2457,6 +2457,39 @@ html:has(.about-site) {
   outline-offset: 2px;
 }
 
+/* Phones: the top bar is too narrow for everything in one row, so it
+   splits into two rows. The name and the search box go on top, and the
+   links and your circle go underneath. Without this, the search box and the
+   links get pushed off the right edge of the screen */
+@media (max-width: 760px) {
+  .feed-nav {
+    flex-wrap: wrap;      /* lets the two halves stack into 2 rows */
+    gap: 4px 12px;        /* space between the rows, and between things in a row */
+    padding: 8px 16px;    /* less space at the sides, so there's more room */
+  }
+
+  .feed-nav-left {
+    flex: 1 1 100%;       /* takes the whole first row... */
+    min-width: 0;         /* ...and is allowed to be narrower than the name plus a
+                             full-size search box, so the box shrinks to fit instead
+                             of poking out past the edge of the screen */
+  }
+
+  .feed-nav-logo {
+    font-size: 24px;      /* a smaller name, so the search box has room next to it */
+  }
+
+  .feed-nav-search {
+    flex: 1;              /* fills whatever room is left next to the name... */
+    min-width: 0;         /* ...and is allowed to get narrower than 260px */
+    width: auto;          /* (instead of always being 260px wide) */
+  }
+
+  .feed-nav-right {
+    gap: 4px;             /* links closer together, so they fit in one row */
+  }
+}
+
 /* ----- Feed: keyboard focus ----- */
 
 /* Keyboard users (pressing Tab) see a clear outline on every button, tab,
@@ -4425,13 +4458,16 @@ html:has(.about-site) {
   color: var(--about-ink-2);  /* blue (6.5:1 on the box) */
 }
 
-/* The two "Continue with ..." buttons (Google, Microsoft), side by side below the form.
+/* The "Continue with ..." buttons below the form (just Google for now).
    They're off-white with a blue line, so they're a quieter choice than the
    sky-blue Sign up button, which stays the main action */
 .signup-social-list {
-  display: grid;                          /* puts the buttons in columns... */
-  grid-template-columns: 1fr 1fr;         /* ...2 of them, side by side, each half the width */
-  gap: 10px;                              /* space between the buttons */
+  display: grid;                                          /* puts the buttons in columns... */
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* ...as many as fit, sharing the width
+                                                             evenly. One button fills the whole row;
+                                                             if GitHub or LinkedIn get added later,
+                                                             they line up side by side on their own */
+  gap: 10px;                                              /* space between the buttons */
 }
 
 /* One "Continue with ..." button: the logo, then the words */
@@ -4595,6 +4631,65 @@ html:has(.about-site) {
   background-color: var(--about-panel);
 }
 
+/* ---------- Log in page: "Forgot your password?" ----------
+   The small link under the password box, and the reset form it opens.
+   The reset form shows up in the same box on the Log in page (Login.jsx)
+   when the address ends in #forgot-password, so it uses the classes above
+   plus these few. */
+
+/* The line that holds the "Forgot your password?" link. It sits on the
+   right, right under the password box, so it's where people look for it */
+.signup-forgot {
+  margin-top: -4px;      /* pulls it a little closer to the password box above it */
+  margin-bottom: 12px;   /* space before the Log in button */
+  text-align: right;     /* pushes the link to the right edge */
+}
+
+/* The link itself: smaller than the labels, darker blue, and underlined so it
+   looks like a link. It's a quiet extra, so the Log in button stays the main thing */
+.signup-forgot-link {
+  padding: 2px 4px;                          /* a bigger area to click, and room for the outline */
+  border-radius: 4px;                        /* rounded corners for the keyboard outline */
+  font-size: 15px;                           /* a bit smaller than the labels */
+  font-weight: 700;                          /* thick text */
+  color: var(--primary-dark);                /* darker blue (5.2:1 on the box, WCAG) */
+  text-decoration: underline;                /* underlined, so it's clearly a link */
+  text-decoration-color: var(--border);      /* a soft blue line under the words... */
+  text-underline-offset: 3px;                /* ...with a little space under the letters */
+}
+
+/* When the mouse is over it, the line under it turns the same dark blue as the
+   words and gets thicker, so the hover shows without relying on color alone */
+.signup-forgot-link:hover {
+  text-decoration-color: currentColor;  /* same color as the words */
+  text-decoration-thickness: 2px;       /* a thicker line */
+}
+
+/* The email address on the "Check your email" screen. It's bold and navy, so
+   a typo in it is easy to spot. overflow-wrap lets a very long address break
+   onto the next line instead of spilling out of the box */
+.signup-sent-email {
+  font-weight: 700;          /* thick text */
+  color: var(--about-ink);   /* deep navy (9.3:1 on the box) */
+  overflow-wrap: anywhere;   /* long addresses wrap instead of sticking out */
+}
+
+/* The smaller line under it ("It can take a few minutes...") */
+.signup-note {
+  margin-bottom: 16px;        /* space before the buttons */
+  font-size: 15px;            /* a bit smaller than the line above */
+  color: var(--about-ink-2);  /* blue (6.5:1 on the box) */
+}
+
+/* The "Back to Log in" link on the "Check your email" screen. It has the
+   sky-blue button look (about-button) and is as wide as the box
+   (signup-submit). It's a link, not a button, because it goes to a page,
+   so this centers its words the way a button would */
+.signup-submit-link {
+  display: block;       /* fills the box's width, like the buttons */
+  text-align: center;   /* words in the middle */
+}
+
 /* Phones: less space around and inside the box, so the form has room */
 @media (max-width: 640px) {
   .signup-main {
@@ -4663,7 +4758,9 @@ html:has(.about-site) {
   .signup-secondary-button,
   .signup-step,
   .signup-banner,
-  .signup-switch {
+  .signup-switch,
+  .signup-forgot,
+  .signup-note {
     animation: signup-rise var(--time-signup-rise) var(--ease-out) backwards;
   }
 
@@ -4684,6 +4781,12 @@ html:has(.about-site) {
   .signup-input:nth-of-type(1) { animation-delay: calc(var(--signup-start) + var(--signup-stagger) * 2); }
   .signup-label:nth-of-type(2),
   .signup-input:nth-of-type(2) { animation-delay: calc(var(--signup-start) + var(--signup-stagger) * 3); }
+
+  /* "Forgot your password?" arrives together with the password box above it */
+  .signup-forgot { animation-delay: calc(var(--signup-start) + var(--signup-stagger) * 3); }
+
+  /* On "Check your email", the smaller line arrives right after the line above it */
+  .signup-note { animation-delay: calc(var(--signup-start) + var(--signup-stagger) * 2); }
 
   /* The big button under the inputs */
   .signup-submit { animation-delay: calc(var(--signup-start) + var(--signup-stagger) * 4); }
@@ -4733,6 +4836,12 @@ html:has(.about-site) {
   /* The "Log in" link's pale blue box fades in on hover */
   .signup-switch a {
     transition: background-color var(--time-hover) ease;
+  }
+
+  /* The line under "Forgot your password?" fades to dark blue on hover.
+     Only the color fades: the link doesn't move, since it's a small extra */
+  .signup-forgot-link {
+    transition: text-decoration-color var(--time-hover) ease;
   }
 }
 
