@@ -12,8 +12,6 @@
 // so the code can move the keyboard focus to it.
 // useEffect runs a bit of code after the page has been redrawn.
 import { useEffect, useRef, useState } from 'react';
-// Link makes a clickable link to another page of our site.
-import { Link } from 'react-router';
 // useNavigate lets the page send the user to another page of our site.
 import { useNavigate } from 'react-router';
 // SmoothLink is a Link that fades smoothly to the next page (components/SmoothLink.jsx).
@@ -88,9 +86,6 @@ function Signup() {
         return () => clearTimeout(waitTimer.current);
     }, []);
 
-    // Runs when step 1 is submitted (the Continue button is clicked, or Enter
-    // is pressed). The browser has already checked that Name and Email are
-    // filled in, because they're "required".
     // Runs when the Google button is clicked.
     // With Google there's no separate "sign up": the first time someone logs
     // in with Google, Supabase makes their account. So this is the same as
@@ -119,6 +114,9 @@ function Signup() {
         }
     }
 
+    // Runs when step 1 is submitted (the Continue button is clicked, or Enter
+    // is pressed). The browser has already checked that Name and Email are
+    // filled in, because they're "required".
     function handleContinue(event) {
         // Normally submitting a form reloads the whole page. This stops that.
         event.preventDefault();
