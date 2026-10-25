@@ -108,12 +108,12 @@ SSO login (planned 2026-10-19) - replaces username/password with Supabase Auth
         S1c. ONLY AFTER S2c: copy the PUBLISHABLE key for the frontend team.
              never share the secret key.
 
-    [ ] Task S2 - profiles table                       files: backend/sql/profiles.sql (new)  (Anthony)
+    [x] Task S2 - profiles table                       files: backend/sql/profiles.sql (new)  (Anthony)
         [x] S2a. SQL written in backend/sql/profiles.sql (profiles keyed to auth.users.id,
              RLS on, read-own-row policy only, no insert/update policies: all writes go
              through our backend, which uses the secret key)
         [x] S2b. the same file also turns on RLS for public.users
-        [ ] S2c. read it through, then run it in the Supabase SQL Editor
+        [x] S2c. read it through, then run it in the Supabase SQL Editor
 
     [x] Task S3 - server-side client options           files: backend/src/db.ts  (Anthony)
         S3a. createClient(url, secretKey, { auth: { persistSession: false, autoRefreshToken: false } })
