@@ -14,8 +14,14 @@ const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
 // flowType: 'pkce' is the safer way to handle logins that send you to
 // another site and back (like "Log in with Google"). It's more secure than
 // the old way (called the "implicit flow").
-export const supabase = createClient(supabaseUrl, supabaseKey, {
-    auth: {
-        flowType: 'pkce', // Use PKCE flow for authentication  
-    },
-});
+// If .env.local is missing, createClient crashes, and since App.jsx loads the
+// Log in and Sign up pages right away, the whole site would go blank. So with
+// no keys we export null instead, and the pages check for that before using it.
+// "a ? b : c" means "if a, then b, otherwise c"
+export const supabase = supabaseUrl && supabaseKey
+    ? createClient(supabaseUrl, supabaseKey, {
+        auth: {
+            flowType: 'pkce', // Use PKCE flow for authentication
+        },
+    })
+    : null;

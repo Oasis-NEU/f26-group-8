@@ -1739,173 +1739,278 @@ html:has(.about-site) {
 /* ---------- Feed page ---------- */
 /* Everything below styles the Feed page (Feed.jsx, yoursite.com/feed).
    Every class name starts with "feed-" so it can't clash with other pages.
+   (The top bar's styles, "feed-nav", are further down in this section,
+   because the bar was first made for this page. Every page uses them.)
 
    The quiet small text uses var(--subtle). A lighter blue would be too faint
    to read on the boxes. Text needs a contrast of at least 4.5 to 1 against its
    background (WCAG), and var(--subtle) on the boxes is about 6.1 to 1. */
 
-/* The white profile card box */
-.feed-profile-card {
-  background-color: var(--card);    /* off-white box (--card) */
-  border: 1px solid var(--line);  /* thin light blue line around it */
-  border-radius: 16px;        /* rounded corners */
-  max-width: 300px;           /* never wider than 300px */
-  overflow: hidden;           /* hides anything poking out past the rounded corners */
-}
+/* ----- Page layout ----- */
 
-/* Name */
-.feed-profile-name {
-  font-size: 22px;      /* text size */
-  font-weight: bold;    /* thick text */
-  margin-top: 12px;     /* space between the circle and the name */
-}
-
-/* Profile Bio Display */
-.feed-profile-bio {
-  font-size: 16px;      /* text size */
-  color: var(--muted);  /* blue (set at the top of this file) */
-}
-
-/* School Display */
-.feed-profile-school {
-  font-size: 14px;      /* a bit smaller than the bio */
-  color: var(--subtle);       /* soft blue, so it looks less important */
-}
-
-/* The circle with initials */
-.feed-profile-avatar {
-  width: 72px;                  /* circle size... */
-  height: 72px;                 /* ...same width and height makes a square */
-  border-radius: 50%;           /* 50% rounds a square into a circle */
-  background-color: var(--primary);    /* circle color: blue (--primary) */
-  color: white;                 /* white initials */
-  font-size: 22px;
-  font-weight: bold;
-  display: flex;                /* turns on flexbox so we can center the text... */
-  align-items: center;          /* ...centered top-to-bottom */
-  justify-content: center;      /* ...centered left-to-right */
-  border: 4px solid white;      /* white ring around the circle */
-  margin: -36px 0 0 20px;       /* top, right, bottom, left. The -36px pulls it UP onto the strip */
-}
-
-/* The blue strip across the top of the profile card */
-.feed-profile-banner {
-  height: 72px;                 /* how tall the strip is */
-  background-color: var(--primary-dark);    /* darker blue (--primary-dark) */
-}
-
-/* Same left/right spacing for the name, bio, and school */
-.feed-profile-name,
-.feed-profile-bio,
-.feed-profile-school {
-  padding: 0 20px;   /* top/bottom: 0, left/right: 20px */
-}
-
-/* The row holding the two stats */
-.feed-profile-stats {
-  display: flex;                    /* put the two stats side by side */
-  margin-top: 16px;                 /* space between the school and the row */
-  border-top: 1px solid var(--line);    /* light line above the row */
-  border-bottom: 1px solid var(--line); /* light line below the row */
-}
-
-/* Each stat (number + label) */
-.feed-profile-stat {
-  flex: 1;              /* both stats share the row's width equally */
-  padding: 14px 20px;   /* space inside: top/bottom, left/right */
-}
-
-/* The divider line between the two stats.
-   :first-child means "only the FIRST .feed-profile-stat",
-   so only the left stat gets a line on its right side */
-.feed-profile-stat:first-child {
-  border-right: 1px solid var(--line);
-}
-
-/* The big number in each stat (like 222) */
-.feed-profile-stat-number {
-  font-size: 18px;      /* bigger than the label under it */
-  font-weight: bold;    /* thick text */
-}
-
-/* The small word under each number (like "Connections") */
-.feed-profile-stat-label {
-  font-size: 13px;      /* small text */
-  color: var(--subtle);       /* soft blue */
-}
-
-/* The "View your profile →" link at the bottom of the card */
-.feed-profile-link {
-  display: flex;                    /* turns on flexbox... */
-  justify-content: space-between;   /* ...pushes the words left and the arrow right */
-  padding: 14px 20px;               /* space inside: top/bottom, left/right */
-  color: var(--primary-dark);            /* darker blue text (6.6:1 on the box, WCAG) */
-  font-weight: bold;                /* thick text */
-}
-
-/* The link turns a darker blue when the mouse is over it */
-.feed-profile-link:hover {
-  color: var(--primary-dark);
-  text-decoration: underline;  /* the two blues are close, so the underline makes the hover easy to see */
-  text-underline-offset: 3px;  /* moves the underline a bit lower so it doesn't touch the letters */
-}
-
-/* The layout of the whole page: 3 columns side by side */
+/* The whole page: the title and tabs across the top,
+   then 2 columns (posts on the left, the side boxes on the right) */
 .feed-page {
-  display: grid;                          /* turns on grid, a way to make rows and columns */
-  grid-template-columns: 260px 1fr 300px; /* left column 260px wide, right column 300px wide.
-                                             1fr = the middle column gets all the leftover space */
-  gap: 24px;                              /* space between the columns */
-  max-width: 1200px;                      /* never wider than 1200px */
-  margin: 0 auto;                         /* "auto" on the left/right centers the page on the screen */
-  padding: 32px 24px;                     /* space inside the edges: top/bottom, left/right */
+  display: grid;                                    /* turns on grid, a way to make rows and columns */
+  grid-template-columns: minmax(0, 1fr) 340px;      /* right column 340px wide. The posts get all the
+                                                       leftover space. minmax(0, ...) lets the column
+                                                       shrink, so a long word can't push it wider */
+  column-gap: 32px;                                 /* space between the 2 columns */
+  row-gap: 24px;                                    /* space between the rows (title, tabs, columns) */
+  align-items: start;                               /* each column is only as tall as its own boxes */
+  max-width: 1240px;                                /* never wider than 1240px */
+  margin: 0 auto;                                   /* "auto" on the left/right centers the page on the screen */
+  padding: 40px 24px 64px;                          /* space inside the edges: top, left/right, bottom */
+  overflow-wrap: break-word;                        /* a very long word (like a web address) breaks onto
+                                                       the next line instead of spilling off the screen */
 }
 
-/* The white "Your space" box under the profile card */
-.feed-space-card {
-  background-color: var(--card);      /* off-white box (--card) */
+/* The posts column: stacks the post box and the posts with space between them */
+.feed-middle {
+  display: flex;
+  flex-direction: column;   /* stack top-to-bottom instead of side by side */
+  gap: 20px;                /* space between each post */
+  min-width: 0;             /* allowed to shrink narrower than its longest word */
+}
+
+/* The right column: stacks its boxes with space between them */
+.feed-right {
+  display: flex;
+  flex-direction: column;   /* stack top-to-bottom */
+  gap: 20px;                /* space between each box */
+  min-width: 0;
+}
+
+/* ----- The big title ----- */
+
+/* The title and the sentence under it. They stretch across both columns */
+.feed-header {
+  grid-column: 1 / -1;      /* from the first column to the last */
+}
+
+/* "See what people are making." App pages use the normal system font
+   in extra bold; the Overpass font is only for the About page (see DESIGN.md) */
+.feed-title {
+  font-size: clamp(36px, 5vw, 60px);  /* big text. clamp(smallest, normal, biggest):
+                                         it shrinks on phones but never below 36px */
+  font-weight: 800;                   /* extra thick */
+  line-height: 1.05;                  /* lines close together */
+  letter-spacing: -0.03em;            /* letters slightly tighter, which big text needs */
+  color: var(--text);                 /* navy (10.4:1 on the page, WCAG) */
+  text-wrap: balance;                 /* if it wraps, both lines are about the same length */
+}
+
+/* Each word of the title. inline-block keeps a word's letters together on
+   one line, so a word never splits in the middle when the title wraps */
+.feed-title-word {
+  display: inline-block;
+  --start: 0;   /* where this word starts, counting letters from the start of the
+                   title. The animations in "Feed: motion" use it to give every
+                   letter its turn. "See" starts at letter 0 */
+}
+
+/* Where each of the other words starts.
+   :nth-child(2) means "the 2nd word", and so on */
+.feed-title-word:nth-child(2) { --start: 3; }    /* "what" (after "See") */
+.feed-title-word:nth-child(3) { --start: 7; }    /* "people" */
+.feed-title-word:nth-child(4) { --start: 13; }   /* "are" */
+.feed-title-word:nth-child(5) { --start: 16; }   /* "making." */
+
+/* Each letter of the title. inline-block lets a letter move up and down
+   by itself (plain letters can't) */
+.feed-title-letter {
+  display: inline-block;
+  --place: 0;   /* this letter's place in its word (0 = first letter) */
+}
+
+/* The place of each letter in its word. The longest word, "making.",
+   has 7 letters (counting the dot) */
+.feed-title-letter:nth-child(2) { --place: 1; }
+.feed-title-letter:nth-child(3) { --place: 2; }
+.feed-title-letter:nth-child(4) { --place: 3; }
+.feed-title-letter:nth-child(5) { --place: 4; }
+.feed-title-letter:nth-child(6) { --place: 5; }
+.feed-title-letter:nth-child(7) { --place: 6; }
+
+/* The blue word "making." at the end of the title */
+.feed-title-blue {
+  color: var(--primary);   /* the main blue (3.9:1 on the page. Big bold text only
+                              needs 3:1, WCAG) */
+}
+
+/* The sentence under the title */
+.feed-subtitle {
+  margin-top: 12px;        /* space between the title and this */
+  font-size: 18px;         /* a little bigger than normal text */
+  line-height: 1.5;        /* space between lines */
+  color: var(--muted);     /* blue (7.3:1 on the page, WCAG) */
+  max-width: 60ch;         /* stops the line getting too long to read (ch = the width of one letter) */
+}
+
+/* ----- Topic tabs ----- */
+
+/* The row of tabs (For you, Following, ...). It stretches across both columns.
+   On a phone the row is wider than the screen, so you can swipe it sideways */
+.feed-tabs {
+  grid-column: 1 / -1;              /* from the first column to the last */
+  display: flex;                    /* puts the tabs side by side */
+  gap: 28px;                        /* space between the tabs */
+  overflow-x: auto;                 /* if the tabs don't fit, the row scrolls sideways
+                                       instead of pushing the page wider */
+  padding: 4px 4px 0;               /* a little room so the keyboard outline isn't cut off... */
+  margin: 0 -4px;                   /* ...and this pulls the row back so the words still line up */
+  box-shadow: inset 0 -1px 0 var(--line); /* a thin light blue line along the bottom
+                                             (drawn as a shadow so the blue line under the
+                                             picked tab can sit on top of it) */
+  scrollbar-width: none;            /* hides the scrollbar (you can still swipe or use Tab) */
+}
+
+/* One tab */
+.feed-tab {
+  padding: 12px 2px;                        /* space above and below the word */
+  border-bottom: 3px solid transparent;     /* an invisible line, so every tab is the same height
+                                               as the picked one (which has a blue line) */
+  font-weight: 600;                         /* semi-bold */
+  color: var(--subtle);                     /* soft blue (5.3:1 on the page, WCAG) */
+  white-space: nowrap;                      /* "For you" never splits onto 2 lines */
+  cursor: pointer;                          /* the mouse turns into a pointing hand over it */
+}
+
+/* The tab that's on right now: navy words with a blue line under it.
+   Two changes (color AND the line), so it doesn't rely on color alone (WCAG) */
+.feed-tab-picked {
+  color: var(--text);                       /* deep navy */
+  border-bottom-color: var(--primary);      /* the blue line */
+}
+
+/* Mouse users: a tab gets darker when the mouse is over it.
+   (hover: hover) means "only on devices with a mouse", so it doesn't get
+   stuck on after you tap it on a phone */
+@media (hover: hover) {
+  .feed-tab:hover {
+    color: var(--text);                     /* deep navy */
+    border-bottom-color: var(--line);       /* a light line, lighter than the picked tab's */
+  }
+
+  /* The picked tab keeps its blue line when the mouse is over it */
+  .feed-tab-picked:hover {
+    border-bottom-color: var(--primary);
+  }
+}
+
+/* ----- The post box ----- */
+
+/* The "Share something you're working on" box above the posts */
+.feed-composer {
+  background-color: var(--card);    /* off-white box (--card) */
   border: 1px solid var(--line);    /* thin light blue line around it */
-  border-radius: 16px;          /* rounded corners */
-  padding: 20px;                /* space inside the box */
-  margin-top: 16px;             /* space between it and the profile card above */
+  border-radius: 16px;              /* rounded corners */
+  padding: 20px 24px;               /* space inside: top/bottom, left/right */
 }
 
-/* The small blue heading at the top of a box (like "YOUR SPACE").
-   "People to know" and "Trending Topics" use it too */
-.feed-space-title {
-  font-size: 12px;              /* small text */
-  font-weight: bold;            /* thick text */
-  color: var(--subtle);               /* soft blue */
-  text-transform: uppercase;    /* shows the words in ALL CAPS (Feed.jsx still says "Your space") */
-  letter-spacing: 1px;          /* a little extra space between letters */
-  margin-bottom: 12px;          /* space under the heading */
-}
-
-/* One row in "Your space" (like "Saved posts ... 12") */
-.feed-space-item {
-  display: flex;                    /* turns on flexbox... */
-  justify-content: space-between;   /* ...words on the left, number on the right */
-  padding: 6px 0;                   /* space above and below each row */
-  color: var(--muted);              /* blue */
-}
-
-/* The top of a post: the circle next to the name, headline, and time */
-.feed-post-header {
-  display: flex;          /* puts the circle and the words side by side */
-  gap: 12px;              /* space between them */
+/* The top row of the post box: your circle next to the typing box */
+.feed-composer-top {
+  display: flex;          /* puts them side by side */
+  gap: 14px;              /* space between them */
   align-items: center;    /* lines them up in the middle, top-to-bottom */
 }
 
-/* The white box around each post */
+/* The typing box */
+.feed-composer-input {
+  flex: 1;                          /* stretches to fill the rest of the row */
+  min-width: 0;                     /* lets the box shrink on narrow screens instead of spilling out */
+  background-color: var(--soft);    /* very light blue, so it looks like a place to type */
+  border: 1px solid var(--border);  /* blue line around it (3.5:1, so you can see where
+                                       the box is; input borders need 3:1, WCAG) */
+  border-radius: 12px;              /* rounded corners */
+  padding: 14px 18px;               /* space inside, so the words don't touch the edge */
+  font-size: 17px;                  /* 16px or more stops phones from zooming in when you tap it */
+  color: var(--text);               /* navy words when you type */
+}
+
+/* The hint text ("Share something...") is soft blue, dark enough to read (WCAG) */
+.feed-composer-input::placeholder {
+  color: var(--subtle);
+}
+
+/* The row with "Add photo" and "Write update" under the typing box.
+   It starts where the typing box starts (past your circle) */
+.feed-composer-buttons {
+  display: flex;                /* side by side */
+  flex-wrap: wrap;              /* on a narrow screen, the second one can drop to the next line */
+  gap: 8px;                     /* space between them */
+  margin: 12px 0 0 54px;        /* top, right, bottom, left. 54px = the circle (48px) + a bit */
+}
+
+/* "Add photo" and "Write update": a little picture, then the words */
+.feed-composer-button {
+  display: inline-flex;         /* puts the icon and the words side by side */
+  align-items: center;          /* lines them up in the middle, top-to-bottom */
+  gap: 8px;                     /* space between the icon and the words */
+  padding: 8px 12px;            /* space inside: top/bottom, left/right */
+  border-radius: 8px;           /* rounded corners, for the hover color below */
+  font-weight: 600;             /* semi-bold */
+  color: var(--muted);          /* blue (8.3:1 on the box, WCAG) */
+  cursor: pointer;              /* the mouse turns into a pointing hand over it */
+}
+
+/* ----- One post ----- */
+
+/* The box around each post */
 .feed-post {
-  background-color: var(--card);      /* off-white box (--card) */
-  border-radius: 16px;          /* rounded corners */
-  padding: 20px;                /* space inside the box */
+  background-color: var(--card);    /* off-white box (--card) */
   border: 1px solid var(--line);    /* thin light blue line around it */
+  border-radius: 16px;              /* rounded corners */
+  overflow: hidden;                 /* keeps the colored strip inside the rounded corners */
+}
+
+/* The colored strip across the top of a post (like "BUILD LOG") */
+.feed-post-strip {
+  padding: 10px 24px;           /* space inside: top/bottom, left/right */
+  font-size: 13px;              /* small text */
+  font-weight: 800;             /* extra thick, so the small capitals stay easy to read */
+  letter-spacing: 0.08em;       /* a little extra space between the capital letters */
+  text-transform: uppercase;    /* shows the words in ALL CAPS (Feed.jsx says "Build log") */
+}
+
+/* The strip's 3 colors. Feed.jsx picks one with each post's "color" */
+.feed-post-strip-blue {
+  background-color: var(--primary);       /* the main blue */
+  color: white;                           /* white words (4.9:1, WCAG) */
+}
+
+.feed-post-strip-dark {
+  background-color: var(--primary-dark);  /* darker blue */
+  color: white;                           /* white words (6.5:1, WCAG) */
+}
+
+.feed-post-strip-sky {
+  background-color: var(--accent);        /* sky blue */
+  color: var(--accent-text);              /* navy words (5.9:1, WCAG) */
+}
+
+/* Everything in the post under the strip */
+.feed-post-body {
+  padding: 20px 24px 10px;      /* space inside: top, left/right, bottom */
+}
+
+/* Who posted it: the circle next to the name, school, and time */
+.feed-post-header {
+  display: flex;            /* puts the circle and the words side by side */
+  gap: 12px;                /* space between them */
+  align-items: flex-start;  /* lines the circle up with the name at the top, so a long
+                               school name that wraps onto more lines doesn't push the
+                               circle down into the middle */
+}
+
+/* The name and the line under it */
+.feed-post-who {
+  min-width: 0;           /* allowed to shrink, so a long school name wraps instead of spilling */
 }
 
 /* Small circle with initials on each post.
-   Also used in "People to know", the post box, and the top bar */
+   Also used in the post box, the Network page, Settings, and the top bar,
+   so changing it changes all of those */
 .feed-post-avatar {
   width: 48px;                  /* same width and height = a square */
   height: 48px;
@@ -1922,132 +2027,347 @@ html:has(.about-site) {
 
 /* The name of the person who wrote the post */
 .feed-post-author {
-  font-weight: bold;    /* thick text */
+  font-weight: bold;      /* thick text */
+  color: var(--text);     /* navy */
 }
 
-/* The line under the name (like their school or job) */
+/* The line under the name, like "Lincoln STEM Academy · 42 min" */
 .feed-post-headline {
-  color: var(--subtle);       /* soft blue */
-  font-size: 14px;      /* smaller text */
+  color: var(--subtle);   /* soft blue (6.1:1, WCAG) */
+  font-size: 14px;        /* smaller text */
 }
 
-/* How long ago it was posted (like "1h") */
-.feed-post-time {
-  color: var(--subtle);       /* soft blue */
-  font-size: 12px;      /* even smaller text */
+/* The post's big title, like "We finally got the garden sensors talking..." */
+.feed-post-title {
+  margin-top: 16px;                   /* space between the name and the title */
+  font-size: clamp(22px, 2.4vw, 30px); /* big text that shrinks a bit on smaller screens */
+  font-weight: 800;                   /* extra thick */
+  line-height: 1.15;                  /* lines close together */
+  letter-spacing: -0.02em;            /* letters slightly tighter */
+  color: var(--text);                 /* navy (12:1, WCAG) */
+  text-wrap: balance;                 /* if it wraps, the lines are about the same length */
 }
 
 /* The words of the post */
 .feed-post-text {
-  margin-top: 10px;      /* space above */
-  margin-bottom: 10px;   /* space below */
+  margin: 10px 0 16px;    /* space: top, left/right, bottom */
+  max-width: 70ch;        /* stops lines getting too long to read */
+  font-size: 17px;        /* a little bigger than normal, so it's easy to read */
+  line-height: 1.6;       /* space between lines */
+  color: var(--muted);    /* blue (8.3:1, WCAG) */
 }
 
-/* The row with "222 reactions" on the left and "18 comments" on the right */
+/* The row with "222 likes" on the left and "18 comments" on the right */
 .feed-post-counts {
-  display: flex;                    /* turns on flexbox... */
-  justify-content: space-between;   /* ...pushes one to each side */
-  color: var(--subtle);                   /* soft blue */
-  font-size: 14px;                  /* smaller text */
+  display: flex;                      /* turns on flexbox... */
+  justify-content: space-between;     /* ...pushes one to each side */
+  color: var(--subtle);               /* soft blue */
+  font-size: 14px;                    /* smaller text */
+  font-variant-numeric: tabular-nums; /* every digit is the same width */
 }
 
-/* The row of buttons at the bottom of a post (Like, Comment, Share).
-   The post box uses it too (Photo, Event, Article) */
+/* The row of buttons at the bottom of a post (Like, Comment, Share) */
 .feed-post-actions {
-  display: flex;                  /* puts the buttons side by side */
-  border-top: 1px solid var(--line);  /* light line above the buttons */
-  margin-top: 8px;                /* space above the line */
+  display: flex;                        /* puts the buttons side by side */
+  border-top: 1px solid var(--line);    /* light line above the buttons */
+  margin-top: 8px;                      /* space above the line */
 }
 
 /* Each button in that row */
 .feed-post-actions button {
   flex: 1;                /* every button gets an equal share of the row's width */
-  border: none;           /* no line around the button */
-  background: none;       /* see-through, so it looks like plain words */
   color: var(--muted);    /* blue */
   padding: 10px;          /* space inside the button, so it's easier to click */
+  margin-top: 6px;        /* a little space between the line and the buttons */
+  border-radius: 8px;     /* rounded corners, so the hover color below looks like a soft button */
+  font-weight: 600;       /* semi-bold, so the buttons read as things you can click */
   cursor: pointer;        /* the mouse turns into a pointing hand over it */
 }
 
-/* A button gets a light blue background when the mouse is over it */
-.feed-post-actions button:hover {
-  background-color: var(--soft);
+/* The Like button after you click it.
+   Feed.jsx adds the "feed-liked" class to the button while the post is liked */
+.feed-post-actions .feed-liked {
+  color: var(--primary-dark);       /* darker blue */
+  font-weight: bold;                /* thick text */
+  background-color: var(--soft);    /* light blue fill, so "liked" doesn't rely on color alone (WCAG) */
 }
 
-/* Stacks the posts with space between them */
-.feed-middle {
+/* The like count ("223 likes"). overflow: hidden hides the number while it's
+   still rolling in from below or above, so it looks like it slides into a slot */
+.feed-like-count {
+  display: inline-flex;
+  overflow: hidden;
+}
+
+/* The like count while you have the post liked: darker blue and semi-bold,
+   so it matches the blue Liked button (6.5:1, WCAG) */
+.feed-like-count-on {
+  color: var(--primary-dark);
+  font-weight: 600;
+}
+
+/* The number itself. inline-block lets it move up and down */
+.feed-like-number {
+  display: inline-block;
+}
+
+/* After you click Like, the new number fades in.
+   (Everyone gets the fade, even with "reduce motion" on, because a fade
+   doesn't move anything. The roll is added in the motion part below) */
+.feed-like-number-up,
+.feed-like-number-down {
+  transition: opacity var(--time-enter) var(--ease-out);
+}
+
+/* @starting-style is how the number looks the moment it appears.
+   The transition above then takes it from here to normal (fully visible) */
+@starting-style {
+  .feed-like-number-up,
+  .feed-like-number-down {
+    opacity: 0;   /* starts see-through */
+  }
+}
+
+/* The message when a tab has no posts, like "No Design posts yet" */
+.feed-empty {
+  padding: 40px 24px;                   /* space inside: top/bottom, left/right */
+  border: 1px dashed var(--border);     /* a dashed line, so it reads as an empty spot */
+  border-radius: 16px;                  /* rounded corners, like the posts */
+  text-align: center;                   /* words in the middle */
+  color: var(--muted);                  /* blue (7.3:1 on the page, WCAG) */
+}
+
+/* ----- Right column ----- */
+
+/* The sky blue box with today's date. It sits straight like the other boxes,
+   and tilts like a sticky note when the mouse is over it (see "Feed: motion") */
+.feed-today {
+  display: flex;                      /* the sparkle next to the words */
+  align-items: center;                /* lined up in the middle, top-to-bottom */
+  gap: 16px;                          /* space between them */
+  padding: 22px 26px;                 /* space inside: top/bottom, left/right */
+  border-radius: 16px;                /* rounded corners */
+  background-color: var(--accent);    /* sky blue */
+  color: var(--accent-text);          /* navy words (5.9:1, WCAG) */
+}
+
+/* The sparkle in the date box is a bit bigger than the other icons */
+.feed-today svg {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;         /* never squished */
+}
+
+/* The weekday and the date, stacked */
+.feed-today-words {
   display: flex;
-  flex-direction: column;  /* stack top-to-bottom instead of side by side */
-  gap: 16px;               /* space between each post */
+  flex-direction: column;   /* one on top of the other */
 }
 
-/* The white boxes in the right column ("People to know" and "Trending Topics") */
+/* "SATURDAY" */
+.feed-today-weekday {
+  font-size: 14px;            /* small text */
+  font-weight: 800;           /* extra thick */
+  letter-spacing: 0.08em;     /* a little extra space between the capital letters */
+  text-transform: uppercase;  /* ALL CAPS */
+}
+
+/* "October 24" */
+.feed-today-date {
+  font-size: 26px;            /* big text */
+  font-weight: 800;           /* extra thick */
+  line-height: 1.2;           /* lines close together */
+}
+
+/* The boxes in the right column ("Opportunities for you" and "People to know") */
 .feed-side-card {
-  background-color: var(--card);      /* off-white box (--card) */
+  background-color: var(--card);    /* off-white box (--card) */
   border: 1px solid var(--line);    /* thin light blue line around it */
-  border-radius: 16px;          /* rounded corners */
-  padding: 20px;                /* space inside the box */
+  border-radius: 16px;              /* rounded corners */
+  padding: 24px 24px 8px;           /* space inside: top, left/right, bottom */
 }
 
-/* One person in "People to know": the circle, their name, then the Connect button */
+/* The title of each box, like "Opportunities for you" */
+.feed-side-title {
+  padding-bottom: 16px;                 /* space under the words */
+  border-bottom: 1px solid var(--line); /* light line under the title */
+  font-size: 22px;                      /* big text */
+  font-weight: 800;                     /* extra thick */
+  letter-spacing: -0.01em;              /* letters slightly tighter */
+  color: var(--text);                   /* navy */
+}
+
+/* The small "Examples" tag next to "Opportunities for you".
+   It tells students the jobs are made up for now */
+.feed-side-note {
+  display: inline-block;                /* only as wide as its word */
+  vertical-align: middle;               /* lined up with the middle of the title */
+  margin-left: 4px;                     /* a little space after the title */
+  padding: 3px 8px;                     /* space inside: top/bottom, left/right */
+  border-radius: 6px;                   /* slightly rounded corners */
+  background-color: var(--accent-soft); /* light blue */
+  color: var(--text);                   /* navy (9.9:1, WCAG) */
+  font-size: 12px;                      /* small text */
+  font-weight: 700;                     /* bold */
+  letter-spacing: 0;                    /* normal spacing (the title's tighter spacing is too tight here) */
+}
+
+/* Each row in a side box gets a light line under it, except the last one.
+   ":last-child" means "only the LAST row" */
+.feed-opportunity,
 .feed-person {
-  display: flex;          /* puts them side by side */
-  gap: 12px;              /* space between them */
-  align-items: center;    /* lines them up in the middle, top-to-bottom */
-  padding: 8px 0;         /* space above and below each person */
+  border-bottom: 1px solid var(--line);
 }
 
-/* The person's name and headline */
-.feed-person-info {
-  flex: 1;    /* takes all the leftover space, which pushes the Connect button to the right edge */
+.feed-opportunity:last-child,
+.feed-person:last-child {
+  border-bottom: none;
 }
 
-/* The "Connect" button */
-.feed-connect-btn {
-  border: 1px solid var(--primary);   /* blue line around it */
-  color: var(--primary-dark);              /* darker blue words (6:1 or more, even on the light hover color, WCAG) */
-  border-radius: 999px;               /* a huge number gives it fully rounded "pill" ends */
-  padding: 4px 12px;                  /* space inside: top/bottom, left/right */
-  font-size: 14px;                    /* smaller text */
+/* One job in "Opportunities for you": the colored square, then the words */
+.feed-opportunity {
+  display: grid;                      /* turns on grid */
+  grid-template-columns: 56px minmax(0, 1fr);  /* square 56px wide, the words get the rest */
+  gap: 16px;                          /* space between them */
+  padding: 18px 0;                    /* space above and below each job */
+}
+
+/* The colored square with the company's initials */
+.feed-opportunity-logo {
+  width: 56px;                  /* same width and height = a square */
+  height: 56px;
+  border-radius: 12px;          /* rounded corners */
+  display: flex;                /* turns on flexbox so we can center the initials... */
+  align-items: center;          /* ...top-to-bottom */
+  justify-content: center;      /* ...left-to-right */
+  font-size: 18px;
+  font-weight: 800;             /* extra thick */
+}
+
+/* The square's 2 colors. Feed.jsx picks one with each job's "color" */
+.feed-opportunity-logo-sky {
+  background-color: var(--accent);      /* sky blue */
+  color: var(--accent-text);            /* navy letters */
+}
+
+.feed-opportunity-logo-blue {
+  background-color: var(--primary);     /* the main blue */
+  color: white;                         /* white letters (4.9:1, WCAG) */
+}
+
+/* What kind of opportunity it is, like "INTERNSHIP" */
+.feed-opportunity-type {
+  font-size: 12px;              /* small text */
+  font-weight: 800;             /* extra thick */
+  letter-spacing: 0.06em;       /* a little extra space between the capital letters */
+  text-transform: uppercase;    /* ALL CAPS */
+  color: var(--primary-dark);   /* darker blue (6.5:1, WCAG) */
+}
+
+/* The job's name, like "Climate Data Intern" */
+.feed-opportunity-title {
+  margin-top: 4px;              /* space above */
+  font-size: 17px;
+  font-weight: 700;             /* bold */
+  color: var(--text);           /* navy */
+}
+
+/* The company and where, like "GreenLine Labs · Remote" */
+.feed-opportunity-place {
+  font-size: 14px;              /* smaller text */
+  color: var(--subtle);         /* soft blue */
+}
+
+/* The deadline with the calendar icon, like "Apply by Nov 14" */
+.feed-opportunity-when {
+  display: flex;                /* the calendar next to the words */
+  align-items: center;          /* lined up in the middle */
+  gap: 6px;                     /* space between them */
+  margin-top: 8px;              /* space above */
+  font-size: 13px;              /* small text */
+  color: var(--subtle);         /* soft blue */
+}
+
+/* One person in "People to know": circle, name, then the eye button */
+.feed-person {
+  display: grid;                                /* turns on grid */
+  grid-template-columns: auto minmax(0, 1fr) auto; /* circle and button only as wide as they
+                                                    need to be; the name gets the rest */
+  gap: 14px;                                    /* space between them */
+  align-items: center;                          /* lined up in the middle, top-to-bottom */
+  padding: 14px 0;                              /* space above and below each person */
+}
+
+/* The person's circle. Light blue with navy letters, so the people
+   look different from the blue circles on the posts */
+.feed-person-avatar {
+  width: 48px;                          /* same width and height = a square */
+  height: 48px;
+  border-radius: 50%;                   /* rounds the square into a circle */
+  background-color: var(--accent-soft); /* light blue */
+  color: var(--text);                   /* navy letters (9.9:1, WCAG) */
+  font-size: 15px;
+  font-weight: bold;
+  display: flex;                        /* turns on flexbox so we can center... */
+  align-items: center;                  /* ...top-to-bottom */
+  justify-content: center;              /* ...left-to-right */
+}
+
+/* The person's name */
+.feed-person-name {
+  font-weight: bold;      /* thick text */
+  color: var(--text);     /* navy */
+}
+
+/* The line under their name, like "Nursing Student" */
+.feed-person-headline {
+  font-size: 14px;        /* smaller text */
+  color: var(--subtle);   /* soft blue */
+}
+
+/* The square eye button next to each person (a link to their profile) */
+.feed-profile-button {
+  display: flex;                      /* turns on flexbox so we can center the + ... */
+  align-items: center;                /* ...top-to-bottom */
+  justify-content: center;            /* ...left-to-right */
+  width: 44px;                        /* 44px square: big enough to tap easily */
+  height: 44px;
+  border: 1px solid var(--border);    /* blue line around it (3.5:1, WCAG) */
+  border-radius: 10px;                /* rounded corners */
+  background-color: var(--card);      /* off-white */
+  color: var(--primary-dark);         /* darker blue eye */
   cursor: pointer;                    /* the mouse turns into a pointing hand over it */
 }
 
-/* One row in "Trending Topics" (like "#Internships ... 860 posts") */
-.feed-topic {
-  display: flex;                    /* turns on flexbox... */
-  justify-content: space-between;   /* ...hashtag on the left, post count on the right */
-  padding: 6px 0;                   /* space above and below each row */
+/* Mouse users: buttons fill in light blue when the mouse is over them.
+   (hover: hover) means "only on devices with a mouse" */
+@media (hover: hover) {
+  .feed-composer-button:hover,
+  .feed-post-actions button:hover {
+    background-color: var(--soft);
+    color: var(--text);                 /* deep navy */
+  }
+
 }
 
-/* The right column: stacks its boxes with space between them */
-.feed-right {
-  display: flex;
-  flex-direction: column;   /* stack top-to-bottom */
-  gap: 16px;                /* space between each box */
+/* Mouse users: the eye button fills in light blue and its line gets darker
+   when the mouse is over it.
+   (hover: hover) and (pointer: fine) means "only with a real mouse or trackpad",
+   so the color doesn't get stuck on after you tap it on a phone */
+@media (hover: hover) and (pointer: fine) {
+  .feed-profile-button:hover {
+    background-color: var(--soft);
+    border-color: var(--primary-dark);
+  }
 }
 
-/* The white "start a post" box at the top of the middle column */
-.feed-composer {
-  background-color: var(--card);      /* off-white box (--card) */
-  border-radius: 16px;          /* rounded corners */
-  padding: 20px;                /* space inside the box */
-  border: 1px solid var(--line);    /* thin light blue line around it */
-}
-
-/* The top row of the post box: your circle next to the typing box */
-.feed-composer-top {
-  display: flex;          /* puts them side by side */
-  gap: 12px;              /* space between them */
-  align-items: center;    /* lines them up in the middle, top-to-bottom */
-  padding: 8px 0;         /* space above and below */
-}
-
-/* The "Type here..." box */
-.feed-composer-input {
-  flex: 1;                      /* stretches to fill the rest of the row */
-  border: 1px solid var(--line);    /* thin light blue line around it */
-  border-radius: 999px;         /* pill shape */
-  padding: 10px 16px;           /* space inside, so the words don't touch the edge */
+/* While you press an eye button, it fills in blue with a white eye,
+   the same as the Add buttons on the Profile page. A color change isn't
+   motion, so everyone gets this, even with "reduce motion" on */
+.feed-profile-button:active {
+  background-color: var(--primary);   /* blue (the white eye on it is 4.9:1, WCAG) */
+  border-color: var(--primary);
+  color: white;
 }
 
 /* The bar across the top of the Feed page */
@@ -2137,11 +2457,212 @@ html:has(.about-site) {
   outline-offset: 2px;
 }
 
-/* The Like button after you click it.
-   Feed.jsx adds the "feed-liked" class to the button while the post is liked */
-.feed-post-actions .feed-liked {
-  color: var(--primary-dark);    /* darker blue (with bold, so it doesn't rely on color alone) */
-  font-weight: bold;        /* thick text */
+/* ----- Feed: keyboard focus ----- */
+
+/* Keyboard users (pressing Tab) see a clear outline on every button, tab,
+   and box on this page, so they always know where they are (WCAG).
+   The same 2px blue ring the Profile page uses */
+.feed-tab:focus-visible,
+.feed-composer-button:focus-visible,
+.feed-post-actions button:focus-visible,
+.feed-profile-button:focus-visible,
+.feed-composer-input:focus-visible {
+  outline: 2px solid var(--primary);    /* blue outline (4.5:1 on the boxes; outlines need 3:1, WCAG) */
+  outline-offset: 2px;                  /* a little gap between it and the outline */
+}
+
+/* ----- Feed: motion ----- */
+
+/* Only for people who haven't turned on "reduce motion" in their settings (WCAG) */
+@media (prefers-reduced-motion: no-preference) {
+  /* Hover colors fade in quickly instead of snapping on, at the same speed as Profile */
+  .feed-tab,
+  .feed-composer-button,
+  .feed-post-actions button,
+  .feed-profile-button {
+    transition:
+      background-color var(--time-hover) ease,
+      border-color var(--time-hover) ease,
+      color var(--time-hover) ease,
+      transform var(--time-press) var(--ease-out);   /* the press (below) */
+  }
+
+  /* Buttons shrink very slightly while pressed, so it feels like the page
+     heard you. 0.97 = 97% of the normal size.
+     ":root:not([data-reduce-motion="on"])" means "unless Reduce motion is on
+     in our Settings page". The @media above only checks the computer's own
+     setting, so this checks ours too (WCAG). The rules below do the same */
+  :root:not([data-reduce-motion="on"]) .feed-composer-button:active,
+  :root:not([data-reduce-motion="on"]) .feed-post-actions button:active {
+    transform: scale(0.97);
+  }
+
+  /* The eye buttons are small (44px), so 97% would only shrink them by about
+     1px, too little to notice. 94% is a clear little "click" */
+  :root:not([data-reduce-motion="on"]) .feed-profile-button:active {
+    transform: scale(0.94);
+  }
+
+  /* The title's intro (only the first time you open the Feed in a tab;
+     Feed.jsx adds "feed-title-intro" then). Each letter rises up a little,
+     fades in, and comes into focus, one after another */
+  .feed-title-intro .feed-title-letter {
+    animation: feed-letter-in 500ms var(--ease-out) backwards;   /* "backwards" keeps each
+                                                                    letter hidden until its turn,
+                                                                    then lets go when it's done,
+                                                                    so the hover wave can move it */
+    /* Each letter waits its turn: its place in the whole title
+       (the word's start + its place in the word) times 0.02 seconds.
+       calc() does the math. So the 1st letter starts right away,
+       the 2nd after 0.02 seconds, the 10th after 0.18 seconds... */
+    animation-delay: calc((var(--start) + var(--place)) * 20ms);
+  }
+
+  /* The like count fades to blue (and back) instead of snapping */
+  .feed-like-count {
+    transition: color var(--time-hover) ease;
+  }
+
+  /* The new like number rolls into place while it fades in */
+  .feed-like-number-up,
+  .feed-like-number-down {
+    transition:
+      opacity var(--time-enter) var(--ease-out),
+      transform var(--time-enter) var(--ease-out);
+  }
+
+  /* Where the number starts: liking rolls the new number UP from below
+     (the count went up), and unliking rolls it DOWN from above */
+  @starting-style {
+    .feed-like-number-up {
+      transform: translateY(70%);    /* starts 70% of its own height lower */
+    }
+
+    .feed-like-number-down {
+      transform: translateY(-70%);   /* starts 70% of its own height higher */
+    }
+  }
+}
+
+/* Mouse users: when the mouse moves onto the title, a wave runs through it
+   from left to right. Each letter lifts up and grows a little, a tiny bit
+   after the letter before it, and stays up while the mouse is there.
+   When the mouse leaves, they settle back down the same way.
+   Only with a real mouse (a tap on a phone would set it off by accident),
+   and only without "reduce motion", on the computer or in our Settings (WCAG) */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .feed-title-letter {
+    transition: transform 320ms var(--ease-out);                  /* how the lift moves */
+    transition-delay: calc((var(--start) + var(--place)) * 14ms); /* same "wait your turn" math */
+  }
+
+  :root:not([data-reduce-motion="on"]) .feed-title:hover .feed-title-letter {
+    transform: translateY(-0.1em) scale(1.06);   /* up a little (em = grows with the text size)
+                                                    and 6% bigger, so the letters squeeze
+                                                    and bump into each other */
+  }
+}
+
+/* Mouse users: the date box tilts and lifts when the mouse is over it,
+   like picking up a sticky note, then settles back flat when the mouse leaves.
+   Only with a real mouse (so a tap on a phone doesn't leave it stuck tilted),
+   and only without "reduce motion", on the computer or in our Settings (WCAG) */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .feed-today {
+    transition: transform 300ms var(--ease-out);   /* how fast it tilts (0.3 seconds) */
+  }
+
+  :root:not([data-reduce-motion="on"]) .feed-today:hover {
+    transform: rotate(-2deg) translateY(-4px);     /* tilts 2 degrees to the left and lifts 4px up */
+  }
+}
+
+/* How each title letter comes in: from a little lower, see-through,
+   and blurry, to its normal spot, fully visible and sharp */
+@keyframes feed-letter-in {
+  from {
+    opacity: 0;                       /* see-through */
+    transform: translateY(0.35em);    /* a little lower (em = grows with the text size) */
+    filter: blur(6px);                /* blurry */
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+/* People who turned on "reduce motion" get a gentler intro: the whole title
+   just fades in, with nothing moving or blurring (WCAG) */
+@media (prefers-reduced-motion: reduce) {
+  .feed-title-intro {
+    animation: feed-title-fade 300ms ease both;
+  }
+}
+
+/* The gentle fade for "reduce motion" */
+@keyframes feed-title-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ----- Feed: smaller screens ----- */
+
+/* Laptops and tablets, 1100px wide or less (the same size Profile uses):
+   the right column gets a bit narrower */
+@media (max-width: 1100px) {
+  .feed-page {
+    grid-template-columns: minmax(0, 1fr) 300px;
+    column-gap: 24px;
+  }
+}
+
+/* Phones and small tablets, 760px wide or less (the same size the other pages use).
+   Everything stacks in one column, in the same order as in Feed.jsx,
+   so the Tab key still goes top to bottom (WCAG) */
+@media (max-width: 760px) {
+  .feed-page {
+    grid-template-columns: minmax(0, 1fr);  /* one column */
+    row-gap: 20px;                          /* a bit less space between rows */
+    padding: 24px 16px 48px;                /* less space at the edges: top, left/right, bottom */
+  }
+
+  /* Less space inside the boxes, so the words get more room */
+  .feed-composer,
+  .feed-post-body {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .feed-post-strip {
+    padding: 10px 18px;
+  }
+
+  /* The post box's buttons line up with the left edge instead of past the circle */
+  .feed-composer-buttons {
+    margin-left: 0;
+  }
+
+}
+
+/* Touch screens: the tabs and the Like/Comment/Share buttons get a
+   little taller, so they're easier to hit with a finger */
+@media (pointer: coarse) {
+  .feed-tab {
+    padding: 14px 2px;
+  }
+
+  .feed-post-actions button {
+    padding: 12px 10px;
+  }
+
+  .feed-composer-button {
+    padding: 11px 12px;
+  }
 }
 
 /* ---------- Top bar: account menu ---------- */
