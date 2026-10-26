@@ -4349,10 +4349,658 @@ html:has(.about-site) {
   background-color: var(--soft);
 }
 
+/* After you click Connect, the button turns solid blue and says "Pending",
+   so it's clear the request went out. Click it again to take the request back */
+.network-connect-button-on {
+  background-color: var(--primary);   /* solid blue */
+  color: white;                       /* white words (4.9:1 on the blue, WCAG) */
+}
+
+/* A darker blue when the mouse is over the "Pending" button */
+.network-connect-button-on:hover {
+  background-color: var(--primary-dark);  /* darker blue (white words on it are 7.1:1) */
+}
+
+/* The small "Examples" tag next to a box title. It says the people and
+   numbers in that box are made up for now (same look as the Feed's tag) */
+.network-example-tag {
+  display: inline-block;                /* only as wide as its word */
+  vertical-align: middle;               /* lined up with the middle of the title */
+  margin-left: 6px;                     /* a little space after the title */
+  padding: 3px 8px;                     /* space inside: top/bottom, left/right */
+  border-radius: 6px;                   /* slightly rounded corners */
+  background-color: var(--accent-soft); /* light blue */
+  color: var(--text);                   /* navy (9.9:1, WCAG) */
+  font-size: 12px;                      /* small text */
+  font-weight: 700;                     /* bold */
+}
+
+/* The box titles get the keyboard focus after you answer a request (see
+   Network.jsx). They aren't buttons, so they don't need an outline then */
+.network-box-title:focus {
+  outline: none;
+}
+
+/* The note at the top of Requests after you answer one ("You're now
+   connected with ..."). It has no space while it's empty, so it leaves no gap */
+.network-note {
+  font-size: 15px;         /* a bit smaller than normal text */
+  font-weight: 600;        /* semi-bold, so it's noticed */
+  color: var(--muted);     /* blue (8.3:1 on the boxes) */
+}
+
+/* Once the note has words in it, it gets space below */
+.network-note:not(:empty) {
+  margin-bottom: 12px;
+}
+
+/* The message shown when a box has nothing in it */
+.network-empty {
+  font-size: 15px;         /* a bit smaller than normal text */
+  color: var(--muted);     /* blue (8.3:1 on the boxes) */
+}
+
+/* The list of people who asked to connect with you */
+.network-requests {
+  display: flex;
+  flex-direction: column;  /* one request under another */
+}
+
+/* One request: the circle, the name and headline, then the two buttons, in a row */
+.network-request {
+  display: flex;                      /* puts them side by side */
+  align-items: center;                /* lines them up in the middle, top-to-bottom */
+  gap: 12px;                          /* space between them */
+  padding: 12px 0;                    /* space above and below each request */
+  border-top: 1px solid var(--line);  /* thin light blue line between requests */
+}
+
+/* No line above the first request (the box title is already there) */
+.network-request:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+/* The name and headline in the middle. It takes the leftover space,
+   which pushes the buttons to the right edge */
+.network-request-text {
+  flex: 1;
+  min-width: 0;   /* lets long names wrap instead of pushing the buttons off the box */
+}
+
+/* The person's name */
+.network-request-name {
+  font-weight: bold;
+}
+
+/* The line under the name (like their school) */
+.network-request-headline {
+  color: var(--subtle);  /* soft blue (6.1:1 on the boxes, WCAG) */
+  font-size: 14px;       /* smaller text */
+}
+
+/* The Accept and Ignore buttons, side by side */
+.network-request-buttons {
+  display: flex;
+  gap: 8px;          /* space between the two buttons */
+  flex-shrink: 0;    /* the buttons never get squished */
+}
+
+/* Accept: the main choice, so it's solid blue */
+.network-accept-button {
+  background-color: var(--primary);   /* solid blue */
+  color: white;                       /* white words (4.9:1, WCAG) */
+  border: 1px solid var(--primary);   /* same size as Ignore, which has a line around it */
+  border-radius: 999px;               /* pill shape */
+  padding: 6px 16px;                  /* space inside: top/bottom, left/right */
+  font-weight: 600;                   /* semi-bold */
+  cursor: pointer;                    /* the mouse turns into a pointing hand over it */
+}
+
+/* A darker blue when the mouse is over it */
+.network-accept-button:hover {
+  background-color: var(--primary-dark);  /* white words on it are 7.1:1 */
+  border-color: var(--primary-dark);
+}
+
+/* Ignore: the quieter choice, so it has the same outline look as Connect */
+.network-ignore-button {
+  background-color: var(--card);      /* off-white, like the box */
+  color: var(--primary-dark);         /* darker blue words (6.5:1, WCAG) */
+  border: 1px solid var(--primary);   /* blue line around it */
+  border-radius: 999px;               /* pill shape */
+  padding: 6px 16px;                  /* space inside: top/bottom, left/right */
+  font-weight: 600;                   /* semi-bold */
+  cursor: pointer;                    /* the mouse turns into a pointing hand over it */
+}
+
+/* Very light blue when the mouse is over it */
+.network-ignore-button:hover {
+  background-color: var(--soft);
+}
+
+/* The list of groups in the right column */
+.network-groups {
+  display: flex;
+  flex-direction: column;  /* one group under another */
+}
+
+/* One group: its square, its name and member count, and the Join button */
+.network-group {
+  display: flex;                      /* puts them side by side */
+  align-items: center;                /* lines them up in the middle, top-to-bottom */
+  gap: 10px;                          /* space between them */
+  padding: 10px 0;                    /* space above and below each group */
+  border-top: 1px solid var(--line);  /* thin light blue line between groups */
+}
+
+/* No line above the first group */
+.network-group:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+/* The group's square with its letters (like "NC") */
+.network-group-square {
+  width: 40px;                          /* same width and height = a square */
+  height: 40px;
+  border-radius: 10px;                  /* rounded corners, so it's not a circle like a person */
+  background-color: var(--accent-soft); /* light blue */
+  color: var(--text);                   /* navy letters (9.9:1) */
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;                        /* centers the letters... */
+  align-items: center;                  /* ...top-to-bottom */
+  justify-content: center;              /* ...left-to-right */
+  flex-shrink: 0;                       /* never squished */
+}
+
+/* The group's name and member count. It takes the leftover space */
+.network-group-text {
+  flex: 1;
+  min-width: 0;   /* lets long names wrap instead of pushing the button off the box */
+}
+
+/* The group's name */
+.network-group-name {
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 1.3;  /* long names wrap to 2 lines neatly */
+}
+
+/* "1,284 members" under the name */
+.network-group-members {
+  color: var(--subtle);                /* soft blue (6.1:1 on the boxes, WCAG) */
+  font-size: 13px;                     /* small text */
+  font-variant-numeric: tabular-nums;  /* every digit is the same width, so the number
+                                          doesn't wiggle when it goes up by 1 */
+}
+
+/* Keyboard users see a blue ring around every button on this page (WCAG).
+   It's the same 2px ring the Feed and Profile pages use */
+.network-connect-button:focus-visible,
+.network-accept-button:focus-visible,
+.network-ignore-button:focus-visible {
+  outline: 2px solid var(--primary-dark); /* darker blue ring */
+  outline-offset: 2px;                    /* a small gap between the button and the ring */
+}
+
 /* Small screens: 2 columns don't fit side by side on a phone, so they stack */
 @media (max-width: 760px) {
   .network-page {
     grid-template-columns: 1fr;   /* just 1 column */
+    padding: 20px 16px;           /* less space at the edges, so the boxes have more room */
+  }
+}
+
+/* Phones: a request's buttons move under the name, so long names have room */
+@media (max-width: 640px) {
+  .network-request {
+    flex-wrap: wrap;   /* lets the buttons drop to their own row */
+  }
+
+  .network-request-buttons {
+    width: 100%;           /* the buttons get the whole row... */
+    padding-left: 60px;    /* ...starting under the name, not under the circle (48px circle + 12px gap) */
+  }
+}
+
+/* Only for people who haven't turned on "reduce motion" (WCAG) */
+@media (prefers-reduced-motion: no-preference) {
+  /* Hover colors fade in quickly instead of snapping on */
+  .network-connect-button,
+  .network-accept-button,
+  .network-ignore-button {
+    transition:
+      background-color var(--time-hover) ease,
+      border-color var(--time-hover) ease,
+      color var(--time-hover) ease,
+      transform var(--time-press) var(--ease-out);   /* the press (below) */
+  }
+
+  /* Buttons shrink very slightly while pressed, so it feels like the page
+     heard you. ":root:not([data-reduce-motion="on"])" also checks the
+     "Reduce motion" switch on our Settings page, like the Feed does */
+  :root:not([data-reduce-motion="on"]) .network-connect-button:active,
+  :root:not([data-reduce-motion="on"]) .network-accept-button:active,
+  :root:not([data-reduce-motion="on"]) .network-ignore-button:active {
+    transform: scale(0.97);
+  }
+}
+
+/* ---------- Messages page ---------- */
+/* Everything below styles the Messages page (Messages.jsx, yoursite.com/messages).
+   It's one big box that fills the screen under the top bar: your
+   conversations on the left, and the chat you picked on the right. On
+   phones it shows one side at a time.
+   Every class name starts with "messages-" so it can't clash with other pages. */
+
+/* The whole page: the top bar, then the big box filling the rest of the
+   screen. "100dvh" is the height of the screen (the "d" makes it right on
+   phones, where the browser's address bar slides in and out) */
+.messages-site {
+  display: flex;
+  flex-direction: column;   /* top bar on top, the box under it */
+  height: 100dvh;           /* exactly one screen tall, so only the lists inside scroll */
+}
+
+/* The space around the big box */
+.messages-page {
+  flex: 1;                  /* takes all the height under the top bar */
+  min-height: 0;            /* lets it be shorter than what's inside, so the lists scroll instead */
+  width: 100%;
+  max-width: 1200px;        /* never wider than 1200px, like the other pages */
+  margin: 0 auto;           /* centers it on the screen */
+  padding: 24px;            /* space around the box */
+}
+
+/* The big box: conversations on the left (320px), the chat on the right */
+.messages-panel {
+  height: 100%;                        /* fills the space */
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr); /* left column 320px, the chat gets the rest.
+                                          "minmax(0, 1fr)" instead of just "1fr" lets the
+                                          column be narrower than its longest line, so long
+                                          messages wrap or end in "..." instead of
+                                          stretching the column past the edge of the box */
+  background-color: var(--card);       /* off-white box (--card) */
+  border: 1px solid var(--line);       /* thin light blue line around it */
+  border-radius: 16px;                 /* rounded corners */
+  overflow: hidden;                    /* keeps the corners round where the columns touch them */
+}
+
+/* ----- Messages: the conversation list (left) ----- */
+
+/* The left column: the "Messages" title, then the list */
+.messages-list-column {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;                          /* lets the list inside scroll */
+  border-right: 1px solid var(--line);    /* thin line between the two columns */
+}
+
+/* The "Messages" title at the top of the left column (the page's one <h1>) */
+.messages-title {
+  padding: 18px 20px 14px;               /* space inside: top, left/right, bottom */
+  font-size: 22px;
+  font-weight: bold;
+  border-bottom: 1px solid var(--line);  /* thin line under it */
+}
+
+/* The short line that says "Loading...", "No messages yet", or what went
+   wrong. It's used under the title, and above the typing box when a
+   message doesn't send */
+.messages-status {
+  padding: 12px 20px;      /* space inside: top/bottom, left/right */
+  color: var(--subtle);    /* small gray-blue text (6:1 on boxes, WCAG) */
+  font-size: 14px;         /* a bit smaller than normal text */
+}
+
+/* When there's nothing to say, the line takes up no space. It stays on the
+   page (just empty) so screen readers notice when words show up in it */
+.messages-status:empty {
+  padding: 0;
+}
+
+/* The list of conversations. It scrolls on its own if there are a lot */
+.messages-list {
+  flex: 1;
+  overflow-y: auto;   /* a scrollbar appears only when the list is too long */
+}
+
+/* One conversation: a button that fills the row. The circle on the left;
+   the name, time, and last message on the right */
+.messages-person-button {
+  display: flex;                         /* circle and words side by side */
+  align-items: center;                   /* lined up in the middle */
+  gap: 12px;                             /* space between the circle and the words */
+  width: 100%;                           /* fills the row, so it's a big target */
+  padding: 12px 20px;                    /* space inside: top/bottom, left/right */
+  text-align: left;                      /* buttons center their words by default */
+  border-bottom: 1px solid var(--line);  /* thin line between conversations */
+  cursor: pointer;                       /* the mouse turns into a pointing hand */
+}
+
+/* Very light blue when the mouse is over a conversation */
+.messages-person-button:hover {
+  background-color: var(--soft);
+}
+
+/* The conversation that's open right now: the same light blue, plus a
+   thicker name, so it doesn't rely on color alone (aria-current tells
+   screen readers it's the open one, see Messages.jsx) */
+.messages-person-button[aria-current="true"] {
+  background-color: var(--soft);
+}
+
+.messages-person-button[aria-current="true"] .messages-person-name {
+  font-weight: 800;   /* extra thick */
+}
+
+/* Keyboard users see a ring around the conversation they're on (WCAG).
+   "inset" draws it just inside the edge, because the box cuts off anything outside */
+.messages-person-button:focus-visible {
+  outline: 2px solid var(--primary-dark);  /* darker blue ring */
+  outline-offset: -2px;                    /* drawn 2px inside the edge */
+}
+
+/* The words next to the circle. They take the leftover space */
+.messages-person-text {
+  flex: 1;
+  min-width: 0;   /* lets the last message get cut off with "..." instead of stretching the row */
+}
+
+/* The top line: the name on the left, the time on the right */
+.messages-person-top {
+  display: flex;
+  justify-content: space-between;  /* name left, time right */
+  align-items: baseline;           /* lines up the bottoms of the letters */
+  gap: 8px;
+}
+
+/* The person's name */
+.messages-person-name {
+  font-weight: bold;
+  overflow: hidden;          /* a very long name... */
+  text-overflow: ellipsis;   /* ...ends with "..." */
+  white-space: nowrap;       /* ...and stays on one line */
+}
+
+/* When the last message was sent, like "10:24 AM" */
+.messages-person-time {
+  flex-shrink: 0;            /* never squished by a long name */
+  font-size: 13px;           /* small text */
+  color: var(--subtle);      /* soft blue (6.1:1 on the box; 5.6:1 on the light blue hover, WCAG) */
+}
+
+/* The bottom line: the last message, cut off with "..." if it's long */
+.messages-person-preview {
+  display: flex;          /* puts the unread dot next to the words */
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;        /* smaller text */
+  color: var(--muted);    /* blue (8.3:1 on the box) */
+}
+
+/* The words of the last message */
+.messages-person-preview-text {
+  overflow: hidden;          /* long messages... */
+  text-overflow: ellipsis;   /* ...end with "..." */
+  white-space: nowrap;       /* ...and stay on one line */
+}
+
+/* A conversation with a new message you haven't read: darker, bolder words */
+.messages-person-unread .messages-person-preview {
+  color: var(--text);     /* navy (12:1) */
+  font-weight: 700;       /* bold, so it doesn't rely on color alone */
+}
+
+/* The blue dot before an unread message. It's a decoration: the words
+   "Unread:" are there for screen readers (see Messages.jsx) */
+.messages-unread-dot {
+  width: 8px;                          /* a small circle */
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--primary);    /* blue (4.5:1 on the box; dots need 3:1, WCAG) */
+  flex-shrink: 0;                      /* never squished */
+}
+
+/* ----- Messages: the chat (right) ----- */
+
+/* The right column: who you're talking to, the messages, then the typing box */
+.messages-chat-column {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;   /* lets the messages scroll inside it */
+  min-width: 0;    /* lets long words wrap instead of stretching the column */
+}
+
+/* The bar at the top of the chat: their circle, name, and headline */
+.messages-chat-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;                    /* space inside: top/bottom, left/right */
+  border-bottom: 1px solid var(--line);  /* thin line under it */
+}
+
+/* A smaller circle in the chat bar (the Feed's circle is 48px) */
+.messages-chat-header .feed-post-avatar {
+  width: 40px;
+  height: 40px;
+  font-size: 14px;
+}
+
+/* Their name in the chat bar */
+.messages-chat-name {
+  font-size: 17px;
+  font-weight: bold;
+}
+
+/* The name gets the keyboard focus when a chat opens on a phone (see
+   Messages.jsx). It isn't a button, so it doesn't need an outline then */
+.messages-chat-name:focus {
+  outline: none;
+}
+
+/* The line under their name (like their school) */
+.messages-chat-headline {
+  font-size: 13px;
+  color: var(--subtle);   /* soft blue (6.1:1 on the box, WCAG) */
+}
+
+/* "Back" to the list. Only phones show it (see the end of this section),
+   because on bigger screens the list is always there */
+.messages-back-button {
+  display: none;
+  padding: 6px 12px;                    /* space inside: top/bottom, left/right */
+  border: 1px solid var(--primary);     /* blue line around it */
+  border-radius: 999px;                 /* pill shape */
+  color: var(--primary-dark);           /* darker blue words (6.5:1, WCAG) */
+  font-weight: 600;                     /* semi-bold */
+  cursor: pointer;
+}
+
+.messages-back-button:hover {
+  background-color: var(--soft);
+}
+
+/* The messages themselves. They scroll on their own, and the newest is at the bottom */
+.messages-thread {
+  flex: 1;
+  overflow-y: auto;         /* a scrollbar appears when there are a lot */
+  display: flex;
+  flex-direction: column;   /* one message under another */
+  gap: 10px;                /* space between messages */
+  padding: 20px;            /* space inside */
+}
+
+/* One message: the bubble, then the time under it. Their messages are on
+   the left; yours are on the right (the "from-me" class) */
+.messages-bubble-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;   /* their messages: on the left */
+  max-width: 75%;            /* a bubble never takes the whole width, so it reads like a chat */
+}
+
+.messages-bubble-row-from-me {
+  align-self: flex-end;      /* your messages: pushed to the right side */
+  align-items: flex-end;     /* the time lines up on the right too */
+}
+
+/* The bubble around their messages: light blue with navy words */
+.messages-bubble {
+  padding: 10px 14px;                 /* space inside: top/bottom, left/right */
+  border-radius: 16px 16px 16px 4px;  /* round corners, except a sharper one at the bottom
+                                         left, pointing toward who sent it */
+  background-color: var(--soft);      /* very light blue */
+  border: 1px solid var(--line);      /* thin line, so it stands out from the off-white box */
+  color: var(--text);                 /* navy (11:1 on the light blue) */
+  line-height: 1.45;
+  overflow-wrap: anywhere;            /* very long words or links wrap instead of sticking out */
+  white-space: pre-wrap;              /* keeps any line breaks in the message */
+}
+
+/* Your bubbles: solid blue with white words, and the sharper corner on the right */
+.messages-bubble-row-from-me .messages-bubble {
+  border-radius: 16px 16px 4px 16px;
+  background-color: var(--primary);   /* blue */
+  border-color: var(--primary);
+  color: white;                       /* white words (4.9:1, WCAG) */
+}
+
+/* The time under each bubble */
+.messages-bubble-time {
+  margin-top: 3px;
+  padding: 0 4px;
+  font-size: 12px;        /* small text */
+  color: var(--subtle);   /* soft blue (6.1:1 on the box, WCAG) */
+}
+
+/* The typing box and the Send button at the bottom of the chat */
+.messages-composer {
+  display: flex;
+  gap: 8px;
+  padding: 12px 20px;                 /* space inside: top/bottom, left/right */
+  border-top: 1px solid var(--line);  /* thin line above it */
+}
+
+/* The box you type your message into */
+.messages-input {
+  flex: 1;
+  min-width: 0;                       /* lets it shrink on small phones */
+  padding: 10px 16px;                 /* space inside, so the words don't touch the edge */
+  font-size: 16px;                    /* 16px also stops phones from zooming in when you tap it */
+  color: var(--text);                 /* navy words */
+  background-color: var(--card);      /* off-white */
+  border: 1px solid var(--border);    /* blue line (3.5:1, enough for borders, WCAG) */
+  border-radius: 999px;               /* pill shape */
+}
+
+/* The placeholder ("Write a message...") is soft blue, not gray (6.1:1) */
+.messages-input::placeholder {
+  color: var(--subtle);
+}
+
+/* The Send button: solid blue, because it's the main thing to do here */
+.messages-send-button {
+  padding: 10px 20px;                 /* space inside: top/bottom, left/right */
+  background-color: var(--primary);   /* blue */
+  color: white;                       /* white words (4.9:1, WCAG) */
+  font-weight: 600;                   /* semi-bold */
+  border-radius: 999px;               /* pill shape */
+  cursor: pointer;
+}
+
+.messages-send-button:hover {
+  background-color: var(--primary-dark);  /* darker blue (white words on it are 7.1:1) */
+}
+
+/* Keyboard users see a ring around the typing box and the buttons (WCAG) */
+.messages-input:focus-visible,
+.messages-send-button:focus-visible,
+.messages-back-button:focus-visible {
+  outline: 2px solid var(--primary-dark);  /* darker blue ring */
+  outline-offset: 2px;                     /* a small gap between it and the ring */
+}
+
+/* Phones: the two columns don't fit side by side, so only one shows at a
+   time. Picking a conversation adds "messages-panel-showing-chat" (see
+   Messages.jsx), which swaps the list for the chat. Back swaps them again */
+@media (max-width: 760px) {
+  .messages-page {
+    padding: 12px;   /* less space around the box, so the chat has more room */
+  }
+
+  .messages-panel {
+    grid-template-columns: minmax(0, 1fr);   /* one column, which can be narrower than its
+                                                longest line (see the note above) */
+  }
+
+  .messages-list-column {
+    border-right: none;   /* nothing next to it to divide from */
+  }
+
+  /* While a chat is open, the list is hidden... */
+  .messages-panel-showing-chat .messages-list-column {
+    display: none;
+  }
+
+  /* ...and while it isn't, the chat is hidden */
+  .messages-panel:not(.messages-panel-showing-chat) .messages-chat-column {
+    display: none;
+  }
+
+  .messages-back-button {
+    display: block;   /* the Back button shows up */
+  }
+
+  .messages-bubble-row {
+    max-width: 85%;   /* bubbles can be a bit wider on a small screen */
+  }
+
+  .messages-thread,
+  .messages-chat-header,
+  .messages-composer {
+    padding-left: 12px;    /* less space at the sides */
+    padding-right: 12px;
+  }
+}
+
+/* Motion: only for people who haven't turned on "reduce motion" (WCAG) */
+@media (prefers-reduced-motion: no-preference) {
+  /* Hover colors fade in quickly instead of snapping on */
+  .messages-person-button,
+  .messages-send-button,
+  .messages-back-button {
+    transition:
+      background-color var(--time-hover) ease,
+      transform var(--time-press) var(--ease-out);   /* the press (below) */
+  }
+
+  /* Send and Back shrink very slightly while pressed, like the other
+     buttons on the site. This also checks the "Reduce motion" switch on
+     our Settings page, like the Feed does */
+  :root:not([data-reduce-motion="on"]) .messages-send-button:active,
+  :root:not([data-reduce-motion="on"]) .messages-back-button:active {
+    transform: scale(0.97);
+  }
+
+  /* The recipe for a message you just sent: it starts invisible, a few
+     pixels lower and a touch smaller, then settles into place. Only the
+     message you just sent plays it; opening a conversation doesn't, since
+     you do that all the time and waiting for it would feel slow */
+  @keyframes messages-bubble-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px) scale(0.98);
+    }
+  }
+
+  :root:not([data-reduce-motion="on"]) .messages-bubble-row-new {
+    animation: messages-bubble-in var(--time-enter) var(--ease-out) backwards;
+    transform-origin: bottom right;   /* grows from the corner near the typing box */
   }
 }
 
