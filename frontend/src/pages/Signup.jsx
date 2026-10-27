@@ -18,6 +18,8 @@ import { useNavigate } from 'react-router';
 import SmoothLink from '../components/SmoothLink.jsx';
 // ServiceLogo draws the Google logo (components/ServiceLogo.jsx).
 import ServiceLogo from '../components/ServiceLogo.jsx';
+// SiteLogo is our own logo: the binoculars picture and the name (components/SiteLogo.jsx).
+import SiteLogo from '../components/SiteLogo.jsx';
 // TextType: a line that types itself out, one word after another
 import TextType from '../components/reactbits/TextType.jsx';
 // markLoggedIn remembers that you're logged in (login-status.js)
@@ -30,6 +32,18 @@ import { supabase } from '../supabase.js';
 // through them once and stops on the last one. (This list lives outside
 // Signup, so it stays the same list on every redraw and the typing isn't restarted)
 const bannerWords = ['internships', 'co-ops', 'research positions', 'your first opportunity'];
+
+// Works out the red message for one box, using the checks the browser
+// already does because of "required" and type="email".
+// "input" is the box, and "emptyMessage" is what to say if it's empty.
+// It gives back '' (nothing) when the box is fine
+function findProblem(input, emptyMessage) {
+    // validity.valueMissing is true when a "required" box is empty
+    if (input.validity.valueMissing) return emptyMessage;
+    // validity.typeMismatch is true when a type="email" box doesn't look like an email
+    if (input.validity.typeMismatch) return 'Enter an email address like name@example.com.';
+    return '';
+}
 
 function Signup() {
     // "step" is which part of signing up is showing: 1 (name and email) or
@@ -50,9 +64,10 @@ function Signup() {
     // "Signing you up..." (see handleContinue)
     const [signingUp, setSigningUp] = useState(false);
 
-    // true when the two passwords were different, so the "Confirm password"
-    // box can be marked as having a problem
-    const [mismatch, setMismatch] = useState(false);
+    // The red messages under the boxes. It's an object with one message per
+    // box: errors.name is the Name box's, errors.email the Email box's, and so on.
+    // It starts as {} (nothing wrong yet). An empty message '' means that box is fine
+    const [errors, setErrors] = useState({});
 
     // The big heading ("Sign up" / "Create a password"), so the code can
     // move the keyboard focus onto it when the step changes
@@ -115,13 +130,32 @@ function Signup() {
     }
 
     // Runs when step 1 is submitted (the Continue button is clicked, or Enter
-    // is pressed). The browser has already checked that Name and Email are
-    // filled in, because they're "required".
+    // is pressed).
     function handleContinue(event) {
         // Normally submitting a form reloads the whole page. This stops that.
         event.preventDefault();
         // If it's already working on it, ignore a second click or Enter
         if (signingUp) return;
+
+        // event.target is the form. form.name is the input with name="name"
+        const form = event.target;
+
+        // Check each box and show the red messages (or clear old ones)
+        const newErrors = {
+            name: findProblem(form.name, 'Enter your name.'),
+            email: findProblem(form.email, 'Enter your email.'),
+        };
+        setErrors(newErrors);
+        // If a box has a problem, stop here and put the cursor in the first
+        // box that needs fixing, so screen readers read its red message (WCAG)
+        if (newErrors.name) {
+            form.name.focus();
+            return;
+        }
+        if (newErrors.email) {
+            form.email.focus();
+            return;
+        }
 
         // Changes the button's words to "Signing you up..."
         setSigningUp(true);
@@ -141,7 +175,7 @@ function Signup() {
         stepJustChanged.current = true;
         // Clears the old message, so it isn't there when they come back
         setMessage('');
-        setMismatch(false);
+        setErrors({});
         setStep(1);
     }
 
@@ -149,21 +183,32 @@ function Signup() {
     // or Enter is pressed).
     function handleSubmit(event) {
         event.preventDefault();
-        // event.target is the form. .password and .confirmPassword are the inputs
-        // with those names, and .value is what the user typed in them.
-        const password = event.target.password.value;
-        const confirmPassword = event.target.confirmPassword.value;
+        // event.target is the form. form.password and form.confirmPassword are
+        // the inputs with those names, and .value is what the user typed in them.
+        const form = event.target;
 
-        // If the two are different, stop here and say so. The page stays on
-        // step 2, and the keyboard focus goes to the box that needs fixing
-        if (password !== confirmPassword) {
-            setMismatch(true);
-            setMessage("The passwords don't match. Please retype them.");
-            event.target.confirmPassword.focus();
+        // Check each box. If both are filled in but different, the
+        // "Confirm password" box gets the "don't match" message instead
+        const newErrors = {
+            password: findProblem(form.password, 'Create a password.'),
+            confirmPassword: findProblem(form.confirmPassword, 'Retype your password.'),
+        };
+        if (!newErrors.confirmPassword && form.password.value !== form.confirmPassword.value) {
+            newErrors.confirmPassword = "The passwords don't match. Please retype them.";
+        }
+        setErrors(newErrors);
+
+        // If a box has a problem, stop here. The page stays on step 2, and
+        // the keyboard focus goes to the first box that needs fixing
+        if (newErrors.password) {
+            form.password.focus();
+            return;
+        }
+        if (newErrors.confirmPassword) {
+            form.confirmPassword.focus();
             return;
         }
 
-        setMismatch(false);
         // The backticks ` ` let you put a variable inside text with ${ }.
         setMessage(`Thanks for signing up, ${name}!`);
         // Signing up also logs you in, so the About page shows your
@@ -188,9 +233,7 @@ function Signup() {
             <header className="about-bar">
                 <div className="about-inner about-bar-row">
                     <SmoothLink className="about-logo" to="/about">
-                        {/* The diamond is decoration, so screen readers skip it */}
-                        <span className="about-blaze" aria-hidden="true"></span>
-                        ScoutSearch
+                        <SiteLogo />
                     </SmoothLink>
 
                     {/* The same section tabs as the About page's top bar.
@@ -244,16 +287,23 @@ function Signup() {
                             <>
                                 <p className="signup-intro">Create your free ScoutSearch account.</p>
 
-                                {/* onSubmit={handleContinue} runs the function above when the form is sent */}
-                                <form onSubmit={handleContinue}>
+                                {/* onSubmit={handleContinue} runs the function above when the form is sent.
+                                    noValidate turns off the browser's own "Please fill out this
+                                    field" bubbles, so our red messages under the boxes show instead */}
+                                <form onSubmit={handleContinue} noValidate>
                                     {/* htmlFor="name" connects this label to the input with id="name".
                                         Clicking the label focuses the input, and screen readers read
                                         the label out loud (WCAG) */}
                                     <label htmlFor="name" className="signup-label">Name</label>
                                     {/* autoComplete="name" lets the browser fill in your name.
-                                        required means the form can't be sent while it's empty.
+                                        required means it can't be empty (findProblem checks this).
                                         value and onChange keep what's typed in the "name" box above,
-                                        so it isn't lost when step 2 shows */}
+                                        so it isn't lost when step 2 shows.
+                                        Typing also clears the red message ("...errors" copies the
+                                        other boxes' messages, and name: '' empties this one).
+                                        aria-invalid gives the box its red outline (index.css) and tells
+                                        screen readers it has a problem. aria-describedby points at
+                                        the red message below, so screen readers read it with the box */}
                                     <input
                                         id="name"
                                         name="name"
@@ -262,11 +312,19 @@ function Signup() {
                                         required
                                         className="signup-input"
                                         value={name}
-                                        onChange={(event) => setName(event.target.value)}
+                                        onChange={(event) => {
+                                            setName(event.target.value);
+                                            setErrors({ ...errors, name: '' });
+                                        }}
+                                        aria-invalid={Boolean(errors.name)}
+                                        aria-describedby="name-error"
                                     />
+                                    {/* The red reason under the box. It's empty when the box is fine */}
+                                    <p id="name-error" className="signup-field-error">{errors.name}</p>
 
                                     <label htmlFor="email" className="signup-label">Email</label>
-                                    {/* type="email" checks it looks like an email address */}
+                                    {/* type="email" checks it looks like an email address.
+                                        The rest works like the Name box above */}
                                     <input
                                         id="email"
                                         name="email"
@@ -275,8 +333,14 @@ function Signup() {
                                         required
                                         className="signup-input"
                                         value={email}
-                                        onChange={(event) => setEmail(event.target.value)}
+                                        onChange={(event) => {
+                                            setEmail(event.target.value);
+                                            setErrors({ ...errors, email: '' });
+                                        }}
+                                        aria-invalid={Boolean(errors.email)}
+                                        aria-describedby="email-error"
                                     />
+                                    <p id="email-error" className="signup-field-error">{errors.email}</p>
 
                                     {/* type="submit" means clicking this button sends the form.
                                         "about-button" is the sky-blue button from the About page.
@@ -318,11 +382,13 @@ function Signup() {
                             <>
                                 <p className="signup-intro">Choose a password for {email}.</p>
 
-                                <form onSubmit={handleSubmit}>
+                                {/* noValidate: our red messages show instead of the browser's bubbles */}
+                                <form onSubmit={handleSubmit} noValidate>
                                     <label htmlFor="password" className="signup-label">Password</label>
                                     {/* type="password" hides what you type as dots.
                                         "new-password" tells password managers to suggest a strong new password.
-                                        autoFocus puts the cursor here as soon as step 2 shows */}
+                                        autoFocus puts the cursor here as soon as step 2 shows.
+                                        The red message works like the Name box on step 1 */}
                                     <input
                                         id="password"
                                         name="password"
@@ -331,13 +397,15 @@ function Signup() {
                                         required
                                         autoFocus
                                         className="signup-input"
+                                        onChange={() => setErrors({ ...errors, password: '' })}
+                                        aria-invalid={Boolean(errors.password)}
+                                        aria-describedby="password-error"
                                     />
+                                    <p id="password-error" className="signup-field-error">{errors.password}</p>
 
                                     {/* The same password typed again, so a typo is caught before the
-                                        account is made. aria-invalid tells screen readers (and
-                                        index.css, for the red outline) that this box has a problem.
-                                        aria-describedby points at the message below, so screen
-                                        readers read it along with the box */}
+                                        account is made. If the two don't match, the red message
+                                        shows under this box */}
                                     <label htmlFor="confirmPassword" className="signup-label">Confirm password</label>
                                     <input
                                         id="confirmPassword"
@@ -346,20 +414,15 @@ function Signup() {
                                         autoComplete="new-password"
                                         required
                                         className="signup-input"
-                                        aria-invalid={mismatch}
-                                        aria-describedby="signup-message"
+                                        onChange={() => setErrors({ ...errors, confirmPassword: '' })}
+                                        aria-invalid={Boolean(errors.confirmPassword)}
+                                        aria-describedby="confirmPassword-error"
                                     />
+                                    <p id="confirmPassword-error" className="signup-field-error">{errors.confirmPassword}</p>
 
                                     {/* Shows the message. role="status" makes screen readers read the
-                                        message out loud when it appears (WCAG). The red look is only
-                                        added when the passwords didn't match */}
-                                    <p
-                                        id="signup-message"
-                                        role="status"
-                                        className={mismatch ? 'signup-message signup-message-error' : 'signup-message'}
-                                    >
-                                        {message}
-                                    </p>
+                                        message out loud when it appears (WCAG) */}
+                                    <p role="status" className="signup-message">{message}</p>
 
                                     <button type="submit" className="about-button signup-submit">Sign up</button>
 

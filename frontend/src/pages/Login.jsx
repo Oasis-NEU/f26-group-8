@@ -25,6 +25,8 @@ import { Link, useLocation, useNavigate } from 'react-router';
 import SmoothLink from '../components/SmoothLink.jsx';
 // ServiceLogo draws the Google logo (components/ServiceLogo.jsx).
 import ServiceLogo from '../components/ServiceLogo.jsx';
+// SiteLogo is our own logo: the binoculars picture and the name (components/SiteLogo.jsx).
+import SiteLogo from '../components/SiteLogo.jsx';
 // TextType: a line that types itself out, one word after another
 import TextType from '../components/reactbits/TextType.jsx';
 // markLoggedIn remembers that you're logged in (login-status.js)
@@ -38,10 +40,27 @@ import { supabase } from '../supabase.js';
 // Login, so it stays the same list on every redraw and the typing isn't restarted)
 const bannerWords = ['internships', 'co-ops', 'research positions', 'your next opportunity'];
 
+// Works out the red message for one box, using the checks the browser
+// already does because of "required" and type="email".
+// "input" is the box, and "emptyMessage" is what to say if it's empty.
+// It gives back '' (nothing) when the box is fine
+function findProblem(input, emptyMessage) {
+    // validity.valueMissing is true when a "required" box is empty
+    if (input.validity.valueMissing) return emptyMessage;
+    // validity.typeMismatch is true when a type="email" box doesn't look like an email
+    if (input.validity.typeMismatch) return 'Enter an email address like name@example.com.';
+    return '';
+}
+
 function Login() {
     // "message" is the text shown above the Log in button. It starts empty ('').
     // Calling setMessage('...') changes it, and React updates the page.
     const [message, setMessage] = useState('');
+
+    // The red messages under the boxes. It's an object with one message per
+    // box: errors.email is the Email box's, errors.password the Password box's.
+    // It starts as {} (nothing wrong yet). An empty message '' means that box is fine
+    const [errors, setErrors] = useState({});
 
     // navigate('/feed') // Sends the user to the Feed page after Logging in
     const navigate = useNavigate();
@@ -144,9 +163,28 @@ function Login() {
     function handleSubmit(event) {
         // Normally submitting a form reloads the whole page. This stops that.
         event.preventDefault();
-        // event.target is the form. .email is the input with name="email",
-        // and .value is what the user typed in it.
-        const email = event.target.email.value;
+        // event.target is the form. form.email is the input with name="email"
+        const form = event.target;
+
+        // Check each box and show the red messages (or clear old ones)
+        const newErrors = {
+            email: findProblem(form.email, 'Enter your email.'),
+            password: findProblem(form.password, 'Enter your password.'),
+        };
+        setErrors(newErrors);
+        // If a box has a problem, stop here and put the cursor in the first
+        // box that needs fixing, so screen readers read its red message (WCAG)
+        if (newErrors.email) {
+            form.email.focus();
+            return;
+        }
+        if (newErrors.password) {
+            form.password.focus();
+            return;
+        }
+
+        // .value is what the user typed in the Email box.
+        const email = form.email.value;
         // The backticks ` ` let you put a variable inside text with ${ }.
         setMessage(`Welcome, ${email}!`);
         // Remember that you're logged in, so the About page shows your
@@ -164,6 +202,15 @@ function Login() {
         event.preventDefault();
         // If it's already working on it, ignore a second click or Enter
         if (sending) return;
+
+        // Check the Email box, the same way handleSubmit does
+        const form = event.target;
+        const emailProblem = findProblem(form.email, 'Enter your email.');
+        setErrors({ email: emailProblem });
+        if (emailProblem) {
+            form.email.focus();
+            return;
+        }
 
         // Changes the button's words to "Sending link..."
         setSending(true);
@@ -196,9 +243,7 @@ function Login() {
             <header className="about-bar">
                 <div className="about-inner about-bar-row">
                     <SmoothLink className="about-logo" to="/about">
-                        {/* The diamond is decoration, so screen readers skip it */}
-                        <span className="about-blaze" aria-hidden="true"></span>
-                        ScoutSearch
+                        <SiteLogo />
                     </SmoothLink>
 
                     {/* The same section tabs as the About page's top bar.
@@ -246,16 +291,23 @@ function Login() {
                             <h1 className="signup-title" ref={headingRef} tabIndex={-1}>Log in</h1>
                             <p className="signup-intro">Welcome back to ScoutSearch.</p>
 
-                            {/* onSubmit={handleSubmit} runs the function above when the form is sent */}
-                            <form onSubmit={handleSubmit}>
+                            {/* onSubmit={handleSubmit} runs the function above when the form is sent.
+                                noValidate turns off the browser's own "Please fill out this
+                                field" bubbles, so our red messages under the boxes show instead */}
+                            <form onSubmit={handleSubmit} noValidate>
                                 {/* htmlFor="email" connects this label to the input with id="email".
                                     Clicking the label focuses the input, and screen readers read
                                     the label out loud (WCAG) */}
                                 <label htmlFor="email" className="signup-label">Email</label>
                                 {/* type="email" checks it looks like an email address.
                                     autoComplete="email" lets the browser fill it in for you.
-                                    required means the form can't be sent while it's empty.
-                                    value and onChange keep what's typed in "email" (above) */}
+                                    required means it can't be empty (findProblem checks this).
+                                    value and onChange keep what's typed in "email" (above).
+                                    Typing also clears the red message ("...errors" copies the
+                                    other boxes' messages, and email: '' empties this one).
+                                    aria-invalid gives the box its red outline (index.css) and tells
+                                    screen readers it has a problem. aria-describedby points at
+                                    the red message below, so screen readers read it with the box */}
                                 <input
                                     id="email"
                                     name="email"
@@ -264,12 +316,20 @@ function Login() {
                                     required
                                     className="signup-input"
                                     value={email}
-                                    onChange={(event) => setEmail(event.target.value)}
+                                    onChange={(event) => {
+                                        setEmail(event.target.value);
+                                        setErrors({ ...errors, email: '' });
+                                    }}
+                                    aria-invalid={Boolean(errors.email)}
+                                    aria-describedby="email-error"
                                 />
+                                {/* The red reason under the box. It's empty when the box is fine */}
+                                <p id="email-error" className="signup-field-error">{errors.email}</p>
 
                                 <label htmlFor="password" className="signup-label">Password</label>
                                 {/* type="password" hides what you type as dots.
-                                    "current-password" lets password managers fill in a saved password */}
+                                    "current-password" lets password managers fill in a saved password.
+                                    The rest works like the Email box above */}
                                 <input
                                     id="password"
                                     name="password"
@@ -277,16 +337,27 @@ function Login() {
                                     autoComplete="current-password"
                                     required
                                     className="signup-input"
+                                    onChange={() => setErrors({ ...errors, password: '' })}
+                                    aria-invalid={Boolean(errors.password)}
+                                    aria-describedby="password-error"
                                 />
+                                <p id="password-error" className="signup-field-error">{errors.password}</p>
 
                                 {/* "Forgot your password?" right under the password box.
                                     to="#forgot-password" adds #forgot-password to the
                                     address, which swaps the box to the reset form. Since the
                                     address changes, Back brings you here again.
-                                    onClick clears any old "Check your email", so the
-                                    reset form always opens fresh */}
+                                    onClick clears any old "Check your email" and red
+                                    messages, so the reset form always opens fresh */}
                                 <p className="signup-forgot">
-                                    <Link to="#forgot-password" className="signup-forgot-link" onClick={() => setSentTo('')}>
+                                    <Link
+                                        to="#forgot-password"
+                                        className="signup-forgot-link"
+                                        onClick={() => {
+                                            setSentTo('');
+                                            setErrors({});
+                                        }}
+                                    >
                                         Forgot your password?
                                     </Link>
                                 </p>
@@ -326,10 +397,12 @@ function Login() {
                                 Type the email you log in with, and we'll send you a link to make a new password.
                             </p>
 
-                            {/* onSubmit={handleReset} runs the function above when the form is sent */}
-                            <form onSubmit={handleReset}>
+                            {/* onSubmit={handleReset} runs the function above when the form is sent.
+                                noValidate: our red message shows instead of the browser's bubble */}
+                            <form onSubmit={handleReset} noValidate>
                                 {/* id="reset-email" is different from the Log in form's
-                                    id="email", because two things on a page can't share an id */}
+                                    id="email", because two things on a page can't share an id.
+                                    The red message works like the Log in form's Email box */}
                                 <label htmlFor="reset-email" className="signup-label">Email</label>
                                 <input
                                     id="reset-email"
@@ -339,8 +412,14 @@ function Login() {
                                     required
                                     className="signup-input"
                                     value={email}
-                                    onChange={(event) => setEmail(event.target.value)}
+                                    onChange={(event) => {
+                                        setEmail(event.target.value);
+                                        setErrors({ ...errors, email: '' });
+                                    }}
+                                    aria-invalid={Boolean(errors.email)}
+                                    aria-describedby="reset-email-error"
                                 />
+                                <p id="reset-email-error" className="signup-field-error">{errors.email}</p>
 
                                 {/* aria-disabled (not "disabled") keeps the button reachable
                                     with Tab while it's working, and the words say what's

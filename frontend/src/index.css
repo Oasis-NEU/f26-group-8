@@ -95,7 +95,7 @@
   --time-signup-rise: 260ms; /* Sign up page: each piece inside the box fading in */
   --signup-start: 40ms;      /* Sign up page: how long the pieces wait before the first one starts */
   --signup-stagger: 25ms;    /* Sign up page: extra wait for each piece after the first, so they arrive in order */
-  --signup-error: #9b1c1c;   /* Sign up page: the "passwords don't match" message and its box outline.
+  --signup-error: #9b1c1c;   /* Sign up and Log in pages: the red messages under the boxes and their outlines.
                                 A deep red, so it's clearly different from the blues (6.5:1 on the
                                 box, 7.3:1 on the off-white input, WCAG) */
   --text-type-word: var(--primary-dark); /* TextType: the typed words (5.8:1 on the page, WCAG) */
@@ -179,6 +179,65 @@ body {
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 8px; /* small space between the heading and its text */
+}
+
+/* ---------- Site logo ----------
+   The binoculars picture and the name "ScoutSearch" (components/SiteLogo.jsx).
+   It's in every top bar (About, Login, Signup, and NavBar) and the About
+   footer. The size of the picture is set by each bar, next to that bar's
+   other styles (look for ".site-logo-icon" in its section) */
+
+/* The picture and the name side by side */
+.site-logo {
+  display: inline-flex;   /* puts the picture and the name in a row */
+  align-items: center;    /* lines them up in the middle, top-to-bottom */
+  gap: 10px;              /* space between the picture and the name */
+}
+
+/* The binoculars picture. Each bar sets its width and height */
+.site-logo-icon {
+  flex-shrink: 0;         /* never gets squished when the bar is narrow */
+}
+
+/* "Scout" in the app blue, the same blue as the colored word in the Feed
+   title. "Search" keeps the bar's navy text color. (Not sky blue like the
+   lenses: sky blue is too faint to use for words, see --accent) */
+.site-logo-scout {
+  color: var(--primary);
+}
+
+/* Motion: the first page you open in a tab fades the logo in (SiteLogo.jsx
+   adds "site-logo-intro" only that first time). The picture grows in a
+   touch, and the name follows right after it. Skipped for people who turned
+   on "reduce motion", on their computer or in our Settings (WCAG) */
+@media (prefers-reduced-motion: no-preference) {
+  /* The recipe for the picture: starts invisible and a little smaller */
+  @keyframes site-logo-icon-in {
+    from {
+      opacity: 0;               /* invisible... */
+      transform: scale(0.85);   /* ...and 85% of its size */
+    }
+  }
+
+  /* The recipe for the name: starts invisible and a few pixels to the left,
+     so it looks like it slides out from behind the picture */
+  @keyframes site-logo-name-in {
+    from {
+      opacity: 0;
+      transform: translateX(-6px);
+    }
+  }
+
+  /* "backwards" keeps each part invisible during its delay, before it
+     starts playing. The name waits 120ms, so the two come in one after the other */
+  :root:not([data-reduce-motion="on"]) .site-logo-intro .site-logo-icon {
+    animation: site-logo-icon-in 500ms var(--ease-out) backwards;
+  }
+
+  :root:not([data-reduce-motion="on"]) .site-logo-intro .site-logo-name {
+    display: inline-block;    /* plain text can't move ("transform") unless it's a block */
+    animation: site-logo-name-in 500ms var(--ease-out) 120ms backwards;
+  }
 }
 
 /* ---------- Login and Signup pages ---------- */
@@ -378,11 +437,12 @@ html:has(.about-site) {
   min-height: 68px;    /* the bar's height */
 }
 
-/* "ScoutSearch" with the diamond mark. It's a link back to the top of the page */
+/* The logo (binoculars and "ScoutSearch", see "Site logo" near the top).
+   On About it's a link back to the top of the page; on Log in and Sign up
+   it goes back to the About page */
 .about-logo {
-  display: inline-flex;              /* puts the diamond and the name side by side */
-  align-items: center;               /* lines them up in the middle */
-  gap: 12px;                         /* space between the diamond and the name */
+  display: inline-flex;              /* keeps the logo in one piece */
+  align-items: center;               /* lines it up in the middle */
   font-family: var(--font-display);  /* Overpass */
   font-weight: 800;                  /* extra thick */
   font-size: 22px;                   /* text size */
@@ -390,15 +450,10 @@ html:has(.about-site) {
   color: var(--about-ink);           /* deep navy text */
 }
 
-/* The blue diamond. It looks like the painted marks on trees that show
-   hikers the trail ("trail blazes"), which fits a site about finding your way.
-   It's only decoration, so About.jsx hides it from screen readers */
-.about-blaze {
-  width: 14px;                     /* a 14px square... */
-  height: 14px;
-  background-color: var(--accent); /* sky blue */
-  border-radius: 2px;              /* barely rounded corners */
-  transform: rotate(45deg);        /* ...turned 45 degrees, so it's a diamond */
+/* The binoculars picture in this bar */
+.about-logo .site-logo-icon {
+  width: 36px;
+  height: 36px;
 }
 
 /* The list of section links ("Who it's for", ...) */
@@ -1163,12 +1218,19 @@ html:has(.about-site) {
   gap: 24px;                       /* space between them */
 }
 
-/* "ScoutSearch" in the footer */
+/* The logo in the footer (binoculars and "ScoutSearch") */
 .about-footer-name {
   font-family: var(--font-display);  /* Overpass */
   font-weight: 800;                  /* extra thick */
   font-size: 20px;                   /* text size */
   color: var(--about-ink);           /* navy */
+  margin-bottom: 8px;                /* space between the logo and the lines under it */
+}
+
+/* The binoculars picture in the footer, a bit smaller than the top bar's */
+.about-footer-name .site-logo-icon {
+  width: 32px;
+  height: 32px;
 }
 
 /* The footer's links, in a row that wraps on small screens */
@@ -1319,6 +1381,11 @@ html:has(.about-site) {
   /* Only the logo, Log in, and Sign up fit in the first row, so the logo shrinks a bit */
   .about-logo {
     font-size: 20px;
+  }
+
+  .about-logo .site-logo-icon {
+    width: 32px;          /* a smaller picture to match the smaller name */
+    height: 32px;
   }
 
   /* Smaller section links, so all 3 fit on one row on most phones */
@@ -2398,6 +2465,12 @@ html:has(.about-site) {
   border-radius: 6px;   /* rounded corners for the keyboard outline below */
 }
 
+/* The binoculars picture next to the name (see "Site logo" near the top) */
+.feed-nav-logo .site-logo-icon {
+  width: 44px;
+  height: 44px;
+}
+
 /* The name is a link to the About page, so it gets underlined when the
    mouse is over it, to show it can be clicked */
 .feed-nav-logo:hover {
@@ -2477,6 +2550,11 @@ html:has(.about-site) {
 
   .feed-nav-logo {
     font-size: 24px;      /* a smaller name, so the search box has room next to it */
+  }
+
+  .feed-nav-logo .site-logo-icon {
+    width: 34px;          /* a smaller picture to match */
+    height: 34px;
   }
 
   .feed-nav-search {
@@ -5230,16 +5308,27 @@ html:has(.about-site) {
   margin-bottom: 16px;
 }
 
-/* The "passwords don't match" version: bold deep red, so it can't be missed */
-.signup-message-error {
-  font-weight: 700;              /* thick text, so it doesn't rely on color alone */
-  color: var(--signup-error);    /* deep red */
-}
-
-/* An input that has a problem (the retyped password) gets a deep red outline.
-   aria-invalid="true" is set in Signup.jsx, which also tells screen readers */
+/* An input that has a problem (empty, not an email, or the passwords don't
+   match) gets a deep red outline. aria-invalid="true" is set in Login.jsx
+   and Signup.jsx, which also tells screen readers */
 .signup-input[aria-invalid="true"] {
   border-color: var(--signup-error);
+  border-width: 2px;   /* a thicker line, so it doesn't rely on color alone (WCAG) */
+}
+
+/* The red reason right under a box ("Enter your email."). It has no height
+   while it's empty, so it leaves no gap until there's a problem */
+.signup-field-error {
+  font-size: 14px;               /* a little smaller than the labels */
+  font-weight: 700;              /* thick text, so it doesn't rely on color alone (WCAG) */
+  color: var(--signup-error);    /* deep red (6.5:1 on the box) */
+}
+
+/* Once it has words in it, it sits close under its box, with the usual
+   space before the next label */
+.signup-field-error:not(:empty) {
+  margin-top: -8px;      /* pulls it up, closer to its box (the box has 12px below it) */
+  margin-bottom: 12px;   /* space before the next label or button */
 }
 
 /* The small "Step 1 of 2" line above the title */
@@ -5459,6 +5548,13 @@ html:has(.about-site) {
   .signup-input:focus {
     border-color: var(--primary-dark);                          /* darker blue line */
     box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 18%, transparent); /* soft glow, 4px wide */
+  }
+
+  /* A box with a problem stays red while you're typing in it (without this,
+     the blue line above would cover the red one), with a soft red glow */
+  .signup-input[aria-invalid="true"]:focus {
+    border-color: var(--signup-error);                                         /* deep red line */
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--signup-error) 15%, transparent); /* soft red glow */
   }
 
   /* The "Continue with" buttons fade to their hover colors and shrink very

@@ -11,6 +11,8 @@
 import { Link } from "react-router";
 // AccountMenu is your circle and the dropdown it opens (components/AccountMenu.jsx).
 import AccountMenu from "./AccountMenu.jsx";
+// SiteLogo is the binoculars picture and the name (components/SiteLogo.jsx).
+import SiteLogo from "./SiteLogo.jsx";
 // The top bar
 function NavBar() {
   return (
@@ -20,9 +22,11 @@ function NavBar() {
     <nav className="feed-nav" aria-label="Main">
       {/* Left side: the site name and the search box */}
       <div className="feed-nav-left">
-        {/* The site name. Clicking it goes to the About page. Since you're
+        {/* The logo. Clicking it goes to the About page. Since you're
             logged in, its top bar shows a Home button and your circle there */}
-        <Link to="/about" className="feed-nav-logo">ScoutSearch</Link>
+        <Link to="/about" className="feed-nav-logo">
+          <SiteLogo />
+        </Link>
         {/* A hidden label for screen readers, like the one in the post box (WCAG) */}
         <label htmlFor="feed-search" className="sr-only">
           Search
