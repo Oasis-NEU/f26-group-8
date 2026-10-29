@@ -7,10 +7,12 @@
 //   only saved in this browser for now. Once the site has a backend, they
 //   should be saved to your account instead, so they follow you everywhere.)
 // - applySettings() writes each choice onto the page's <html> tag, like
-//   <html data-theme="mint" data-font="readable">. index.css has rules
+//   <html data-palette="mint" data-font="readable">. index.css has rules
 //   for each one (under "Settings: site-wide choices"), so the whole site changes.
 // - main.jsx runs applySettings() once when the site opens, and the
 //   Settings page runs it again every time something is changed.
+// - Light / Dark / System is NOT in here. It has its own file (theme.js),
+//   because the sun/moon button in every top bar changes it too.
 
 // The name the choices are saved under in localStorage
 const storageKey = 'scoutsearch-settings';
@@ -18,7 +20,8 @@ const storageKey = 'scoutsearch-settings';
 // What every choice starts as, before anyone changes it
 export const defaultSettings = {
     // Appearance
-    theme: 'blue',              // the site's colors: 'blue', 'mint', or 'lavender'
+    palette: 'blue',            // the site's colors: 'blue', 'mint', or 'lavender'
+                                // (this used to be called "theme"; light and dark are in theme.js)
     headings: 'classic',        // heading style: 'classic' or 'sign' (the road-sign font)
 
     // Privacy & data
@@ -48,6 +51,12 @@ export function loadSettings() {
         const saved = JSON.parse(localStorage.getItem(storageKey));
         // "...": copy everything from defaultSettings, then everything saved on top
         const settings = { ...defaultSettings, ...saved };
+        // The colors used to be saved as "theme". Anyone who picked Mint or
+        // Lavender before keeps it under the new name
+        if (saved && saved.theme && !saved.palette) {
+            settings.palette = saved.theme;
+        }
+        delete settings.theme;
         // The text size used to be saved as a word ('normal', 'large', 'larger').
         // The slider needs a number, so anyone who picked a word before gets
         // the matching number instead
@@ -76,7 +85,7 @@ export function saveSettings(settings) {
 // On/off choices are written as "on" or "off"
 export function applySettings(settings) {
     const html = document.documentElement;
-    html.dataset.theme = settings.theme;
+    html.dataset.palette = settings.palette;
     html.dataset.headings = settings.headings;
     html.dataset.font = settings.font;
     // The text size is a number, so it goes in a CSS variable instead:

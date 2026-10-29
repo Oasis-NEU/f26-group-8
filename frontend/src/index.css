@@ -21,42 +21,130 @@
 /* Colors used across the whole site. Change one here and it updates everywhere.
    These are "variables": you use one by writing var(--name).
 
-   The site's color scheme is a clear, gentle light blue: a light blue page,
-   blue-white boxes (not pure white, which is glaring), navy text, and
-   sky-blue buttons with navy words. The secondary colors are real blues,
-   not grays, so the page feels fresh instead of dull, and everything is
-   kept a step dimmer than full brightness so it's easy on the eyes.
+   There are two sets: LIGHT and DARK. Which one is on is decided by
+   data-theme="light" or data-theme="dark" on the <html> tag. A small script
+   in index.html sets it before the page is drawn, and ThemeProvider.jsx
+   changes it when you pick Light, Dark, or System from the sun/moon button in
+   the top bar. Every color on the site comes from these variables, so both
+   sets cover the whole site.
+
+   Light: soft gray-blue, kept a step dimmer than full brightness so it's easy
+   on the eyes. No box is pure white. The Sign up buttons are a deep, confident
+   blue with white words, so they're what you notice first.
+   Dark: a deep navy page (not black, so it still feels like ScoutSearch),
+   boxes a little lighter than the page so they stand apart, and calmer blues
+   that don't glow.
+
    The numbers like 6.2:1 are contrast: how much text stands out from what's
-   behind it. Small text needs at least 4.5:1 (WCAG). */
+   behind it. Small text needs at least 4.5:1, big text and the edges of
+   buttons and boxes need 3:1 (WCAG). Each number below is "light / dark".
+   (Some older comments further down in this file still have the numbers from
+   before the light and dark sets. The ones here are the current ones.) */
+
+/* ----- Light (also the normal set, if data-theme is missing) ----- */
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;     /* tells the browser to draw scrollbars and form boxes light too */
+
+  --bg: #dde4ec;           /* soft gray-blue page background */
+  --card: #eef2f6;         /* the boxes: a soft off-white, never pure white */
+  --soft: #e2e8ef;         /* very light gray-blue for hover colors and tags */
+  --text: #14283f;         /* navy for headings and main text (13.3:1 on boxes, 11.7:1 on the page) */
+  --muted: #2b4460;        /* blue for paragraph text (8.9:1 on boxes, 7.8:1 on the page) */
+  --subtle: #3e5874;       /* soft blue for small, less important text
+                              (6.5:1 on boxes, 5.7:1 on the page, 5.2:1 on the About boxes) */
+  --primary: #2a63a0;      /* the main blue (app buttons, boxes). White text on it is 6.2:1 */
+  --primary-dark: #1d4c7d; /* darker blue for hovering (white text on it is 8.8:1) */
+  --border: #5d7794;       /* blue for input box borders (4.1:1 on boxes; borders need 3:1) */
+  --line: #c3cedb;         /* light gray-blue for the thin lines around boxes */
+
+  /* The accent: saved for the main thing to do on a screen (Sign up,
+     Apply), so it's what people notice first */
+  --accent: #1c5591;       /* deep, confident blue (white words on it are 7.6:1) */
+  --accent-hover: #154476; /* a step deeper, for hovering (white words 9.9:1) */
+  --accent-text: #ffffff;  /* the words on the accent */
+  --accent-soft: #d3dde9;  /* light blue for "Why it matched" and other small highlights
+                              (navy words on it are 10.9:1) */
+
+  /* The About page's colors. The same as above, plus slightly deeper
+     boxes so the off-white example job cards stand out on them */
+  --about-bg: var(--bg);
+  --about-panel: #d0d9e4;  /* slightly deeper gray-blue boxes on the page */
+  --about-edge: var(--line);
+  --about-ink: var(--text);
+  --about-ink-2: var(--muted);
+  --about-ink-3: var(--subtle);
+
+  /* Colors for one job each */
+  --primary-text: var(--primary); /* the main blue as a word color (5.5:1 on boxes, 4.8:1 on the page) */
+  --link: var(--primary-dark);    /* blue words and links (7.8:1 on boxes) */
+  --focus-ring: var(--primary-dark); /* the outline when you reach something with the Tab key (6.9:1 on the page) */
+  --on-primary: #ffffff;          /* words and icons on the blue buttons */
+  --strong-fill: var(--text);     /* the darkest box color, for boxes with white words on them */
+  --signup-error: #9b1c1c;        /* red error messages under the boxes (7.2:1 on boxes) */
+  --shadow-color: #0f2a44;        /* shadows under floating boxes (used see-through) */
+
+  /* The logo's picture (components/SiteLogo.jsx) */
+  --logo-tile: var(--text);   /* the navy square */
+  --logo-lens: #7aaedb;       /* the sky-blue lenses (the logo is the only decoration allowed this blue) */
+  --logo-line: var(--card);   /* the light outlines */
+  --logo-scout: var(--primary); /* the word "Scout" (5.5:1 on boxes) */
+
+  /* Background effects */
+  --bg-pattern-stroke: color-mix(in srgb, var(--primary) 10%, transparent); /* the About page's wavy lines
+                                        (blue at 10% strength, so they never get in the way of text) */
+  --signup-grid: color-mix(in srgb, var(--primary) 12%, transparent); /* Sign up and Log in: the faint
+                                        graph-paper lines in the background */
+  --signup-glow: color-mix(in srgb, var(--logo-lens) 35%, transparent); /* Sign up and Log in: the soft
+                                        sky-blue glow at the top of the page */
+  --spotlight-color: color-mix(in srgb, white 55%, transparent); /* SpotlightCard: the soft light that
+                                        follows the mouse on the About page's boxes */
+}
+
+/* ----- Dark ----- */
+:root[data-theme="dark"] {
+  color-scheme: dark;      /* dark scrollbars and form boxes */
+
+  --bg: #0f1927;           /* deep navy page background (not black) */
+  --card: #192839;         /* the boxes: a little lighter than the page, so they stand apart */
+  --soft: #203148;         /* a little lighter again, for hover colors and tags */
+  --text: #e1e8f1;         /* soft white for headings and main text (12.1:1 on boxes, 14.3:1 on the page) */
+  --muted: #bac8d9;        /* light blue-gray for paragraph text (8.8:1 on boxes) */
+  --subtle: #9eb0c5;       /* small, less important text (6.7:1 on boxes, 5.4:1 on "Why it matched") */
+  --primary: #4177b4;      /* the main blue, calmer than the light one so it doesn't glow
+                              (white text on it is 4.6:1) */
+  --primary-dark: #355f91; /* darker blue for hovering (white text 6.6:1) */
+  --border: #6e86a2;       /* input box borders (4.0:1 on boxes) */
+  --line: #2c3e55;         /* thin lines around boxes */
+
+  --accent: #3a6da8;       /* Sign up blue (white words 5.3:1, and 3.3:1 against the page, so the button's edge shows) */
+  --accent-hover: #4177b4; /* a step lighter when the mouse is over it (white words 4.6:1) */
+  --accent-text: #ffffff;
+  --accent-soft: #23384f;  /* "Why it matched" chips (light words on them are 9.7:1) */
+
+  --about-panel: #142233;  /* the About page's boxes: between the page and the cards */
+
+  --link: #8fb8e4;         /* light blue words and links (7.2:1 on boxes) */
+  --primary-text: var(--link);
+  --focus-ring: var(--link);
+  --strong-fill: #0a121d;  /* darker than the page, for boxes with white words */
+  --signup-error: #f2a7a7; /* light red, so it's readable on dark boxes (7.7:1) */
+  --shadow-color: #02060c; /* shadows are nearly black in the dark */
+
+  --logo-tile: #26436a;    /* the square is lighter than the page, so it doesn't disappear */
+  --logo-lens: #86b4e0;
+  --logo-line: var(--text);
+  --logo-scout: var(--link);
+
+  --bg-pattern-stroke: color-mix(in srgb, var(--link) 9%, transparent);
+  --signup-grid: color-mix(in srgb, var(--link) 7%, transparent);
+  --signup-glow: color-mix(in srgb, var(--primary) 22%, transparent);
+  --spotlight-color: color-mix(in srgb, white 6%, transparent); /* only a faint light, so it doesn't glare */
+}
+
+/* Everything else that isn't a color: fonts, timing, and the effects'
+   settings. The effects' colors come from the variables above */
 :root {
-  --bg: #d7e9fb;           /* clear light blue page background */
-  --card: #f0f7ff;         /* the boxes: a clean blue-white, softer than pure white */
-  --text: #10325a;         /* navy for headings and main text (12:1 on boxes, 10.4:1 on the page) */
-  --muted: #1f4a7d;        /* blue for paragraph text (8.3:1 on boxes, 7.3:1 on the page) */
-  --primary: #2a74ba;      /* the main blue (app buttons, boxes). White text on it is 4.9:1 */
-  --primary-dark: #1d5a94; /* darker blue, for hovering, keyboard outlines, and colored text (6.5:1 on boxes) */
-  --border: #5b86b8;       /* blue for input box borders (3.5:1 on boxes; borders need 3:1, WCAG) */
-  --line: #b3d0ee;         /* light blue for the thin lines around boxes */
-  --soft: #e2effd;         /* very light blue for hover colors and tags */
-  --subtle: #355f8f;       /* soft blue for small, less important text
-                              (6.1:1 on boxes, 5.3:1 on the page background, WCAG) */
-
-  /* The accent: sky blue, saved for the main thing to do on a screen
-     (Sign up, Apply), so it's what people notice first */
-  --accent: #74b6ea;       /* sky blue */
-  --accent-hover: #5ea8e3; /* a little deeper sky blue, for hovering (navy text on it is 5.3:1) */
-  --accent-text: #10325a;  /* navy words on the accent (5.9:1, WCAG) */
-  --accent-soft: #cde4fa;  /* light blue for small highlights (navy text on it is 9.9:1) */
-
-  /* The About page's colors. Light blue like the other pages, with
-     slightly deeper blue boxes so the off-white example job cards stand out */
-  --about-bg: #d7e9fb;     /* page background (clear light blue) */
-  --about-panel: #c6def7;  /* slightly deeper blue boxes on the page */
-  --about-edge: #b3d0ee;   /* thin light blue lines */
-  --about-ink: #10325a;    /* main text: navy (10.4:1 on the background, 9.3:1 on boxes) */
-  --about-ink-2: #1f4a7d;  /* secondary text: blue (7.3:1 on the background, 6.5:1 on boxes) */
-  --about-ink-3: #355f8f;  /* quiet small text: soft blue (5.3:1 on the background, 4.8:1 on boxes) */
-
   /* The About page's fonts (loaded in index.html). Other pages keep the system font */
   --font-display: "Overpass", "Segoe UI", system-ui, sans-serif;  /* headlines: based on US highway signs */
   --font-body: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif; /* body text: made to be
@@ -75,30 +163,16 @@
 
   /* The React Bits effects (components/reactbits/, used on the About page) */
   --shine-base: var(--about-ink-2);  /* ShinyText: the words' normal color (7.3:1 on the background) */
-  --shine-light: var(--primary-dark); /* ShinyText: the darker blue band that sweeps across (5.8:1, so the
+  --shine-light: var(--link);       /* ShinyText: the darker blue band that sweeps across (5.8:1, so the
                                         words stay readable mid-sweep; white or sky blue would be too faint) */
   --star-color: var(--about-ink);    /* StarBorder: the lights traveling around the button. Navy, because
                                         a sky-blue light would blend into the sky-blue button */
-  --spotlight-color: color-mix(in srgb, white 70%, transparent); /* SpotlightCard: the glow. A soft white
-                                        light that only makes the pale blue box brighter, so the text
-                                        stays easy to read (6.5:1 or more, WCAG) */
-  --spark-color: var(--primary);      /* ClickSpark: the sparks when you click (sky blue would be hard to see) */
-  --wave-color: color-mix(in srgb, var(--primary) 10%, transparent); /* Waves: the flowing background
-                                        lines. Very faint (blue at 10% strength), so they never get in
-                                        the way of the text on top of them */
-  --signup-grid: color-mix(in srgb, var(--primary) 12%, transparent); /* Sign up page: the faint
-                                        graph-paper lines in the background (blue at 12% strength,
-                                        so they never get in the way of the form) */
-  --signup-glow: color-mix(in srgb, var(--accent) 35%, transparent); /* Sign up page: the soft sky-blue
-                                        glow at the top of the page */
+  --spark-color: var(--primary-text); /* ClickSpark: the sparks when you click (sky blue would be hard to see) */
   --time-signup-box: 300ms;  /* Sign up page: the box fading in when the page opens */
   --time-signup-rise: 260ms; /* Sign up page: each piece inside the box fading in */
   --signup-start: 40ms;      /* Sign up page: how long the pieces wait before the first one starts */
   --signup-stagger: 25ms;    /* Sign up page: extra wait for each piece after the first, so they arrive in order */
-  --signup-error: #9b1c1c;   /* Sign up page: the "passwords don't match" message and its box outline.
-                                A deep red, so it's clearly different from the blues (6.5:1 on the
-                                box, 7.3:1 on the off-white input, WCAG) */
-  --text-type-word: var(--primary-dark); /* TextType: the typed words (5.8:1 on the page, WCAG) */
+  --text-type-word: var(--link);         /* TextType: the typed words (6.9:1 light / 8.6:1 dark on the page, WCAG) */
   --text-type-cursor: var(--primary);    /* TextType: the blinking bar after them */
   --time-shine: 2.2s;    /* one sweep of the shine. It runs twice (4.4s), then stops */
   --time-star: 3s;       /* the star lights making one trip around the button */
@@ -107,8 +181,8 @@
 
   /* Settings page: the little two-color circles on the "Color theme" choices.
      They always show each theme's own colors, whichever theme is on */
-  --swatch-blue-page: #d7e9fb;       /* Blue theme: page color */
-  --swatch-blue-button: #2a74ba;     /* Blue theme: button color */
+  --swatch-blue-page: #dde4ec;       /* Blue theme: page color */
+  --swatch-blue-button: #2a63a0;     /* Blue theme: button color */
   --swatch-mint-page: #d3efe4;       /* Mint theme: page color */
   --swatch-mint-button: #1d7563;     /* Mint theme: button color */
   --swatch-lavender-page: #e4dff7;   /* Lavender theme: page color */
@@ -142,7 +216,7 @@ body {
 /* The blue title box at the top of the Login and Signup pages */
 .page-title {
   background-color: var(--primary); /* blue box */
-  color: white;                     /* white text */
+  color: var(--on-primary);                     /* white text */
   font-size: 36px;                  /* text size */
   font-weight: bold;                /* thick text */
   padding: 24px 40px;               /* space inside the box: top/bottom, left/right */
@@ -153,7 +227,7 @@ body {
 /* The blue Log in / Sign up button under the form */
 .form-button {
   background-color: var(--primary); /* blue */
-  color: white;                     /* white text */
+  color: var(--on-primary);                     /* white text */
   font-weight: bold;                /* thick text */
   padding: 8px 16px;                /* space inside: top/bottom, left/right */
   cursor: pointer;                  /* mouse turns into a pointing hand */
@@ -179,6 +253,77 @@ body {
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 8px; /* small space between the heading and its text */
+}
+
+/* ---------- Site logo ----------
+   The binoculars picture and the name "ScoutSearch" (components/SiteLogo.jsx).
+   It's in every top bar (About, Login, Signup, and NavBar) and the About
+   footer. The size of the picture is set by each bar, next to that bar's
+   other styles (look for ".site-logo-icon" in its section) */
+
+/* The picture and the name side by side */
+.site-logo {
+  display: inline-flex;   /* puts the picture and the name in a row */
+  align-items: center;    /* lines them up in the middle, top-to-bottom */
+  gap: 10px;              /* space between the picture and the name */
+}
+
+/* The binoculars picture. Each bar sets its width and height */
+.site-logo-icon {
+  flex-shrink: 0;         /* never gets squished when the bar is narrow */
+}
+
+/* The picture's colors (the shapes are drawn in SiteLogo.jsx). They come
+   from the color sets at the top, so the logo changes with light and dark */
+.site-logo-tile {
+  fill: var(--logo-tile);   /* the rounded square */
+}
+
+.site-logo-lens {
+  fill: var(--logo-lens);   /* the two lenses */
+}
+
+.site-logo-lines {
+  stroke: var(--logo-line); /* the outlines */
+}
+
+/* "Scout" in blue (--logo-scout). "Search" keeps the bar's text color */
+.site-logo-scout {
+  color: var(--logo-scout);
+}
+
+/* Motion: the first page you open in a tab fades the logo in (SiteLogo.jsx
+   adds "site-logo-intro" only that first time). The picture grows in a
+   touch, and the name follows right after it. Skipped for people who turned
+   on "reduce motion", on their computer or in our Settings (WCAG) */
+@media (prefers-reduced-motion: no-preference) {
+  /* The recipe for the picture: starts invisible and a little smaller */
+  @keyframes site-logo-icon-in {
+    from {
+      opacity: 0;               /* invisible... */
+      transform: scale(0.85);   /* ...and 85% of its size */
+    }
+  }
+
+  /* The recipe for the name: starts invisible and a few pixels to the left,
+     so it looks like it slides out from behind the picture */
+  @keyframes site-logo-name-in {
+    from {
+      opacity: 0;
+      transform: translateX(-6px);
+    }
+  }
+
+  /* "backwards" keeps each part invisible during its delay, before it
+     starts playing. The name waits 120ms, so the two come in one after the other */
+  :root:not([data-reduce-motion="on"]) .site-logo-intro .site-logo-icon {
+    animation: site-logo-icon-in 500ms var(--ease-out) backwards;
+  }
+
+  :root:not([data-reduce-motion="on"]) .site-logo-intro .site-logo-name {
+    display: inline-block;    /* plain text can't move ("transform") unless it's a block */
+    animation: site-logo-name-in 500ms var(--ease-out) 120ms backwards;
+  }
 }
 
 /* ---------- Login and Signup pages ---------- */
@@ -218,7 +363,7 @@ body {
 /* The "Back to About" link */
 .back-link {
   margin-top: 24px;              /* space above the link */
-  color: var(--primary-dark);    /* blue text */
+  color: var(--link);    /* blue text */
   text-decoration: underline;    /* underlined, so it looks like a link */
 }
 
@@ -226,7 +371,7 @@ body {
 .form-button:focus-visible,
 .form-box input:focus-visible,
 .back-link:focus-visible {
-  outline: 2px solid var(--primary); /* a 2px blue line around it */
+  outline: 2px solid var(--focus-ring); /* a 2px blue line around it */
   outline-offset: 2px;               /* a small gap between it and the line */
 }
 
@@ -258,8 +403,8 @@ html:has(.about-site) {
   scrollbar-color: var(--about-edge) var(--about-bg);
 }
 
-/* The highlight when you select text with the mouse: sky blue with navy
-   text (7.5:1), instead of the browser's default */
+/* The highlight when you select text with the mouse: the accent blue with
+   white text, instead of the browser's default */
 .about-site ::selection {
   background-color: var(--accent);
   color: var(--accent-text);
@@ -295,7 +440,7 @@ html:has(.about-site) {
    The darker blue stands out on the light background (5.8:1; outlines need 3:1) (WCAG) */
 .about-site a:focus-visible,
 .about-site button:focus-visible {
-  outline: 3px solid var(--primary-dark); /* a 3px darker blue line around it */
+  outline: 3px solid var(--focus-ring); /* a 3px darker blue line around it */
   outline-offset: 3px;              /* a small gap between it and the line */
 }
 
@@ -306,8 +451,8 @@ html:has(.about-site) {
   left: 16px;                           /* ...and placed in the top left corner */
   top: -100px;                          /* off the top of the screen until it's focused */
   z-index: 20;                          /* above the top bar */
-  background-color: var(--accent);      /* sky blue */
-  color: var(--accent-text);            /* navy text (6.2:1) */
+  background-color: var(--accent);      /* the accent blue */
+  color: var(--accent-text);            /* white words (7.6:1 light / 5.3:1 dark, WCAG) */
   font-weight: 700;                     /* thick text */
   padding: 10px 16px;                   /* space inside: top/bottom, left/right */
   border-radius: 8px;                   /* rounded corners */
@@ -324,8 +469,8 @@ html:has(.about-site) {
    Sky blue is the accent color, so these are what people notice first */
 .about-button {
   display: inline-block;            /* lets the link have padding on all sides */
-  background-color: var(--accent);  /* sky blue */
-  color: var(--accent-text);        /* navy text (6.2:1 on the sky blue, WCAG) */
+  background-color: var(--accent);  /* the accent blue */
+  color: var(--accent-text);        /* white words (7.6:1 light / 5.3:1 dark, WCAG) */
   font-weight: 700;                 /* thick text */
   font-size: 16px;                  /* text size */
   line-height: 1.25;                /* keeps the button from getting too tall */
@@ -346,16 +491,17 @@ html:has(.about-site) {
   padding: 14px 28px;   /* more space inside, so it's a big, easy target */
 }
 
-/* The navy Sign up button in the sky-blue band at the bottom of the page
-   (a sky-blue button on sky blue would disappear, and white barely stands out) */
-.about-button-navy {
-  background-color: var(--about-ink); /* deep navy */
-  color: white;                       /* white text (12.9:1) */
+/* The Sign up button in the blue band at the bottom of the page. The band
+   is the accent blue, so this button is the box color with dark words
+   instead (a blue button on the blue band would disappear) */
+.about-ready-button {
+  background-color: var(--card); /* the box color */
+  color: var(--text);            /* dark words (13.3:1 light / 12.1:1 dark) */
 }
 
-/* The darker blue when the mouse is over it (white text on it is 6.9:1) */
-.about-button-navy:hover {
-  background-color: var(--primary-dark);
+/* A slightly different box color when the mouse is over it */
+.about-ready-button:hover {
+  background-color: var(--soft);
 }
 
 /* ---------- About page: top bar ---------- */
@@ -378,11 +524,12 @@ html:has(.about-site) {
   min-height: 68px;    /* the bar's height */
 }
 
-/* "ScoutSearch" with the diamond mark. It's a link back to the top of the page */
+/* The logo (binoculars and "ScoutSearch", see "Site logo" near the top).
+   On About it's a link back to the top of the page; on Log in and Sign up
+   it goes back to the About page */
 .about-logo {
-  display: inline-flex;              /* puts the diamond and the name side by side */
-  align-items: center;               /* lines them up in the middle */
-  gap: 12px;                         /* space between the diamond and the name */
+  display: inline-flex;              /* keeps the logo in one piece */
+  align-items: center;               /* lines it up in the middle */
   font-family: var(--font-display);  /* Overpass */
   font-weight: 800;                  /* extra thick */
   font-size: 22px;                   /* text size */
@@ -390,15 +537,10 @@ html:has(.about-site) {
   color: var(--about-ink);           /* deep navy text */
 }
 
-/* The blue diamond. It looks like the painted marks on trees that show
-   hikers the trail ("trail blazes"), which fits a site about finding your way.
-   It's only decoration, so About.jsx hides it from screen readers */
-.about-blaze {
-  width: 14px;                     /* a 14px square... */
-  height: 14px;
-  background-color: var(--accent); /* sky blue */
-  border-radius: 2px;              /* barely rounded corners */
-  transform: rotate(45deg);        /* ...turned 45 degrees, so it's a diamond */
+/* The binoculars picture in this bar */
+.about-logo .site-logo-icon {
+  width: 36px;
+  height: 36px;
 }
 
 /* The list of section links ("Who it's for", ...) */
@@ -514,7 +656,7 @@ html:has(.about-site) {
   border: 1px solid var(--about-edge);                /* thin line around it */
   border-radius: 16px;                                /* rounded corners */
   padding: 16px;                                      /* space inside */
-  box-shadow: 0 24px 48px -24px rgb(15 42 68 / 0.18);     /* a soft shadow below, so it floats above the page:
+  box-shadow: 0 24px 48px -24px color-mix(in srgb, var(--shadow-color) 18%, transparent);     /* a soft shadow below, so it floats above the page:
                                                          across, down, blur, spread, color (navy at 18%) */
 }
 
@@ -593,8 +735,8 @@ html:has(.about-site) {
   position: absolute;               /* placed on top of the buttons... */
   inset: 4px;                       /* ...covering exactly the same area (inside the tray's 4px padding) */
   pointer-events: none;             /* clicks go through it to the real buttons underneath */
-  background-color: var(--accent);  /* sky blue */
-  color: var(--accent-text);        /* navy text (6.2:1) */
+  background-color: var(--accent);  /* the accent blue */
+  color: var(--accent-text);        /* white words (7.6:1 light / 5.3:1 dark, WCAG) */
   border-radius: 7px;               /* rounded corners */
 }
 
@@ -670,7 +812,7 @@ html:has(.about-site) {
 /* On the white card, keyboard focus uses the darker blue (6.9:1), like
    everywhere else on the page (WCAG) */
 .about-listing a:focus-visible {
-  outline-color: var(--primary-dark);
+  outline-color: var(--focus-ring);
 }
 
 /* The square with the company's initials, next to the job title */
@@ -690,7 +832,7 @@ html:has(.about-site) {
   height: 44px;
   border-radius: 10px;               /* rounded corners */
   background-color: var(--primary);  /* blue */
-  color: white;                      /* white letters (4.9:1) */
+  color: var(--on-primary);                      /* white letters (4.9:1) */
   font-family: var(--font-display);  /* Overpass */
   font-weight: 800;                  /* extra thick */
   font-size: 16px;                   /* text size */
@@ -763,7 +905,7 @@ html:has(.about-site) {
   display: inline-block;               /* lets it have space above it */
   margin-top: 14px;                    /* space above the link */
   padding: 2px 0;                      /* a slightly taller target to click or tap */
-  color: var(--primary-dark);          /* darker blue (6.5:1) */
+  color: var(--link);          /* darker blue (6.5:1) */
   font-weight: 700;                    /* thick text */
   text-decoration: underline;          /* underlined, so it looks like a link */
   text-decoration-color: var(--border); /* a softer blue underline... */
@@ -968,13 +1110,13 @@ html:has(.about-site) {
 /* The blue band at the very bottom. After reading everything, visitors get
    one more chance to sign up. It's the one place blue fills a whole area */
 .about-ready {
-  background-color: var(--accent); /* sky blue */
-  color: var(--accent-text);       /* navy text (6.2:1) */
+  background-color: var(--accent); /* the accent blue */
+  color: var(--accent-text);       /* white words (7.6:1 light / 5.3:1 dark, WCAG) */
 }
 
-/* On the sky-blue band, the outline is navy so it stands out (6.2:1) (WCAG) */
+/* On the blue band, the outline is the band's word color so it stands out (WCAG) */
 .about-ready a:focus-visible {
-  outline-color: var(--about-ink);
+  outline-color: var(--accent-text);
 }
 
 /* The heading on the left, the button on the right */
@@ -1056,7 +1198,7 @@ html:has(.about-site) {
   display: inline-block;                  /* lets it have space above it */
   margin-top: 16px;                       /* space above the link */
   padding: 2px 0;                         /* a slightly taller target to click or tap */
-  color: var(--primary-dark);             /* darker blue (5.2:1 on the blue box, WCAG) */
+  color: var(--link);             /* darker blue (5.2:1 on the blue box, WCAG) */
   font-weight: 700;                       /* thick text */
   text-decoration: underline;             /* underlined, so it looks like a link */
   text-decoration-color: var(--border);   /* a softer underline... */
@@ -1113,7 +1255,7 @@ html:has(.about-site) {
   flex: none;                       /* never squished */
   font-size: 26px;                  /* big enough to see */
   line-height: 1;                   /* no extra space above or below */
-  color: var(--primary-dark);       /* darker blue */
+  color: var(--link);       /* darker blue */
 }
 
 /* When the answer is open, the + turns into a − (minus) */
@@ -1123,12 +1265,12 @@ html:has(.about-site) {
 
 /* The question turns darker blue when the mouse is over it */
 .about-faq-question:hover {
-  color: var(--primary-dark);
+  color: var(--link);
 }
 
 /* The outline when you reach a question with the Tab key (WCAG) */
 .about-faq-question:focus-visible {
-  outline: 3px solid var(--primary-dark);
+  outline: 3px solid var(--focus-ring);
   outline-offset: 3px;
   border-radius: 6px;
 }
@@ -1163,12 +1305,19 @@ html:has(.about-site) {
   gap: 24px;                       /* space between them */
 }
 
-/* "ScoutSearch" in the footer */
+/* The logo in the footer (binoculars and "ScoutSearch") */
 .about-footer-name {
   font-family: var(--font-display);  /* Overpass */
   font-weight: 800;                  /* extra thick */
   font-size: 20px;                   /* text size */
   color: var(--about-ink);           /* navy */
+  margin-bottom: 8px;                /* space between the logo and the lines under it */
+}
+
+/* The binoculars picture in the footer, a bit smaller than the top bar's */
+.about-footer-name .site-logo-icon {
+  width: 32px;
+  height: 32px;
 }
 
 /* The footer's links, in a row that wraps on small screens */
@@ -1319,6 +1468,11 @@ html:has(.about-site) {
   /* Only the logo, Log in, and Sign up fit in the first row, so the logo shrinks a bit */
   .about-logo {
     font-size: 20px;
+  }
+
+  .about-logo .site-logo-icon {
+    width: 32px;          /* a smaller picture to match the smaller name */
+    height: 32px;
   }
 
   /* Smaller section links, so all 3 fit on one row on most phones */
@@ -1545,7 +1699,7 @@ html:has(.about-site) {
   border: 1px solid var(--about-edge);    /* thin pale blue line around it */
   border-radius: 999px;                   /* pill shape */
   padding: 8px 14px;                      /* space inside: top/bottom, left/right */
-  box-shadow: 0 4px 12px -6px rgb(15 42 68 / 0.3); /* a small shadow, so it floats above the lines */
+  box-shadow: 0 4px 12px -6px color-mix(in srgb, var(--shadow-color) 30%, transparent); /* a small shadow, so it floats above the lines */
   cursor: pointer;                        /* mouse turns into a pointing hand */
 }
 
@@ -1556,7 +1710,7 @@ html:has(.about-site) {
 
 /* The darker blue outline when you reach it with the Tab key (WCAG) */
 .waves-pause:focus-visible {
-  outline: 3px solid var(--primary-dark);
+  outline: 3px solid var(--focus-ring);
   outline-offset: 3px;
 }
 
@@ -1834,7 +1988,7 @@ html:has(.about-site) {
 
 /* The blue word "making." at the end of the title */
 .feed-title-blue {
-  color: var(--primary);   /* the main blue (3.9:1 on the page. Big bold text only
+  color: var(--primary-text);   /* the main blue (3.9:1 on the page. Big bold text only
                               needs 3:1, WCAG) */
 }
 
@@ -1976,17 +2130,17 @@ html:has(.about-site) {
 /* The strip's 3 colors. Feed.jsx picks one with each post's "color" */
 .feed-post-strip-blue {
   background-color: var(--primary);       /* the main blue */
-  color: white;                           /* white words (4.9:1, WCAG) */
+  color: var(--on-primary);                           /* white words (4.9:1, WCAG) */
 }
 
 .feed-post-strip-dark {
   background-color: var(--primary-dark);  /* darker blue */
-  color: white;                           /* white words (6.5:1, WCAG) */
+  color: var(--on-primary);                           /* white words (6.5:1, WCAG) */
 }
 
 .feed-post-strip-sky {
-  background-color: var(--accent);        /* sky blue */
-  color: var(--accent-text);              /* navy words (5.9:1, WCAG) */
+  background-color: var(--accent);        /* the accent blue */
+  color: var(--accent-text);              /* white words (7.6:1 light / 5.3:1 dark, WCAG) */
 }
 
 /* Everything in the post under the strip */
@@ -2016,7 +2170,7 @@ html:has(.about-site) {
   height: 48px;
   border-radius: 50%;           /* rounds the square into a circle */
   background-color: var(--primary);    /* fills the circle so you can see it */
-  color: white;                 /* white initials */
+  color: var(--on-primary);                 /* white initials */
   font-size: 16px;
   font-weight: bold;
   display: flex;                /* turns on flexbox so we can center... */
@@ -2087,7 +2241,7 @@ html:has(.about-site) {
 /* The Like button after you click it.
    Feed.jsx adds the "feed-liked" class to the button while the post is liked */
 .feed-post-actions .feed-liked {
-  color: var(--primary-dark);       /* darker blue */
+  color: var(--link);       /* darker blue */
   font-weight: bold;                /* thick text */
   background-color: var(--soft);    /* light blue fill, so "liked" doesn't rely on color alone (WCAG) */
 }
@@ -2102,7 +2256,7 @@ html:has(.about-site) {
 /* The like count while you have the post liked: darker blue and semi-bold,
    so it matches the blue Liked button (6.5:1, WCAG) */
 .feed-like-count-on {
-  color: var(--primary-dark);
+  color: var(--link);
   font-weight: 600;
 }
 
@@ -2147,8 +2301,8 @@ html:has(.about-site) {
   gap: 16px;                          /* space between them */
   padding: 22px 26px;                 /* space inside: top/bottom, left/right */
   border-radius: 16px;                /* rounded corners */
-  background-color: var(--accent);    /* sky blue */
-  color: var(--accent-text);          /* navy words (5.9:1, WCAG) */
+  background-color: var(--accent);    /* the accent blue */
+  color: var(--accent-text);          /* white words (7.6:1 light / 5.3:1 dark, WCAG) */
 }
 
 /* The sparkle in the date box is a bit bigger than the other icons */
@@ -2246,13 +2400,13 @@ html:has(.about-site) {
 
 /* The square's 2 colors. Feed.jsx picks one with each job's "color" */
 .feed-opportunity-logo-sky {
-  background-color: var(--accent);      /* sky blue */
-  color: var(--accent-text);            /* navy letters */
+  background-color: var(--accent-soft); /* light blue (so it looks different from the blue one) */
+  color: var(--text);                   /* dark letters (10.9:1 light / 9.7:1 dark) */
 }
 
 .feed-opportunity-logo-blue {
   background-color: var(--primary);     /* the main blue */
-  color: white;                         /* white letters (4.9:1, WCAG) */
+  color: var(--on-primary);                         /* white letters (4.9:1, WCAG) */
 }
 
 /* What kind of opportunity it is, like "INTERNSHIP" */
@@ -2261,7 +2415,7 @@ html:has(.about-site) {
   font-weight: 800;             /* extra thick */
   letter-spacing: 0.06em;       /* a little extra space between the capital letters */
   text-transform: uppercase;    /* ALL CAPS */
-  color: var(--primary-dark);   /* darker blue (6.5:1, WCAG) */
+  color: var(--link);   /* darker blue (6.5:1, WCAG) */
 }
 
 /* The job's name, like "Climate Data Intern" */
@@ -2335,7 +2489,7 @@ html:has(.about-site) {
   border: 1px solid var(--border);    /* blue line around it (3.5:1, WCAG) */
   border-radius: 10px;                /* rounded corners */
   background-color: var(--card);      /* off-white */
-  color: var(--primary-dark);         /* darker blue eye */
+  color: var(--link);         /* darker blue eye */
   cursor: pointer;                    /* the mouse turns into a pointing hand over it */
 }
 
@@ -2367,7 +2521,7 @@ html:has(.about-site) {
 .feed-profile-button:active {
   background-color: var(--primary);   /* blue (the white eye on it is 4.9:1, WCAG) */
   border-color: var(--primary);
-  color: white;
+  color: var(--on-primary);
 }
 
 /* The bar across the top of the Feed page */
@@ -2398,6 +2552,12 @@ html:has(.about-site) {
   border-radius: 6px;   /* rounded corners for the keyboard outline below */
 }
 
+/* The binoculars picture next to the name (see "Site logo" near the top) */
+.feed-nav-logo .site-logo-icon {
+  width: 44px;
+  height: 44px;
+}
+
 /* The name is a link to the About page, so it gets underlined when the
    mouse is over it, to show it can be clicked */
 .feed-nav-logo:hover {
@@ -2407,7 +2567,7 @@ html:has(.about-site) {
 
 /* Blue outline when you reach the name with the Tab key (WCAG) */
 .feed-nav-logo:focus-visible {
-  outline: 3px solid var(--primary-dark); /* a 3px darker blue line around it */
+  outline: 3px solid var(--focus-ring); /* a 3px darker blue line around it */
   outline-offset: 4px;                    /* a small gap between it and the line */
 }
 
@@ -2447,14 +2607,52 @@ html:has(.about-site) {
 .feed-nav-right .feed-nav-avatar,
 .feed-nav-right .feed-nav-avatar:hover {
   padding: 0;
-  color: white;                /* white letters (4.9:1 on blue, WCAG) */
+  color: var(--on-primary);                /* white letters (4.9:1 on blue, WCAG) */
   text-decoration: none;
 }
 
 /* Keyboard users see a ring around your circle (WCAG) */
 .feed-nav-avatar:focus-visible {
-  outline: 2px solid var(--primary);   /* blue ring (4.5:1 on the bar) */
+  outline: 2px solid var(--focus-ring);   /* blue ring (4.5:1 on the bar) */
   outline-offset: 2px;
+}
+
+/* Phones: the top bar is too narrow for everything in one row, so it
+   splits into two rows. The name and the search box go on top, and the
+   links and your circle go underneath. Without this, the search box and the
+   links get pushed off the right edge of the screen */
+@media (max-width: 760px) {
+  .feed-nav {
+    flex-wrap: wrap;      /* lets the two halves stack into 2 rows */
+    gap: 4px 12px;        /* space between the rows, and between things in a row */
+    padding: 8px 16px;    /* less space at the sides, so there's more room */
+  }
+
+  .feed-nav-left {
+    flex: 1 1 100%;       /* takes the whole first row... */
+    min-width: 0;         /* ...and is allowed to be narrower than the name plus a
+                             full-size search box, so the box shrinks to fit instead
+                             of poking out past the edge of the screen */
+  }
+
+  .feed-nav-logo {
+    font-size: 24px;      /* a smaller name, so the search box has room next to it */
+  }
+
+  .feed-nav-logo .site-logo-icon {
+    width: 34px;          /* a smaller picture to match */
+    height: 34px;
+  }
+
+  .feed-nav-search {
+    flex: 1;              /* fills whatever room is left next to the name... */
+    min-width: 0;         /* ...and is allowed to get narrower than 260px */
+    width: auto;          /* (instead of always being 260px wide) */
+  }
+
+  .feed-nav-right {
+    gap: 4px;             /* links closer together, so they fit in one row */
+  }
 }
 
 /* ----- Feed: keyboard focus ----- */
@@ -2467,7 +2665,7 @@ html:has(.about-site) {
 .feed-post-actions button:focus-visible,
 .feed-profile-button:focus-visible,
 .feed-composer-input:focus-visible {
-  outline: 2px solid var(--primary);    /* blue outline (4.5:1 on the boxes; outlines need 3:1, WCAG) */
+  outline: 2px solid var(--focus-ring);    /* blue outline (4.5:1 on the boxes; outlines need 3:1, WCAG) */
   outline-offset: 2px;                  /* a little gap between it and the outline */
 }
 
@@ -2692,7 +2890,7 @@ html:has(.about-site) {
 
 /* Blue outline when you reach the circle with the Tab key (WCAG) */
 .account-menu-button:focus-visible {
-  outline: 3px solid var(--primary-dark); /* a 3px darker blue line around it */
+  outline: 3px solid var(--focus-ring); /* a 3px darker blue line around it */
   outline-offset: 2px;                    /* a small gap between it and the line */
 }
 
@@ -2708,7 +2906,7 @@ html:has(.about-site) {
   background-color: var(--card);    /* off-white (--card) */
   border: 1px solid var(--line);    /* thin light blue line around it */
   border-radius: 12px;              /* rounded corners */
-  box-shadow: 0 16px 32px -12px rgb(15 42 68 / 0.25); /* a soft shadow below, so it floats */
+  box-shadow: 0 16px 32px -12px color-mix(in srgb, var(--shadow-color) 25%, transparent); /* a soft shadow below, so it floats */
   transform-origin: top right;      /* the opening animation grows out of the circle's corner */
   font-size: 16px;                  /* the same text size on every page (the About page's text is bigger) */
   line-height: 1.5;                 /* the same line spacing on every page too */
@@ -2743,7 +2941,7 @@ html:has(.about-site) {
 .account-menu .account-menu-profile-link {
   padding: 2px 0;              /* less space, since it sits under your name */
   font-size: 14px;             /* small text */
-  color: var(--primary-dark);  /* darker blue (6.5:1 on the box) */
+  color: var(--link);  /* darker blue (6.5:1 on the box) */
 }
 
 /* Very light blue behind an item when the mouse is over it */
@@ -2760,7 +2958,7 @@ html:has(.about-site) {
 
 /* Blue outline when you reach an item with the Tab key (WCAG) */
 .account-menu .account-menu-item:focus-visible {
-  outline: 3px solid var(--primary-dark);
+  outline: 3px solid var(--focus-ring);
   outline-offset: -3px;  /* draws the line just inside the edge, so it isn't cut off by the box */
 }
 
@@ -2897,7 +3095,7 @@ html:has(.about-site) {
   border-radius: 16px;          /* rounded corners */
   border: 6px solid var(--card);      /* off-white frame around the picture */
   background-color: var(--primary);   /* blue, like every initials square in the app */
-  color: white;                 /* white initials (4.9:1 on blue, WCAG) */
+  color: var(--on-primary);                 /* white initials (4.9:1 on blue, WCAG) */
   font-weight: bold;            /* thick letters */
   font-size: 48px;              /* big initials */
 }
@@ -2974,7 +3172,7 @@ html:has(.about-site) {
   border-radius: 999px;         /* pill shape, like every button in the app */
   border: 1px solid var(--primary);   /* blue line around it (--primary) */
   background-color: var(--card);      /* off-white (--card) */
-  color: var(--primary);        /* blue words (4.5:1 on the box, WCAG) */
+  color: var(--primary-text);        /* blue words (4.5:1 on the box, WCAG) */
   font-weight: bold;            /* thick text */
   font-size: 16px;
   text-decoration: none;        /* Edit profile is a Link, so remove the underline */
@@ -2988,7 +3186,7 @@ html:has(.about-site) {
      Blue words would be too faint on light blue (4.2:1), so they turn darker */
   .profile-header-button:hover {
     background-color: var(--soft);      /* very light blue (--soft) */
-    color: var(--primary-dark);         /* darker blue words (about 6:1, WCAG) */
+    color: var(--link);         /* darker blue words (about 6:1, WCAG) */
   }
 
   /* The filled button turns a darker blue when the mouse is over it,
@@ -2996,7 +3194,7 @@ html:has(.about-site) {
   .profile-header-button-dark:hover {
     background-color: var(--primary-dark);    /* darker blue (white words 7.1:1, WCAG) */
     border-color: var(--primary-dark);
-    color: white;
+    color: var(--on-primary);
   }
 
   /* A project tile glows when the mouse is over it: its border turns blue,
@@ -3011,8 +3209,8 @@ html:has(.about-site) {
 
   /* The resume link turns darker blue, and so does its underline */
   .profile-resume-link:hover {
-    color: var(--primary-dark);               /* darker blue (6.6:1, WCAG) */
-    text-decoration-color: var(--primary-dark);
+    color: var(--link);               /* darker blue (6.6:1, WCAG) */
+    text-decoration-color: var(--link);
   }
 
   /* The round arrow lightens while the mouse is anywhere on the tile */
@@ -3026,20 +3224,20 @@ html:has(.about-site) {
    because it's a color change, not movement */
 .profile-header-button:active {
   background-color: var(--soft);      /* very light blue (--soft) */
-  color: var(--primary-dark);         /* darker blue words (about 6:1, WCAG) */
+  color: var(--link);         /* darker blue words (about 6:1, WCAG) */
 }
 
 .profile-header-button-dark:active {
-  background-color: var(--text);      /* navy, the darkest blue (white words 12.9:1, WCAG) */
+  background-color: var(--strong-fill);      /* navy, the darkest blue (white words 12.9:1, WCAG) */
   border-color: var(--text);
-  color: white;
+  color: var(--on-primary);
 }
 
 /* The filled button (Edit profile, Message) */
 .profile-header-button-dark {
   background-color: var(--primary);   /* blue (--primary) */
   border-color: var(--primary);
-  color: white;                 /* white words (4.9:1 on blue, WCAG) */
+  color: var(--on-primary);                 /* white words (4.9:1 on blue, WCAG) */
 }
 
 
@@ -3144,7 +3342,7 @@ html:has(.about-site) {
   padding: 6px 14px;            /* space inside: top/bottom, left/right */
   border: 1px solid var(--primary);   /* blue line around it (--primary) */
   border-radius: 999px;         /* pill shape */
-  color: var(--primary);        /* blue words (4.5:1 on the box, WCAG) */
+  color: var(--primary-text);        /* blue words (4.5:1 on the box, WCAG) */
   font-size: 14px;              /* small text */
   font-weight: 600;             /* semi-bold */
   text-decoration: none;        /* it's a Link, so remove the underline */
@@ -3156,7 +3354,7 @@ html:has(.about-site) {
 @media (hover: hover) and (pointer: fine) {
   .profile-card-action:hover {
     background-color: var(--soft);      /* very light blue (--soft) */
-    color: var(--primary-dark);         /* darker blue words */
+    color: var(--link);         /* darker blue words */
   }
 }
 
@@ -3166,7 +3364,7 @@ html:has(.about-site) {
 .profile-card-action:active {
   background-color: var(--primary);   /* blue (white words 4.9:1, WCAG) */
   border-color: var(--primary);
-  color: white;
+  color: var(--on-primary);
 }
 
 /* The paragraph in the About card */
@@ -3209,7 +3407,7 @@ html:has(.about-site) {
   flex-shrink: 0;               /* keeps the square from getting squished */
   border-radius: 12px;          /* rounded corners */
   background-color: var(--primary);   /* blue, like every initials square in the app */
-  color: white;                 /* white letters and icons (4.9:1 on blue, WCAG) */
+  color: var(--on-primary);                 /* white letters and icons (4.9:1 on blue, WCAG) */
   font-weight: bold;            /* thick letters */
   font-size: 18px;              /* big letters */
 }
@@ -3298,7 +3496,7 @@ html:has(.about-site) {
   justify-content: space-between;   /* pushes them to opposite ends */
   height: 140px;                /* how tall the box is */
   padding: 18px 20px;           /* space inside: top/bottom, left/right */
-  color: white;                 /* white words (contrast for each color is below) */
+  color: var(--on-primary);                 /* white words (contrast for each color is below) */
 }
 
 /* The 3 colors a project can pick */
@@ -3311,7 +3509,7 @@ html:has(.about-site) {
 }
 
 .profile-project-top-navy {
-  background-color: var(--text);            /* navy (white words 12.9:1, WCAG) */
+  background-color: var(--strong-fill);            /* navy (white words 12.9:1, WCAG) */
 }
 
 /* The thin circle in the corner of the colored box, just for looks.
@@ -3399,8 +3597,8 @@ html:has(.about-site) {
   width: 44px;                  /* same width and height... */
   height: 44px;                 /* (44px is easy to tap) */
   border-radius: 50%;           /* ...and 50% makes it a circle */
-  background-color: var(--text);      /* navy (--text) */
-  color: white;                 /* white arrow (12.9:1 on navy) */
+  background-color: var(--strong-fill);      /* navy (--text) */
+  color: var(--on-primary);                 /* white arrow (12.9:1 on navy) */
   flex-shrink: 0;               /* never gets squished */
 }
 
@@ -3544,7 +3742,7 @@ html:has(.about-site) {
 .profile-check-done .profile-check-circle {
   background-color: var(--primary);   /* blue (--primary) */
   border-color: var(--primary);
-  color: white;                 /* white check mark (4.9:1 on blue) */
+  color: var(--on-primary);                 /* white check mark (4.9:1 on blue) */
 }
 
 /* "Finish your profile": the one sky-blue button on the page, because it's
@@ -3556,8 +3754,8 @@ html:has(.about-site) {
   border: 2px solid transparent;    /* an invisible border, so the button keeps an
                                        outline in Windows High Contrast mode */
   border-radius: 999px;         /* pill shape */
-  background-color: var(--accent);    /* sky blue (--accent) */
-  color: var(--accent-text);    /* navy words (5.9:1 on sky blue, WCAG) */
+  background-color: var(--accent);    /* the accent blue */
+  color: var(--accent-text);    /* white words (7.6:1 light / 5.3:1 dark, WCAG) */
   font-weight: bold;            /* thick text */
   text-align: center;           /* words in the middle */
   text-decoration: none;        /* it's a Link, so remove the underline */
@@ -3565,13 +3763,13 @@ html:has(.about-site) {
 
 /* The sky-blue button gets a little deeper when the mouse is over it */
 .profile-next-step:hover {
-  background-color: var(--accent-hover);    /* deeper sky blue (navy words 5:1, WCAG) */
+  background-color: var(--accent-hover);    /* a step deeper accent blue */
 }
 
 /* Shown instead of the button once every step is done */
 .profile-checklist-ready {
   margin-top: 16px;             /* space above */
-  color: var(--primary-dark);   /* darker blue (6.6:1, WCAG) */
+  color: var(--link);   /* darker blue (6.6:1, WCAG) */
   font-weight: 600;             /* semi-bold */
 }
 
@@ -3587,7 +3785,7 @@ html:has(.about-site) {
 .profile-resume-link:focus-visible,
 .profile-next-step:focus-visible,
 .profile-btn-primary:focus-visible {
-  outline: 2px solid var(--primary);    /* blue outline (4.5:1 on the boxes, 3.9:1 on the
+  outline: 2px solid var(--focus-ring);    /* blue outline (4.5:1 on the boxes, 3.9:1 on the
                                            page; outlines need 3:1, WCAG) */
   outline-offset: 2px;                  /* a little gap between the button and the outline */
 }
@@ -3714,7 +3912,7 @@ html:has(.about-site) {
 /* The filled blue button. The Edit Profile page uses it for its Save buttons */
 .profile-btn-primary {
   background-color: var(--primary);   /* blue button */
-  color: white;                       /* white words (4.9:1, WCAG) */
+  color: var(--on-primary);                       /* white words (4.9:1, WCAG) */
   font-weight: bold;                  /* thick text */
   border: none;                       /* no line around it */
   border-radius: 999px;               /* pill shape */
@@ -3906,7 +4104,7 @@ html:has(.about-site) {
 .edit-back-link {
   display: inline-block;        /* lets it have space below it */
   margin-bottom: 12px;          /* space between the link and the parts list */
-  color: var(--primary-dark);   /* darker blue words (5.8:1 on the light blue page, WCAG) */
+  color: var(--link);   /* darker blue words (5.8:1 on the light blue page, WCAG) */
   font-weight: 600;             /* semi-bold */
   text-decoration: none;        /* no underline until you hover */
   padding: 6px 0;               /* a bit taller, so it's easier to click */
@@ -3987,7 +4185,7 @@ html:has(.about-site) {
   flex-shrink: 0;               /* never gets squished */
   border-radius: 50%;           /* ...and 50% makes a circle */
   background-color: var(--soft);      /* very light blue (--soft) */
-  color: var(--primary-dark);   /* darker blue number (6:1 on --soft, WCAG) */
+  color: var(--link);   /* darker blue number (6:1 on --soft, WCAG) */
   font-size: 13px;              /* small number */
   font-weight: bold;            /* thick */
 }
@@ -4087,7 +4285,7 @@ html:has(.about-site) {
 
 /* Keyboard and click focus: a blue ring around the box you're typing in (WCAG) */
 .edit-input:focus-visible {
-  outline: 2px solid var(--primary);  /* blue ring (4.5:1 on the box) */
+  outline: 2px solid var(--focus-ring);  /* blue ring (4.5:1 on the box) */
   outline-offset: 2px;                /* a little gap between the box and the ring */
 }
 
@@ -4151,7 +4349,7 @@ html:has(.about-site) {
   border: none;                 /* no line around it */
   border-radius: 50%;           /* round */
   background-color: transparent;    /* no color until you hover */
-  color: var(--primary-dark);   /* darker blue × (6:1 on --soft) */
+  color: var(--link);   /* darker blue × (6:1 on --soft) */
   font-size: 18px;              /* a big enough × to see */
   cursor: pointer;              /* the mouse turns into a pointing hand */
 }
@@ -4169,7 +4367,7 @@ html:has(.about-site) {
 .edit-back-link:focus-visible,
 .edit-tracker-steps:focus-visible,
 .edit-skill-remove:focus-visible {
-  outline: 2px solid var(--primary);  /* blue ring */
+  outline: 2px solid var(--focus-ring);  /* blue ring */
   outline-offset: 2px;                /* a little gap */
 }
 
@@ -4304,7 +4502,7 @@ html:has(.about-site) {
 /* The "Connect" button */
 .network-connect-button {
   border: 1px solid var(--primary);   /* blue line around it */
-  color: var(--primary-dark);              /* darker blue words (6:1 or more, even on the light hover color, WCAG) */
+  color: var(--link);              /* darker blue words (6:1 or more, even on the light hover color, WCAG) */
   border-radius: 999px;               /* pill shape */
   padding: 6px 16px;                  /* space inside: top/bottom, left/right */
   font-weight: 600;                   /* semi-bold */
@@ -4316,10 +4514,658 @@ html:has(.about-site) {
   background-color: var(--soft);
 }
 
+/* After you click Connect, the button turns solid blue and says "Pending",
+   so it's clear the request went out. Click it again to take the request back */
+.network-connect-button-on {
+  background-color: var(--primary);   /* solid blue */
+  color: var(--on-primary);                       /* white words (4.9:1 on the blue, WCAG) */
+}
+
+/* A darker blue when the mouse is over the "Pending" button */
+.network-connect-button-on:hover {
+  background-color: var(--primary-dark);  /* darker blue (white words on it are 7.1:1) */
+}
+
+/* The small "Examples" tag next to a box title. It says the people and
+   numbers in that box are made up for now (same look as the Feed's tag) */
+.network-example-tag {
+  display: inline-block;                /* only as wide as its word */
+  vertical-align: middle;               /* lined up with the middle of the title */
+  margin-left: 6px;                     /* a little space after the title */
+  padding: 3px 8px;                     /* space inside: top/bottom, left/right */
+  border-radius: 6px;                   /* slightly rounded corners */
+  background-color: var(--accent-soft); /* light blue */
+  color: var(--text);                   /* navy (9.9:1, WCAG) */
+  font-size: 12px;                      /* small text */
+  font-weight: 700;                     /* bold */
+}
+
+/* The box titles get the keyboard focus after you answer a request (see
+   Network.jsx). They aren't buttons, so they don't need an outline then */
+.network-box-title:focus {
+  outline: none;
+}
+
+/* The note at the top of Requests after you answer one ("You're now
+   connected with ..."). It has no space while it's empty, so it leaves no gap */
+.network-note {
+  font-size: 15px;         /* a bit smaller than normal text */
+  font-weight: 600;        /* semi-bold, so it's noticed */
+  color: var(--muted);     /* blue (8.3:1 on the boxes) */
+}
+
+/* Once the note has words in it, it gets space below */
+.network-note:not(:empty) {
+  margin-bottom: 12px;
+}
+
+/* The message shown when a box has nothing in it */
+.network-empty {
+  font-size: 15px;         /* a bit smaller than normal text */
+  color: var(--muted);     /* blue (8.3:1 on the boxes) */
+}
+
+/* The list of people who asked to connect with you */
+.network-requests {
+  display: flex;
+  flex-direction: column;  /* one request under another */
+}
+
+/* One request: the circle, the name and headline, then the two buttons, in a row */
+.network-request {
+  display: flex;                      /* puts them side by side */
+  align-items: center;                /* lines them up in the middle, top-to-bottom */
+  gap: 12px;                          /* space between them */
+  padding: 12px 0;                    /* space above and below each request */
+  border-top: 1px solid var(--line);  /* thin light blue line between requests */
+}
+
+/* No line above the first request (the box title is already there) */
+.network-request:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+/* The name and headline in the middle. It takes the leftover space,
+   which pushes the buttons to the right edge */
+.network-request-text {
+  flex: 1;
+  min-width: 0;   /* lets long names wrap instead of pushing the buttons off the box */
+}
+
+/* The person's name */
+.network-request-name {
+  font-weight: bold;
+}
+
+/* The line under the name (like their school) */
+.network-request-headline {
+  color: var(--subtle);  /* soft blue (6.1:1 on the boxes, WCAG) */
+  font-size: 14px;       /* smaller text */
+}
+
+/* The Accept and Ignore buttons, side by side */
+.network-request-buttons {
+  display: flex;
+  gap: 8px;          /* space between the two buttons */
+  flex-shrink: 0;    /* the buttons never get squished */
+}
+
+/* Accept: the main choice, so it's solid blue */
+.network-accept-button {
+  background-color: var(--primary);   /* solid blue */
+  color: var(--on-primary);                       /* white words (4.9:1, WCAG) */
+  border: 1px solid var(--primary);   /* same size as Ignore, which has a line around it */
+  border-radius: 999px;               /* pill shape */
+  padding: 6px 16px;                  /* space inside: top/bottom, left/right */
+  font-weight: 600;                   /* semi-bold */
+  cursor: pointer;                    /* the mouse turns into a pointing hand over it */
+}
+
+/* A darker blue when the mouse is over it */
+.network-accept-button:hover {
+  background-color: var(--primary-dark);  /* white words on it are 7.1:1 */
+  border-color: var(--primary-dark);
+}
+
+/* Ignore: the quieter choice, so it has the same outline look as Connect */
+.network-ignore-button {
+  background-color: var(--card);      /* off-white, like the box */
+  color: var(--link);         /* darker blue words (6.5:1, WCAG) */
+  border: 1px solid var(--primary);   /* blue line around it */
+  border-radius: 999px;               /* pill shape */
+  padding: 6px 16px;                  /* space inside: top/bottom, left/right */
+  font-weight: 600;                   /* semi-bold */
+  cursor: pointer;                    /* the mouse turns into a pointing hand over it */
+}
+
+/* Very light blue when the mouse is over it */
+.network-ignore-button:hover {
+  background-color: var(--soft);
+}
+
+/* The list of groups in the right column */
+.network-groups {
+  display: flex;
+  flex-direction: column;  /* one group under another */
+}
+
+/* One group: its square, its name and member count, and the Join button */
+.network-group {
+  display: flex;                      /* puts them side by side */
+  align-items: center;                /* lines them up in the middle, top-to-bottom */
+  gap: 10px;                          /* space between them */
+  padding: 10px 0;                    /* space above and below each group */
+  border-top: 1px solid var(--line);  /* thin light blue line between groups */
+}
+
+/* No line above the first group */
+.network-group:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+/* The group's square with its letters (like "NC") */
+.network-group-square {
+  width: 40px;                          /* same width and height = a square */
+  height: 40px;
+  border-radius: 10px;                  /* rounded corners, so it's not a circle like a person */
+  background-color: var(--accent-soft); /* light blue */
+  color: var(--text);                   /* navy letters (9.9:1) */
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;                        /* centers the letters... */
+  align-items: center;                  /* ...top-to-bottom */
+  justify-content: center;              /* ...left-to-right */
+  flex-shrink: 0;                       /* never squished */
+}
+
+/* The group's name and member count. It takes the leftover space */
+.network-group-text {
+  flex: 1;
+  min-width: 0;   /* lets long names wrap instead of pushing the button off the box */
+}
+
+/* The group's name */
+.network-group-name {
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 1.3;  /* long names wrap to 2 lines neatly */
+}
+
+/* "1,284 members" under the name */
+.network-group-members {
+  color: var(--subtle);                /* soft blue (6.1:1 on the boxes, WCAG) */
+  font-size: 13px;                     /* small text */
+  font-variant-numeric: tabular-nums;  /* every digit is the same width, so the number
+                                          doesn't wiggle when it goes up by 1 */
+}
+
+/* Keyboard users see a blue ring around every button on this page (WCAG).
+   It's the same 2px ring the Feed and Profile pages use */
+.network-connect-button:focus-visible,
+.network-accept-button:focus-visible,
+.network-ignore-button:focus-visible {
+  outline: 2px solid var(--focus-ring); /* darker blue ring */
+  outline-offset: 2px;                    /* a small gap between the button and the ring */
+}
+
 /* Small screens: 2 columns don't fit side by side on a phone, so they stack */
 @media (max-width: 760px) {
   .network-page {
     grid-template-columns: 1fr;   /* just 1 column */
+    padding: 20px 16px;           /* less space at the edges, so the boxes have more room */
+  }
+}
+
+/* Phones: a request's buttons move under the name, so long names have room */
+@media (max-width: 640px) {
+  .network-request {
+    flex-wrap: wrap;   /* lets the buttons drop to their own row */
+  }
+
+  .network-request-buttons {
+    width: 100%;           /* the buttons get the whole row... */
+    padding-left: 60px;    /* ...starting under the name, not under the circle (48px circle + 12px gap) */
+  }
+}
+
+/* Only for people who haven't turned on "reduce motion" (WCAG) */
+@media (prefers-reduced-motion: no-preference) {
+  /* Hover colors fade in quickly instead of snapping on */
+  .network-connect-button,
+  .network-accept-button,
+  .network-ignore-button {
+    transition:
+      background-color var(--time-hover) ease,
+      border-color var(--time-hover) ease,
+      color var(--time-hover) ease,
+      transform var(--time-press) var(--ease-out);   /* the press (below) */
+  }
+
+  /* Buttons shrink very slightly while pressed, so it feels like the page
+     heard you. ":root:not([data-reduce-motion="on"])" also checks the
+     "Reduce motion" switch on our Settings page, like the Feed does */
+  :root:not([data-reduce-motion="on"]) .network-connect-button:active,
+  :root:not([data-reduce-motion="on"]) .network-accept-button:active,
+  :root:not([data-reduce-motion="on"]) .network-ignore-button:active {
+    transform: scale(0.97);
+  }
+}
+
+/* ---------- Messages page ---------- */
+/* Everything below styles the Messages page (Messages.jsx, yoursite.com/messages).
+   It's one big box that fills the screen under the top bar: your
+   conversations on the left, and the chat you picked on the right. On
+   phones it shows one side at a time.
+   Every class name starts with "messages-" so it can't clash with other pages. */
+
+/* The whole page: the top bar, then the big box filling the rest of the
+   screen. "100dvh" is the height of the screen (the "d" makes it right on
+   phones, where the browser's address bar slides in and out) */
+.messages-site {
+  display: flex;
+  flex-direction: column;   /* top bar on top, the box under it */
+  height: 100dvh;           /* exactly one screen tall, so only the lists inside scroll */
+}
+
+/* The space around the big box */
+.messages-page {
+  flex: 1;                  /* takes all the height under the top bar */
+  min-height: 0;            /* lets it be shorter than what's inside, so the lists scroll instead */
+  width: 100%;
+  max-width: 1200px;        /* never wider than 1200px, like the other pages */
+  margin: 0 auto;           /* centers it on the screen */
+  padding: 24px;            /* space around the box */
+}
+
+/* The big box: conversations on the left (320px), the chat on the right */
+.messages-panel {
+  height: 100%;                        /* fills the space */
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr); /* left column 320px, the chat gets the rest.
+                                          "minmax(0, 1fr)" instead of just "1fr" lets the
+                                          column be narrower than its longest line, so long
+                                          messages wrap or end in "..." instead of
+                                          stretching the column past the edge of the box */
+  background-color: var(--card);       /* off-white box (--card) */
+  border: 1px solid var(--line);       /* thin light blue line around it */
+  border-radius: 16px;                 /* rounded corners */
+  overflow: hidden;                    /* keeps the corners round where the columns touch them */
+}
+
+/* ----- Messages: the conversation list (left) ----- */
+
+/* The left column: the "Messages" title, then the list */
+.messages-list-column {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;                          /* lets the list inside scroll */
+  border-right: 1px solid var(--line);    /* thin line between the two columns */
+}
+
+/* The "Messages" title at the top of the left column (the page's one <h1>) */
+.messages-title {
+  padding: 18px 20px 14px;               /* space inside: top, left/right, bottom */
+  font-size: 22px;
+  font-weight: bold;
+  border-bottom: 1px solid var(--line);  /* thin line under it */
+}
+
+/* The short line that says "Loading...", "No messages yet", or what went
+   wrong. It's used under the title, and above the typing box when a
+   message doesn't send */
+.messages-status {
+  padding: 12px 20px;      /* space inside: top/bottom, left/right */
+  color: var(--subtle);    /* small gray-blue text (6:1 on boxes, WCAG) */
+  font-size: 14px;         /* a bit smaller than normal text */
+}
+
+/* When there's nothing to say, the line takes up no space. It stays on the
+   page (just empty) so screen readers notice when words show up in it */
+.messages-status:empty {
+  padding: 0;
+}
+
+/* The list of conversations. It scrolls on its own if there are a lot */
+.messages-list {
+  flex: 1;
+  overflow-y: auto;   /* a scrollbar appears only when the list is too long */
+}
+
+/* One conversation: a button that fills the row. The circle on the left;
+   the name, time, and last message on the right */
+.messages-person-button {
+  display: flex;                         /* circle and words side by side */
+  align-items: center;                   /* lined up in the middle */
+  gap: 12px;                             /* space between the circle and the words */
+  width: 100%;                           /* fills the row, so it's a big target */
+  padding: 12px 20px;                    /* space inside: top/bottom, left/right */
+  text-align: left;                      /* buttons center their words by default */
+  border-bottom: 1px solid var(--line);  /* thin line between conversations */
+  cursor: pointer;                       /* the mouse turns into a pointing hand */
+}
+
+/* Very light blue when the mouse is over a conversation */
+.messages-person-button:hover {
+  background-color: var(--soft);
+}
+
+/* The conversation that's open right now: the same light blue, plus a
+   thicker name, so it doesn't rely on color alone (aria-current tells
+   screen readers it's the open one, see Messages.jsx) */
+.messages-person-button[aria-current="true"] {
+  background-color: var(--soft);
+}
+
+.messages-person-button[aria-current="true"] .messages-person-name {
+  font-weight: 800;   /* extra thick */
+}
+
+/* Keyboard users see a ring around the conversation they're on (WCAG).
+   "inset" draws it just inside the edge, because the box cuts off anything outside */
+.messages-person-button:focus-visible {
+  outline: 2px solid var(--focus-ring);  /* darker blue ring */
+  outline-offset: -2px;                    /* drawn 2px inside the edge */
+}
+
+/* The words next to the circle. They take the leftover space */
+.messages-person-text {
+  flex: 1;
+  min-width: 0;   /* lets the last message get cut off with "..." instead of stretching the row */
+}
+
+/* The top line: the name on the left, the time on the right */
+.messages-person-top {
+  display: flex;
+  justify-content: space-between;  /* name left, time right */
+  align-items: baseline;           /* lines up the bottoms of the letters */
+  gap: 8px;
+}
+
+/* The person's name */
+.messages-person-name {
+  font-weight: bold;
+  overflow: hidden;          /* a very long name... */
+  text-overflow: ellipsis;   /* ...ends with "..." */
+  white-space: nowrap;       /* ...and stays on one line */
+}
+
+/* When the last message was sent, like "10:24 AM" */
+.messages-person-time {
+  flex-shrink: 0;            /* never squished by a long name */
+  font-size: 13px;           /* small text */
+  color: var(--subtle);      /* soft blue (6.1:1 on the box; 5.6:1 on the light blue hover, WCAG) */
+}
+
+/* The bottom line: the last message, cut off with "..." if it's long */
+.messages-person-preview {
+  display: flex;          /* puts the unread dot next to the words */
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;        /* smaller text */
+  color: var(--muted);    /* blue (8.3:1 on the box) */
+}
+
+/* The words of the last message */
+.messages-person-preview-text {
+  overflow: hidden;          /* long messages... */
+  text-overflow: ellipsis;   /* ...end with "..." */
+  white-space: nowrap;       /* ...and stay on one line */
+}
+
+/* A conversation with a new message you haven't read: darker, bolder words */
+.messages-person-unread .messages-person-preview {
+  color: var(--text);     /* navy (12:1) */
+  font-weight: 700;       /* bold, so it doesn't rely on color alone */
+}
+
+/* The blue dot before an unread message. It's a decoration: the words
+   "Unread:" are there for screen readers (see Messages.jsx) */
+.messages-unread-dot {
+  width: 8px;                          /* a small circle */
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--primary);    /* blue (4.5:1 on the box; dots need 3:1, WCAG) */
+  flex-shrink: 0;                      /* never squished */
+}
+
+/* ----- Messages: the chat (right) ----- */
+
+/* The right column: who you're talking to, the messages, then the typing box */
+.messages-chat-column {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;   /* lets the messages scroll inside it */
+  min-width: 0;    /* lets long words wrap instead of stretching the column */
+}
+
+/* The bar at the top of the chat: their circle, name, and headline */
+.messages-chat-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;                    /* space inside: top/bottom, left/right */
+  border-bottom: 1px solid var(--line);  /* thin line under it */
+}
+
+/* A smaller circle in the chat bar (the Feed's circle is 48px) */
+.messages-chat-header .feed-post-avatar {
+  width: 40px;
+  height: 40px;
+  font-size: 14px;
+}
+
+/* Their name in the chat bar */
+.messages-chat-name {
+  font-size: 17px;
+  font-weight: bold;
+}
+
+/* The name gets the keyboard focus when a chat opens on a phone (see
+   Messages.jsx). It isn't a button, so it doesn't need an outline then */
+.messages-chat-name:focus {
+  outline: none;
+}
+
+/* The line under their name (like their school) */
+.messages-chat-headline {
+  font-size: 13px;
+  color: var(--subtle);   /* soft blue (6.1:1 on the box, WCAG) */
+}
+
+/* "Back" to the list. Only phones show it (see the end of this section),
+   because on bigger screens the list is always there */
+.messages-back-button {
+  display: none;
+  padding: 6px 12px;                    /* space inside: top/bottom, left/right */
+  border: 1px solid var(--primary);     /* blue line around it */
+  border-radius: 999px;                 /* pill shape */
+  color: var(--link);           /* darker blue words (6.5:1, WCAG) */
+  font-weight: 600;                     /* semi-bold */
+  cursor: pointer;
+}
+
+.messages-back-button:hover {
+  background-color: var(--soft);
+}
+
+/* The messages themselves. They scroll on their own, and the newest is at the bottom */
+.messages-thread {
+  flex: 1;
+  overflow-y: auto;         /* a scrollbar appears when there are a lot */
+  display: flex;
+  flex-direction: column;   /* one message under another */
+  gap: 10px;                /* space between messages */
+  padding: 20px;            /* space inside */
+}
+
+/* One message: the bubble, then the time under it. Their messages are on
+   the left; yours are on the right (the "from-me" class) */
+.messages-bubble-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;   /* their messages: on the left */
+  max-width: 75%;            /* a bubble never takes the whole width, so it reads like a chat */
+}
+
+.messages-bubble-row-from-me {
+  align-self: flex-end;      /* your messages: pushed to the right side */
+  align-items: flex-end;     /* the time lines up on the right too */
+}
+
+/* The bubble around their messages: light blue with navy words */
+.messages-bubble {
+  padding: 10px 14px;                 /* space inside: top/bottom, left/right */
+  border-radius: 16px 16px 16px 4px;  /* round corners, except a sharper one at the bottom
+                                         left, pointing toward who sent it */
+  background-color: var(--soft);      /* very light blue */
+  border: 1px solid var(--line);      /* thin line, so it stands out from the off-white box */
+  color: var(--text);                 /* navy (11:1 on the light blue) */
+  line-height: 1.45;
+  overflow-wrap: anywhere;            /* very long words or links wrap instead of sticking out */
+  white-space: pre-wrap;              /* keeps any line breaks in the message */
+}
+
+/* Your bubbles: solid blue with white words, and the sharper corner on the right */
+.messages-bubble-row-from-me .messages-bubble {
+  border-radius: 16px 16px 4px 16px;
+  background-color: var(--primary);   /* blue */
+  border-color: var(--primary);
+  color: var(--on-primary);                       /* white words (4.9:1, WCAG) */
+}
+
+/* The time under each bubble */
+.messages-bubble-time {
+  margin-top: 3px;
+  padding: 0 4px;
+  font-size: 12px;        /* small text */
+  color: var(--subtle);   /* soft blue (6.1:1 on the box, WCAG) */
+}
+
+/* The typing box and the Send button at the bottom of the chat */
+.messages-composer {
+  display: flex;
+  gap: 8px;
+  padding: 12px 20px;                 /* space inside: top/bottom, left/right */
+  border-top: 1px solid var(--line);  /* thin line above it */
+}
+
+/* The box you type your message into */
+.messages-input {
+  flex: 1;
+  min-width: 0;                       /* lets it shrink on small phones */
+  padding: 10px 16px;                 /* space inside, so the words don't touch the edge */
+  font-size: 16px;                    /* 16px also stops phones from zooming in when you tap it */
+  color: var(--text);                 /* navy words */
+  background-color: var(--card);      /* off-white */
+  border: 1px solid var(--border);    /* blue line (3.5:1, enough for borders, WCAG) */
+  border-radius: 999px;               /* pill shape */
+}
+
+/* The placeholder ("Write a message...") is soft blue, not gray (6.1:1) */
+.messages-input::placeholder {
+  color: var(--subtle);
+}
+
+/* The Send button: solid blue, because it's the main thing to do here */
+.messages-send-button {
+  padding: 10px 20px;                 /* space inside: top/bottom, left/right */
+  background-color: var(--primary);   /* blue */
+  color: var(--on-primary);                       /* white words (4.9:1, WCAG) */
+  font-weight: 600;                   /* semi-bold */
+  border-radius: 999px;               /* pill shape */
+  cursor: pointer;
+}
+
+.messages-send-button:hover {
+  background-color: var(--primary-dark);  /* darker blue (white words on it are 7.1:1) */
+}
+
+/* Keyboard users see a ring around the typing box and the buttons (WCAG) */
+.messages-input:focus-visible,
+.messages-send-button:focus-visible,
+.messages-back-button:focus-visible {
+  outline: 2px solid var(--focus-ring);  /* darker blue ring */
+  outline-offset: 2px;                     /* a small gap between it and the ring */
+}
+
+/* Phones: the two columns don't fit side by side, so only one shows at a
+   time. Picking a conversation adds "messages-panel-showing-chat" (see
+   Messages.jsx), which swaps the list for the chat. Back swaps them again */
+@media (max-width: 760px) {
+  .messages-page {
+    padding: 12px;   /* less space around the box, so the chat has more room */
+  }
+
+  .messages-panel {
+    grid-template-columns: minmax(0, 1fr);   /* one column, which can be narrower than its
+                                                longest line (see the note above) */
+  }
+
+  .messages-list-column {
+    border-right: none;   /* nothing next to it to divide from */
+  }
+
+  /* While a chat is open, the list is hidden... */
+  .messages-panel-showing-chat .messages-list-column {
+    display: none;
+  }
+
+  /* ...and while it isn't, the chat is hidden */
+  .messages-panel:not(.messages-panel-showing-chat) .messages-chat-column {
+    display: none;
+  }
+
+  .messages-back-button {
+    display: block;   /* the Back button shows up */
+  }
+
+  .messages-bubble-row {
+    max-width: 85%;   /* bubbles can be a bit wider on a small screen */
+  }
+
+  .messages-thread,
+  .messages-chat-header,
+  .messages-composer {
+    padding-left: 12px;    /* less space at the sides */
+    padding-right: 12px;
+  }
+}
+
+/* Motion: only for people who haven't turned on "reduce motion" (WCAG) */
+@media (prefers-reduced-motion: no-preference) {
+  /* Hover colors fade in quickly instead of snapping on */
+  .messages-person-button,
+  .messages-send-button,
+  .messages-back-button {
+    transition:
+      background-color var(--time-hover) ease,
+      transform var(--time-press) var(--ease-out);   /* the press (below) */
+  }
+
+  /* Send and Back shrink very slightly while pressed, like the other
+     buttons on the site. This also checks the "Reduce motion" switch on
+     our Settings page, like the Feed does */
+  :root:not([data-reduce-motion="on"]) .messages-send-button:active,
+  :root:not([data-reduce-motion="on"]) .messages-back-button:active {
+    transform: scale(0.97);
+  }
+
+  /* The recipe for a message you just sent: it starts invisible, a few
+     pixels lower and a touch smaller, then settles into place. Only the
+     message you just sent plays it; opening a conversation doesn't, since
+     you do that all the time and waiting for it would feel slow */
+  @keyframes messages-bubble-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px) scale(0.98);
+    }
+  }
+
+  :root:not([data-reduce-motion="on"]) .messages-bubble-row-new {
+    animation: messages-bubble-in var(--time-enter) var(--ease-out) backwards;
+    transform-origin: bottom right;   /* grows from the corner near the typing box */
   }
 }
 
@@ -4403,7 +5249,7 @@ html:has(.about-site) {
   border: 1px solid var(--about-edge);          /* thin line around it */
   border-radius: 16px;                          /* rounded corners */
   padding: 22px 28px;                           /* space inside the box: top/bottom, left/right */
-  box-shadow: 0 24px 48px -24px rgb(15 42 68 / 0.18); /* a soft shadow below, so it floats
+  box-shadow: 0 24px 48px -24px color-mix(in srgb, var(--shadow-color) 18%, transparent); /* a soft shadow below, so it floats
                                                    (the same one the About page's example search has) */
 }
 
@@ -4425,13 +5271,16 @@ html:has(.about-site) {
   color: var(--about-ink-2);  /* blue (6.5:1 on the box) */
 }
 
-/* The two "Continue with ..." buttons (Google, Microsoft), side by side below the form.
+/* The "Continue with ..." buttons below the form (just Google for now).
    They're off-white with a blue line, so they're a quieter choice than the
    sky-blue Sign up button, which stays the main action */
 .signup-social-list {
-  display: grid;                          /* puts the buttons in columns... */
-  grid-template-columns: 1fr 1fr;         /* ...2 of them, side by side, each half the width */
-  gap: 10px;                              /* space between the buttons */
+  display: grid;                                          /* puts the buttons in columns... */
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* ...as many as fit, sharing the width
+                                                             evenly. One button fills the whole row;
+                                                             if GitHub or LinkedIn get added later,
+                                                             they line up side by side on their own */
+  gap: 10px;                                              /* space between the buttons */
 }
 
 /* One "Continue with ..." button: the logo, then the words */
@@ -4512,7 +5361,7 @@ html:has(.about-site) {
 .signup-input:focus-visible,
 .signup-social-button:focus-visible,
 .signup-secondary-button:focus-visible {
-  outline: 3px solid var(--primary-dark); /* a 3px darker blue line around it */
+  outline: 3px solid var(--focus-ring); /* a 3px darker blue line around it */
   outline-offset: 2px;                    /* a small gap between it and the line */
 }
 
@@ -4529,7 +5378,7 @@ html:has(.about-site) {
    blue, but deeper (navy text on it is 5.3:1), the mouse shows the "busy"
    pointer, and it doesn't react to hovering, so it's clear to wait */
 .signup-submit[aria-disabled="true"] {
-  background-color: var(--accent-hover);  /* a little deeper sky blue */
+  background-color: var(--accent-hover);  /* a step deeper accent blue */
   cursor: progress;                       /* mouse turns into the "working" pointer */
 }
 
@@ -4546,16 +5395,27 @@ html:has(.about-site) {
   margin-bottom: 16px;
 }
 
-/* The "passwords don't match" version: bold deep red, so it can't be missed */
-.signup-message-error {
-  font-weight: 700;              /* thick text, so it doesn't rely on color alone */
-  color: var(--signup-error);    /* deep red */
-}
-
-/* An input that has a problem (the retyped password) gets a deep red outline.
-   aria-invalid="true" is set in Signup.jsx, which also tells screen readers */
+/* An input that has a problem (empty, not an email, or the passwords don't
+   match) gets a deep red outline. aria-invalid="true" is set in Login.jsx
+   and Signup.jsx, which also tells screen readers */
 .signup-input[aria-invalid="true"] {
   border-color: var(--signup-error);
+  border-width: 2px;   /* a thicker line, so it doesn't rely on color alone (WCAG) */
+}
+
+/* The red reason right under a box ("Enter your email."). It has no height
+   while it's empty, so it leaves no gap until there's a problem */
+.signup-field-error {
+  font-size: 14px;               /* a little smaller than the labels */
+  font-weight: 700;              /* thick text, so it doesn't rely on color alone (WCAG) */
+  color: var(--signup-error);    /* deep red (6.5:1 on the box) */
+}
+
+/* Once it has words in it, it sits close under its box, with the usual
+   space before the next label */
+.signup-field-error:not(:empty) {
+  margin-top: -8px;      /* pulls it up, closer to its box (the box has 12px below it) */
+  margin-bottom: 12px;   /* space before the next label or button */
 }
 
 /* The small "Step 1 of 2" line above the title */
@@ -4586,13 +5446,72 @@ html:has(.about-site) {
   padding: 2px 4px;            /* makes the clickable area (and the hover box) a bit bigger */
   border-radius: 4px;          /* rounded corners for the hover box */
   font-weight: 700;            /* thick text */
-  color: var(--primary-dark);  /* darker blue (5.8:1 on the page) */
+  color: var(--link);  /* darker blue (5.8:1 on the page) */
   text-decoration: underline;  /* underlined */
 }
 
 /* A pale blue box behind it when the mouse is over it */
 .signup-switch a:hover {
   background-color: var(--about-panel);
+}
+
+/* ---------- Log in page: "Forgot your password?" ----------
+   The small link under the password box, and the reset form it opens.
+   The reset form shows up in the same box on the Log in page (Login.jsx)
+   when the address ends in #forgot-password, so it uses the classes above
+   plus these few. */
+
+/* The line that holds the "Forgot your password?" link. It sits on the
+   right, right under the password box, so it's where people look for it */
+.signup-forgot {
+  margin-top: -4px;      /* pulls it a little closer to the password box above it */
+  margin-bottom: 12px;   /* space before the Log in button */
+  text-align: right;     /* pushes the link to the right edge */
+}
+
+/* The link itself: smaller than the labels, darker blue, and underlined so it
+   looks like a link. It's a quiet extra, so the Log in button stays the main thing */
+.signup-forgot-link {
+  padding: 2px 4px;                          /* a bigger area to click, and room for the outline */
+  border-radius: 4px;                        /* rounded corners for the keyboard outline */
+  font-size: 15px;                           /* a bit smaller than the labels */
+  font-weight: 700;                          /* thick text */
+  color: var(--link);                /* darker blue (5.2:1 on the box, WCAG) */
+  text-decoration: underline;                /* underlined, so it's clearly a link */
+  text-decoration-color: var(--border);      /* a soft blue line under the words... */
+  text-underline-offset: 3px;                /* ...with a little space under the letters */
+}
+
+/* When the mouse is over it, the line under it turns the same dark blue as the
+   words and gets thicker, so the hover shows without relying on color alone */
+.signup-forgot-link:hover {
+  text-decoration-color: currentColor;  /* same color as the words */
+  text-decoration-thickness: 2px;       /* a thicker line */
+}
+
+/* The email address on the "Check your email" screen. It's bold and navy, so
+   a typo in it is easy to spot. overflow-wrap lets a very long address break
+   onto the next line instead of spilling out of the box */
+.signup-sent-email {
+  font-weight: 700;          /* thick text */
+  color: var(--about-ink);   /* deep navy (9.3:1 on the box) */
+  overflow-wrap: anywhere;   /* long addresses wrap instead of sticking out */
+}
+
+/* The smaller line under it ("It can take a few minutes...") */
+.signup-note {
+  margin-bottom: 16px;        /* space before the buttons */
+  font-size: 15px;            /* a bit smaller than the line above */
+  color: var(--about-ink-2);  /* blue (6.5:1 on the box) */
+}
+
+/* The "Back to Log in" link on the "Check your email" screen. It has the
+   sky-blue button look (about-button) and is as wide as the box
+   (signup-submit). It's a link, not a button, because it goes to a page,
+   so this centers its words the way a button would */
+.signup-submit-link {
+  display: block;       /* fills the box's width, like the buttons */
+  text-align: center;   /* words in the middle */
 }
 
 /* Phones: less space around and inside the box, so the form has room */
@@ -4663,7 +5582,9 @@ html:has(.about-site) {
   .signup-secondary-button,
   .signup-step,
   .signup-banner,
-  .signup-switch {
+  .signup-switch,
+  .signup-forgot,
+  .signup-note {
     animation: signup-rise var(--time-signup-rise) var(--ease-out) backwards;
   }
 
@@ -4684,6 +5605,12 @@ html:has(.about-site) {
   .signup-input:nth-of-type(1) { animation-delay: calc(var(--signup-start) + var(--signup-stagger) * 2); }
   .signup-label:nth-of-type(2),
   .signup-input:nth-of-type(2) { animation-delay: calc(var(--signup-start) + var(--signup-stagger) * 3); }
+
+  /* "Forgot your password?" arrives together with the password box above it */
+  .signup-forgot { animation-delay: calc(var(--signup-start) + var(--signup-stagger) * 3); }
+
+  /* On "Check your email", the smaller line arrives right after the line above it */
+  .signup-note { animation-delay: calc(var(--signup-start) + var(--signup-stagger) * 2); }
 
   /* The big button under the inputs */
   .signup-submit { animation-delay: calc(var(--signup-start) + var(--signup-stagger) * 4); }
@@ -4710,6 +5637,13 @@ html:has(.about-site) {
     box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 18%, transparent); /* soft glow, 4px wide */
   }
 
+  /* A box with a problem stays red while you're typing in it (without this,
+     the blue line above would cover the red one), with a soft red glow */
+  .signup-input[aria-invalid="true"]:focus {
+    border-color: var(--signup-error);                                         /* deep red line */
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--signup-error) 15%, transparent); /* soft red glow */
+  }
+
   /* The "Continue with" buttons fade to their hover colors and shrink very
      slightly while pressed, like the About page's buttons */
   .signup-social-button,
@@ -4733,6 +5667,12 @@ html:has(.about-site) {
   /* The "Log in" link's pale blue box fades in on hover */
   .signup-switch a {
     transition: background-color var(--time-hover) ease;
+  }
+
+  /* The line under "Forgot your password?" fades to dark blue on hover.
+     Only the color fades: the link doesn't move, since it's a small extra */
+  .signup-forgot-link {
+    transition: text-decoration-color var(--time-hover) ease;
   }
 }
 
@@ -4813,7 +5753,7 @@ html:has(.about-site) {
 
 /* Blue outline when you reach a tab with the Tab key (WCAG) */
 .settings-tab:focus-visible {
-  outline: 3px solid var(--primary-dark); /* a 3px darker blue line around it */
+  outline: 3px solid var(--focus-ring); /* a 3px darker blue line around it */
   outline-offset: 2px;                    /* a small gap between it and the line */
 }
 
@@ -4915,7 +5855,7 @@ html:has(.about-site) {
 /* Blue outline when you reach a choice with the Tab key (WCAG).
    ":has(input:focus-visible)" puts it around the whole box, not just the tiny button */
 .settings-choice:has(input:focus-visible) {
-  outline: 3px solid var(--primary-dark);
+  outline: 3px solid var(--focus-ring);
   outline-offset: 2px;
 }
 
@@ -5032,7 +5972,7 @@ html:has(.about-site) {
   border: 2px solid var(--primary);  /* blue ring (4.5:1 on the box, so it's easy to see, WCAG) */
   border-radius: 50%;                /* ...rounded into a circle */
   background-color: var(--card);     /* off-white */
-  box-shadow: 0 1px 3px color-mix(in srgb, var(--text) 30%, transparent); /* soft shadow (navy, 30% see-through) */
+  box-shadow: 0 1px 3px color-mix(in srgb, var(--shadow-color) 30%, transparent); /* soft shadow (30% see-through) */
 }
 
 .settings-slider::-moz-range-thumb {
@@ -5042,7 +5982,7 @@ html:has(.about-site) {
   border: 2px solid var(--primary);
   border-radius: 50%;
   background-color: var(--card);
-  box-shadow: 0 1px 3px color-mix(in srgb, var(--text) 30%, transparent);
+  box-shadow: 0 1px 3px color-mix(in srgb, var(--shadow-color) 30%, transparent);
 }
 
 /* Mouse over the knob: a soft blue glow appears around it, showing it can be grabbed.
@@ -5050,13 +5990,13 @@ html:has(.about-site) {
 @media (hover: hover) and (pointer: fine) {
   .settings-slider:hover::-webkit-slider-thumb {
     box-shadow:
-      0 1px 3px color-mix(in srgb, var(--text) 30%, transparent),
+      0 1px 3px color-mix(in srgb, var(--shadow-color) 30%, transparent),
       0 0 0 6px color-mix(in srgb, var(--primary) 15%, transparent); /* 6px glow, 15% blue */
   }
 
   .settings-slider:hover::-moz-range-thumb {
     box-shadow:
-      0 1px 3px color-mix(in srgb, var(--text) 30%, transparent),
+      0 1px 3px color-mix(in srgb, var(--shadow-color) 30%, transparent),
       0 0 0 6px color-mix(in srgb, var(--primary) 15%, transparent);
   }
 }
@@ -5069,13 +6009,13 @@ html:has(.about-site) {
 
 .settings-slider:active::-webkit-slider-thumb {
   box-shadow:
-    0 1px 3px color-mix(in srgb, var(--text) 30%, transparent),
+    0 1px 3px color-mix(in srgb, var(--shadow-color) 30%, transparent),
     0 0 0 8px color-mix(in srgb, var(--primary) 22%, transparent);  /* 8px glow, 22% blue */
 }
 
 .settings-slider:active::-moz-range-thumb {
   box-shadow:
-    0 1px 3px color-mix(in srgb, var(--text) 30%, transparent),
+    0 1px 3px color-mix(in srgb, var(--shadow-color) 30%, transparent),
     0 0 0 8px color-mix(in srgb, var(--primary) 22%, transparent);
 }
 
@@ -5136,7 +6076,7 @@ html:has(.about-site) {
   font-family: inherit;               /* buttons don't copy the page's font on their own */
   font-size: 16px;
   font-weight: 700;
-  color: var(--primary-dark);         /* darker blue (6.5:1 on the box) */
+  color: var(--link);         /* darker blue (6.5:1 on the box) */
   background-color: var(--card);      /* off-white (--card) */
   border: 1px solid var(--border);    /* blue line (3.5:1, enough for borders, WCAG) */
   border-radius: 999px;               /* pill shape */
@@ -5161,7 +6101,7 @@ html:has(.about-site) {
 
 /* Blue outline when you reach a button with the Tab key (WCAG) */
 .settings-button:focus-visible {
-  outline: 3px solid var(--primary-dark);
+  outline: 3px solid var(--focus-ring);
   outline-offset: 2px;
 }
 
@@ -5283,66 +6223,252 @@ html:has(.about-site) {
   }
 }
 
+/* ---------- Top bar: theme menu ---------- */
+/* The round sun / moon / screen button in every top bar, and the small menu
+   it opens with Light, Dark, and System (components/ThemeToggle.jsx).
+   It's just left of Log in on the About, Log in, and Sign up pages, and just
+   left of your circle on the pages with NavBar. It stays in the first row of
+   the bar on phones too, so it's never hidden.
+   Every class name starts with "theme-menu-" so it can't clash with other pages. */
+
+/* The wrapper around the button and the menu. "relative" lets the menu be
+   placed right under the button */
+.theme-menu {
+  position: relative;
+  flex-shrink: 0;                 /* never gets squished in a narrow bar */
+}
+
+/* The round button with the sun, moon, or screen in it */
+.theme-menu-button {
+  display: grid;                  /* turns on grid so the picture can be centered... */
+  place-items: center;            /* ...in both directions */
+  width: 40px;                    /* a big, easy target to click or tap (WCAG) */
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--line);  /* thin line around it, so it reads as a button */
+  border-radius: 999px;           /* round */
+  background-color: transparent;  /* no fill until hovered */
+  color: var(--text);             /* the picture's color (it's drawn with currentColor) */
+  cursor: pointer;                /* mouse turns into a pointing hand */
+}
+
+/* A light box behind it when the mouse is over it, or while the menu is open */
+.theme-menu-button:hover,
+.theme-menu-button[aria-expanded="true"] {
+  background-color: var(--soft);
+}
+
+/* The outline when you reach it with the Tab key (WCAG) */
+.theme-menu-button:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;            /* a small gap between it and the line */
+}
+
+/* The sun, moon, or screen inside the button */
+.theme-menu-button svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* The menu itself. It floats just under the button, lined up with its right
+   edge, so it never spills off the right side of the screen */
+.theme-menu-list {
+  position: absolute;               /* on top of the page, not pushing anything down */
+  top: calc(100% + 8px);            /* 8px below the button */
+  right: 0;                         /* right edges lined up */
+  z-index: 20;                      /* above the top bar (10) and the page */
+  min-width: 180px;                 /* wide enough for the longest word with its check mark */
+  padding: 6px;                     /* space inside the box, around the choices */
+  background-color: var(--card);    /* the box color */
+  border: 1px solid var(--line);    /* thin line around it */
+  border-radius: 12px;              /* rounded corners */
+  box-shadow: 0 16px 32px -12px color-mix(in srgb, var(--shadow-color) 25%, transparent); /* a soft shadow, so it floats */
+  transform-origin: top right;      /* the opening animation grows out of the button's corner */
+  font-size: 16px;                  /* the same text size on every page (the About page's text is bigger) */
+  line-height: 1.5;
+}
+
+/* One choice in the menu (Light, Dark, System): the picture, the word, and a
+   check mark on the one that's on. It's a <button>, so it works with the keyboard */
+.theme-menu-item {
+  display: flex;                    /* puts the picture, word, and check mark in a row */
+  align-items: center;              /* lines them up in the middle */
+  gap: 10px;                        /* space between them */
+  width: 100%;                      /* fills the whole row, so the whole row is clickable */
+  padding: 10px 12px;               /* space inside: top/bottom, left/right (a big, easy target) */
+  border: 0;
+  border-radius: 8px;               /* rounded corners for the hover color */
+  background-color: transparent;
+  color: var(--text);               /* words (13:1 on the box) */
+  font: inherit;                    /* buttons don't copy the page's font on their own */
+  font-weight: 600;                 /* semi-bold */
+  text-align: left;
+  cursor: pointer;
+}
+
+/* A light box behind a choice when the mouse is over it */
+.theme-menu-item:hover {
+  background-color: var(--soft);
+}
+
+/* The outline when the arrow keys or Tab reach a choice. It's drawn just
+   inside the edge, so the box's edge doesn't cut it off (WCAG) */
+.theme-menu-item:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: -3px;
+}
+
+/* The little pictures in each choice */
+.theme-menu-item svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;                   /* never squished */
+}
+
+/* The check mark, pushed to the right end. Only the choice that's on shows
+   it; the others keep the space (visibility: hidden) so the words line up.
+   Screen readers hear "checked" from aria-checked instead (WCAG) */
+.theme-menu-check {
+  margin-left: auto;
+  color: var(--link);               /* blue (7.8:1 / 7.2:1 on the box) */
+}
+
+.theme-menu-item[aria-checked="false"] .theme-menu-check {
+  visibility: hidden;
+}
+
+/* Motion: skipped for people who turned on "reduce motion" (WCAG).
+   The menu grows quickly out of the button's corner, like the account menu */
+@media (prefers-reduced-motion: no-preference) {
+  .theme-menu-list {
+    animation: account-menu-in var(--time-hover) var(--ease-out); /* the account menu's recipe */
+  }
+
+  .theme-menu-button,
+  .theme-menu-item {
+    transition: background-color var(--time-hover) ease;
+  }
+}
+
+/* ---------- Switching between light and dark ----------
+   For a moment after you pick Light or Dark, every color fades to its new
+   value instead of snapping (about 0.18 seconds). ThemeProvider.jsx adds the
+   "theme-changing" class to <html> only for that moment, so it doesn't slow
+   down hover colors the rest of the time.
+   Skipped for people who turned on "reduce motion", on their computer or in
+   our Settings (the Settings rule at the end of this file wins over this one) */
+@media (prefers-reduced-motion: no-preference) {
+  :root.theme-changing *,
+  :root.theme-changing *::before,
+  :root.theme-changing *::after {
+    transition:
+      background-color 180ms ease,
+      color 180ms ease,
+      border-color 180ms ease,
+      outline-color 180ms ease,
+      fill 180ms ease,
+      stroke 180ms ease,
+      box-shadow 180ms ease !important;
+  }
+}
+
 /* ---------- Settings: site-wide choices ---------- */
 /* What the choices on the Settings page do to the WHOLE site.
    settings.js writes each choice onto the <html> tag, like
-   <html data-theme="mint" data-font="readable">, and the rules below
+   <html data-palette="mint" data-font="readable">, and the rules below
    react to those. ":root" is the <html> tag, so
-   :root[data-theme="mint"] means "when the theme is Mint".
+   :root[data-palette="mint"] means "when the colors are Mint".
    These are at the very end of the file on purpose: when two rules are
    equally strong, the later one wins, so these win over the normal styles. */
 
 /* --- Appearance: color themes ---
-   Each theme swaps the color variables from the top of the file, so every
-   page changes at once. Blue is the normal one, so it needs no rule.
-   Every pair was checked for contrast like the Blue theme (WCAG) */
+   Mint and Lavender swap the color variables from the top of the file, so
+   every page changes at once. Each one has a light and a dark set, the same
+   as the normal Blue colors, and follows the Light / Dark / System choice.
+   Blue is the normal one, so it needs no rule.
+   (These used to be data-theme="mint". data-theme is the light/dark choice
+   now, so the color choice moved to data-palette.)
+   Every pair was checked for contrast like the Blue sets (WCAG):
+   the lowest small-text pair in each is at least 4.6:1 */
 
 /* Mint: soft green-blue */
-:root[data-theme="mint"] {
+:root[data-theme="light"][data-palette="mint"] {
   --bg: #d3efe4;           /* page background */
   --card: #effaf5;         /* boxes */
+  --soft: #dff4ec;         /* hover colors and tags */
   --text: #0e3a32;         /* headings and main text (11.8:1 on boxes, 10.3:1 on the page) */
   --muted: #1b5649;        /* paragraph text (8:1 on boxes, 7:1 on the page) */
+  --subtle: #2b6658;       /* small text (6.3:1 on boxes, 5.5:1 on the page) */
   --primary: #1d7563;      /* buttons (white text on it is 5.6:1) */
-  --primary-dark: #155c4d; /* hover, keyboard outlines, colored text (7.4:1 on boxes) */
+  --primary-dark: #155c4d; /* hover, links (7.4:1 on boxes) */
   --border: #4d8f7f;       /* input borders (3.5:1 on boxes) */
   --line: #a9dac8;         /* thin lines around boxes */
-  --soft: #dff4ec;         /* hover colors and tags */
-  --subtle: #2b6658;       /* small text (6.3:1 on boxes, 5.5:1 on the page) */
-  --accent: #6fcfb2;       /* the main button (dark text on it is 6.7:1) */
-  --accent-hover: #5bc4a4;
-  --accent-text: #0e3a32;
+  --accent: #1a6b5a;       /* the main button (white words 6.4:1) */
+  --accent-hover: #145647;
   --accent-soft: #c6ebdd;
-  --about-bg: #d3efe4;
   --about-panel: #bfe5d6;
-  --about-edge: #a9dac8;
-  --about-ink: #0e3a32;
-  --about-ink-2: #1b5649;  /* 6.2:1 on the deeper boxes */
-  --about-ink-3: #2b6658;  /* 4.9:1 on the deeper boxes */
+  --logo-lens: #6fcfb2;
+}
+
+:root[data-theme="dark"][data-palette="mint"] {
+  --bg: #0d1b18;
+  --card: #162b26;
+  --soft: #1d3630;
+  --text: #dff0ea;         /* 12.6:1 on boxes */
+  --muted: #b4d0c7;
+  --subtle: #98b9af;       /* 7:1 on boxes */
+  --primary: #2f826e;      /* white text on it is 4.6:1 */
+  --primary-dark: #266a5a;
+  --border: #689a8d;
+  --line: #2a4741;
+  --accent: #2c7a67;       /* white words 5.1:1 */
+  --accent-hover: #2f826e;
+  --accent-soft: #203d36;
+  --about-panel: #12241f;
+  --link: #84d0ba;         /* 8.3:1 on boxes */
+  --strong-fill: #08130f;
+  --logo-tile: #1f4c41;
+  --logo-lens: #7ccdb4;
 }
 
 /* Lavender: soft purple-blue */
-:root[data-theme="lavender"] {
+:root[data-theme="light"][data-palette="lavender"] {
   --bg: #e4dff7;
   --card: #f6f3ff;
+  --soft: #eeeafc;
   --text: #271c58;         /* 13.8:1 on boxes, 11.6:1 on the page */
   --muted: #41357f;        /* 9.4:1 on boxes */
+  --subtle: #51459a;       /* 7.2:1 on boxes */
   --primary: #5a49b5;      /* white text on it is 6.9:1 */
   --primary-dark: #463797; /* 8.5:1 on boxes */
   --border: #7b6ebf;       /* 4:1 on boxes */
   --line: #cac1ec;
-  --soft: #eeeafc;
-  --subtle: #51459a;       /* 7.2:1 on boxes */
-  --accent: #b2a3ef;       /* dark text on it is 6.7:1 */
-  --accent-hover: #a291e9;
-  --accent-text: #271c58;
+  --accent: #4e3fa6;       /* white words 8:1 */
+  --accent-hover: #3f3289;
   --accent-soft: #dcd4f9;
-  --about-bg: #e4dff7;
   --about-panel: #d5ccf3;
-  --about-edge: #cac1ec;
-  --about-ink: #271c58;
-  --about-ink-2: #41357f;  /* 6.7:1 on the deeper boxes */
-  --about-ink-3: #51459a;  /* 5.2:1 on the deeper boxes */
+  --logo-lens: #b2a3ef;
+}
+
+:root[data-theme="dark"][data-palette="lavender"] {
+  --bg: #15132a;
+  --card: #211e3c;
+  --soft: #2a274d;
+  --text: #e7e4f7;         /* 12.8:1 on boxes */
+  --muted: #c7c1e7;
+  --subtle: #aca5d6;       /* 6.9:1 on boxes */
+  --primary: #7669bd;      /* white text on it is 4.6:1 */
+  --primary-dark: #5f52a6;
+  --border: #8479c2;
+  --line: #3a365f;
+  --accent: #6f62ba;       /* white words 5.1:1 */
+  --accent-hover: #7669c1;
+  --accent-soft: #2e2a55;
+  --about-panel: #1b1934;
+  --link: #b8adef;         /* 7.8:1 on boxes */
+  --strong-fill: #0c0a1c;
+  --logo-tile: #3a3473;
+  --logo-lens: #b2a3ef;
 }
 
 /* --- Appearance: heading style ---
@@ -5387,7 +6513,7 @@ body {
    All the softer blues become the darkest text color, and the thin light
    lines become dark too, so everything stands out more. It comes after the
    themes, so it works with any theme */
-:root[data-high-contrast="on"] {
+:root[data-theme][data-high-contrast="on"] {
   --muted: var(--text);          /* paragraph text as dark as headings */
   --subtle: var(--text);         /* small text too */
   --about-ink-2: var(--about-ink);

@@ -2,9 +2,51 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- The little picture on the browser tab (the "favicon"): the ScoutSearch
+         binoculars on a navy square. The file is in public/, and anything in
+         public/ is served from the top of the site, so it's just "/favicon.svg" -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>f26-group-8</title>
+    <!-- Picks light or dark BEFORE anything is drawn, so the page never
+         flashes the wrong colors while the rest of the site loads.
+         It has to be a plain script right here (not in the React code),
+         because React only starts after the whole site has downloaded.
+         It does the same as applyTheme() in src/theme.js:
+         - a saved choice (Light or Dark) wins
+         - otherwise it follows the computer's own light/dark setting
+         Then it writes data-theme on <html>, which picks the color set in
+         index.css. It also sets the Settings page's colors (data-palette,
+         Blue / Mint / Lavender) for the same reason.
+         try/catch: some private windows block localStorage; then it just
+         follows the computer -->
+    <script>
+      (function () {
+        var html = document.documentElement;
+        var theme = null;
+        try {
+          theme = localStorage.getItem('scoutsearch-theme');
+        } catch (error) {}
+        if (theme !== 'light' && theme !== 'dark') {
+          theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        html.setAttribute('data-theme', theme);
+        html.style.colorScheme = theme;
+        try {
+          var settings = JSON.parse(localStorage.getItem('scoutsearch-settings')) || {};
+          // "theme" is the old name of the Settings colors (see settings.js)
+          html.setAttribute('data-palette', settings.palette || settings.theme || 'blue');
+        } catch (error) {}
+      })();
+    </script>
+    <!-- The page color, before index.css has loaded (while developing, the
+         styles arrive a moment after the page appears). var(--bg) takes over
+         once index.css is there; the color after the comma is only for that
+         first moment, so it matches --bg in index.css -->
+    <style>
+      html { background-color: var(--bg, #dde4ec); }
+      html[data-theme="dark"] { background-color: var(--bg, #0f1927); }
+    </style>
     <!-- Fonts for the About page, from Google Fonts. They load here, but only
          the About page uses them (see --font-display and --font-body in index.css).
          "preconnect" starts connecting to Google early so the fonts show up faster -->

@@ -18,6 +18,11 @@ import { Link } from "react-router";
 // AccountMenu is your circle and its dropdown, shown in the top bar when
 // you're logged in (components/AccountMenu.jsx).
 import AccountMenu from "../components/AccountMenu.jsx";
+// SiteLogo is the binoculars picture and the name (components/SiteLogo.jsx).
+import SiteLogo from "../components/SiteLogo.jsx";
+// ThemeToggle is the sun/moon button that switches Light / Dark / System
+// (components/ThemeToggle.jsx).
+import ThemeToggle from "../components/ThemeToggle.jsx";
 // isLoggedIn tells the page if you're logged in (login-status.js).
 import { isLoggedIn } from "../login-status.js";
 
@@ -457,11 +462,9 @@ function About() {
             {/* The bar at the top of the page */}
             <header className="about-bar">
                 <div className="about-inner about-bar-row">
-                    {/* The site's name. Clicking it goes back to the top of the page.
-                        The diamond is decoration, so screen readers skip it */}
+                    {/* The logo. Clicking it goes back to the top of the page */}
                     <a className="about-logo" href="#main">
-                        <span className="about-blaze" aria-hidden="true"></span>
-                        ScoutSearch
+                        <SiteLogo />
                     </a>
 
                     {/* <nav> marks this as navigation. aria-label="Sections" is
@@ -479,6 +482,10 @@ function About() {
                     {/* The right side. "loggedIn ? (...) : (...)" means "if you're
                         logged in, show the first part; if not, show the second" */}
                     <div className="about-bar-actions">
+                        {/* The sun/moon button, just left of Log in (or Home). It's
+                            here, in the first row, on every screen size, so it's
+                            always easy to find */}
+                        <ThemeToggle />
                         {loggedIn ? (
                             <>
                                 {/* Logged in: a Home button back to the Feed, and your
@@ -660,20 +667,22 @@ function About() {
                             order stays h1, then h2s (WCAG) */}
                         <h2 id="about-ready-title" className="about-ready-title">Ready to find your first opportunity?</h2>
                         {/* A navy button, because a sky-blue one would disappear on the sky-blue band */}
-                        <Link to="/signup" className="about-button about-button-big about-button-navy">
+                        <Link to="/signup" className="about-button about-button-big about-ready-button">
                             Sign up
                         </Link>
                     </div>
                 </section>
             </main>
 
-            {/* The footer at the very bottom: the name, who made it, and the
+            {/* The footer at the very bottom: the logo, who made it, and the
                 main links again, for people who scroll to the end looking for them.
                 TEAM TO-DO: add a contact email here once the team picks one */}
             <footer className="about-footer">
                 <div className="about-inner about-footer-row">
                     <div>
-                        <p className="about-footer-name">ScoutSearch</p>
+                        {/* The logo, with the slogan from the logo file under it */}
+                        <p className="about-footer-name"><SiteLogo /></p>
+                        <p>Built by students, for students</p>
                         <p>A Northeastern Oasis Project</p>
                     </div>
                     {/* aria-label names this group of links for screen readers,

@@ -15,6 +15,9 @@ import './index.css'
 import App from './App.jsx'
 // The choices from the Settings page (colors, fonts, text size, ...), see settings.js
 import { loadSettings, applySettings } from './settings.js'
+// ThemeProvider keeps track of Light / Dark / System for every page
+// (components/ThemeProvider.jsx)
+import ThemeProvider from './components/ThemeProvider.jsx'
 
 // Put the saved Settings choices into effect before anything is drawn,
 // so the page doesn't flash in the default colors first
@@ -28,7 +31,11 @@ createRoot(document.getElementById('root')).render(
         useTransitions={false} makes a page change happen right away instead of
         a moment later, which the smooth fade between pages (SmoothLink) needs */}
     <BrowserRouter useTransitions={false}>
-      <App />
+      {/* Everything inside ThemeProvider can use useTheme(), so every
+          page gets light and dark mode, including pages added later */}
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
     </BrowserRouter>
   </StrictMode>,
 )

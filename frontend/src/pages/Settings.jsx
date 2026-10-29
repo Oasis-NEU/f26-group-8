@@ -3,7 +3,7 @@
 // It has a column of tabs on the left. Clicking one shows its box on the right:
 //   Account          your name, email, and profile picture (coming soon)
 //   Preferences      the kinds of jobs you want to see (coming soon)
-//   Appearance       the site's colors and heading style
+//   Appearance       light or dark, the site's colors, and heading style
 //   Privacy & data   who can see your profile and what's on it
 //   Accessibility    font, text size, contrast, spacing, motion, ...
 // Appearance and Accessibility work right away, on every page. The choices
@@ -22,6 +22,9 @@ import { useLocation, useNavigate } from 'react-router';
 import NavBar from '../components/NavBar.jsx';
 // The code that saves the choices and puts them into effect (settings.js)
 import { applySettings, defaultSettings, loadSettings, saveSettings } from '../settings.js';
+// useTheme reads and changes Light / Dark / System (theme.js). It's the same
+// choice as the sun/moon button in the top bar, so both always agree
+import { useTheme } from '../theme.js';
 
 // ---------- The tabs ----------
 // The "id" is also the end of the web address: yoursite.com/settings#privacy
@@ -35,7 +38,7 @@ const tabs = [
 ];
 
 // Which settings each tab's "Reset" button puts back to normal
-const appearanceSettings = ['theme', 'headings'];
+const appearanceSettings = ['palette', 'headings'];
 const privacySettings = ['profileVisibility', 'shareEmail', 'shareSchool', 'shareConnections', 'shareProfileViews', 'shareResume', 'allowMessages'];
 const accessibilitySettings = ['font', 'textSize', 'highContrast', 'textSpacing', 'underlineLinks', 'reduceMotion', 'strongFocus'];
 
@@ -109,6 +112,9 @@ function Settings() {
     // The message next to a Reset button, or after "Download my data"
     const [message, setMessage] = useState('');
 
+    // Light / Dark / System (see theme.js)
+    const { theme, setTheme } = useTheme();
+
     // The tab buttons, so the arrow keys can move the keyboard focus between them
     const tabRefs = useRef([]);
 
@@ -147,7 +153,7 @@ function Settings() {
 
     // Changes one choice, then saves all of them and puts them into effect.
     // [name]: value means "the setting called whatever is in name", so
-    // changeSetting('theme', 'mint') sets settings.theme to 'mint'
+    // changeSetting('palette', 'mint') sets settings.palette to 'mint'
     function changeSetting(name, value) {
         const newSettings = { ...settings, [name]: value };
         setSettings(newSettings);
@@ -255,11 +261,27 @@ function Settings() {
                             <h2 className="settings-panel-title">Appearance</h2>
                             <p className="settings-text">Change how ScoutSearch looks. Changes show up right away, on every page.</p>
 
+                            {/* The same choice as the sun/moon button in the top bar */}
                             <ChoiceGroup
-                                legend="Color theme"
+                                legend="Light or dark"
                                 name="theme"
-                                value={settings.theme}
-                                onChange={(value) => changeSetting('theme', value)}
+                                value={theme}
+                                onChange={(value) => {
+                                    setTheme(value);
+                                    setMessage('');
+                                }}
+                                options={[
+                                    { value: 'light', label: 'Light', description: 'Always light' },
+                                    { value: 'dark', label: 'Dark', description: 'Always dark' },
+                                    { value: 'system', label: 'System', description: 'Match your device' },
+                                ]}
+                            />
+
+                            <ChoiceGroup
+                                legend="Colors"
+                                name="palette"
+                                value={settings.palette}
+                                onChange={(value) => changeSetting('palette', value)}
                                 options={[
                                     { value: 'blue', label: 'Blue', description: 'The normal look', swatch: true },
                                     { value: 'mint', label: 'Mint', description: 'Soft green-blue', swatch: true },
@@ -280,7 +302,15 @@ function Settings() {
                             />
 
                             <div className="settings-footer">
-                                <button type="button" className="settings-button" onClick={() => resetSettings(appearanceSettings)}>
+                                {/* Puts the colors and headings back, and Light or dark back to System */}
+                                <button
+                                    type="button"
+                                    className="settings-button"
+                                    onClick={() => {
+                                        setTheme('system');
+                                        resetSettings(appearanceSettings);
+                                    }}
+                                >
                                     Reset appearance
                                 </button>
                                 {/* role="status" makes screen readers read the message out loud (WCAG) */}
