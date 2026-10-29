@@ -27,6 +27,9 @@ import SmoothLink from '../components/SmoothLink.jsx';
 import ServiceLogo from '../components/ServiceLogo.jsx';
 // SiteLogo is our own logo: the binoculars picture and the name (components/SiteLogo.jsx).
 import SiteLogo from '../components/SiteLogo.jsx';
+// ThemeToggle is the sun/moon button that switches Light / Dark / System
+// (components/ThemeToggle.jsx).
+import ThemeToggle from '../components/ThemeToggle.jsx';
 // TextType: a line that types itself out, one word after another
 import TextType from '../components/reactbits/TextType.jsx';
 // markLoggedIn remembers that you're logged in (login-status.js)
@@ -259,6 +262,13 @@ function Login() {
                             <li><a href="/about#questions">Questions</a></li>
                         </ul>
                     </nav>
+
+                    {/* The sun/moon button, at the right end of the bar, where Log
+                        in is on the About page. "about-bar-actions" keeps it in the
+                        first row on small screens, so it's never hidden */}
+                    <div className="about-bar-actions">
+                        <ThemeToggle />
+                    </div>
                 </div>
             </header>
 

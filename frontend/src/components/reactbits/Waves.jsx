@@ -11,7 +11,8 @@
 // - a "Pause background" button lets anyone stop it. WCAG 2.2.2 says
 //   anything that moves on its own for more than 5 seconds needs a way to
 //   pause it
-// The line color is --wave-color in index.css.
+// The line color is --bg-pattern-stroke in index.css. It's different in light
+// and dark mode, so the lines are read again whenever the theme changes.
 //
 // How to use it: put <Waves /> first inside the page's wrapper.
 
@@ -65,6 +66,13 @@ function Waves() {
         // The line color, read from index.css so it stays with the site's colors
         let color = "";
 
+        // Reads the line color from index.css. The lines are drawn by code,
+        // not by CSS, so they don't change color on their own: this has to
+        // run again whenever the colors change (see themeWatcher below)
+        function readColor() {
+            color = getComputedStyle(canvas).getPropertyValue("--bg-pattern-stroke").trim();
+        }
+
         // The next drawing step, or null when nothing is being drawn
         let frame = null;
         // The time of the last frame, to know how much time passed
@@ -77,7 +85,7 @@ function Waves() {
             canvas.width = canvas.clientWidth * ratio;
             canvas.height = canvas.clientHeight * ratio;
             context.setTransform(ratio, 0, 0, ratio, 0, 0);
-            color = getComputedStyle(canvas).getPropertyValue("--wave-color").trim();
+            readColor();
             drawWaves();
         }
 
@@ -168,6 +176,20 @@ function Waves() {
         resize();
         window.addEventListener("resize", resize);
 
+        // Watches the <html> tag for a new light/dark choice (data-theme),
+        // new Settings colors (data-palette), or high contrast, and redraws
+        // the lines in the new color right away, even while paused.
+        // A MutationObserver is the browser's way of saying "tell me when
+        // this part of the page changes"
+        const themeWatcher = new MutationObserver(() => {
+            readColor();
+            drawWaves();
+        });
+        themeWatcher.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ["data-theme", "data-palette", "data-high-contrast"],
+        });
+
         // Only move when the visitor allows motion and hasn't pressed Pause.
         // Otherwise the still picture drawn by resize() stays on the screen
         const moving = !paused && !shouldStayStill();
@@ -181,6 +203,7 @@ function Waves() {
         // and stop drawing
         return () => {
             stop();
+            themeWatcher.disconnect();
             window.removeEventListener("resize", resize);
             window.removeEventListener("pointermove", handlePointerMove);
             document.removeEventListener("visibilitychange", handleVisibility);

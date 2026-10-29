@@ -20,6 +20,9 @@ import { Link } from "react-router";
 import AccountMenu from "../components/AccountMenu.jsx";
 // SiteLogo is the binoculars picture and the name (components/SiteLogo.jsx).
 import SiteLogo from "../components/SiteLogo.jsx";
+// ThemeToggle is the sun/moon button that switches Light / Dark / System
+// (components/ThemeToggle.jsx).
+import ThemeToggle from "../components/ThemeToggle.jsx";
 // isLoggedIn tells the page if you're logged in (login-status.js).
 import { isLoggedIn } from "../login-status.js";
 
@@ -479,6 +482,10 @@ function About() {
                     {/* The right side. "loggedIn ? (...) : (...)" means "if you're
                         logged in, show the first part; if not, show the second" */}
                     <div className="about-bar-actions">
+                        {/* The sun/moon button, just left of Log in (or Home). It's
+                            here, in the first row, on every screen size, so it's
+                            always easy to find */}
+                        <ThemeToggle />
                         {loggedIn ? (
                             <>
                                 {/* Logged in: a Home button back to the Feed, and your
@@ -660,7 +667,7 @@ function About() {
                             order stays h1, then h2s (WCAG) */}
                         <h2 id="about-ready-title" className="about-ready-title">Ready to find your first opportunity?</h2>
                         {/* A navy button, because a sky-blue one would disappear on the sky-blue band */}
-                        <Link to="/signup" className="about-button about-button-big about-button-navy">
+                        <Link to="/signup" className="about-button about-button-big about-ready-button">
                             Sign up
                         </Link>
                     </div>

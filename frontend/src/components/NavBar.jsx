@@ -13,6 +13,8 @@ import { Link } from "react-router";
 import AccountMenu from "./AccountMenu.jsx";
 // SiteLogo is the binoculars picture and the name (components/SiteLogo.jsx).
 import SiteLogo from "./SiteLogo.jsx";
+// ThemeToggle is the sun/moon button that switches Light / Dark / System (components/ThemeToggle.jsx).
+import ThemeToggle from "./ThemeToggle.jsx";
 // The top bar
 function NavBar() {
   return (
@@ -38,11 +40,14 @@ function NavBar() {
           placeholder="Search..."
         />
       </div>
-      {/* Right side: links to other pages, then your circle */}
+      {/* Right side: links to other pages, the sun/moon button, then your circle */}
       <div className="feed-nav-right">
         <Link to="/feed">Home</Link>
         <Link to="/network">Network</Link>
         <Link to="/messages">Messages</Link>
+        {/* Switches Light / Dark / System. On phones this row moves under the
+            logo, so it's still in the top bar, never hidden */}
+        <ThemeToggle />
 {/* Your circle. Clicking it opens a dropdown with View profile,
             Settings, Preferences, Profile picture, and Log out */}
         <AccountMenu />
