@@ -43,6 +43,14 @@ function NavBar() {
       {/* Right side: links to other pages, the sun/moon button, then your circle */}
       <div className="feed-nav-right">
         <Link to="/feed">Home</Link>
+        {/* The Discovery page: internships, co-ops, and jobs.
+            "Opportunities" is too long for the phone top bar, so phones show
+            "Jobs" instead (index.css swaps them). aria-label makes screen
+            readers always say "Opportunities", whichever word is showing. */}
+        <Link to="/discovery" aria-label="Opportunities">
+          <span className="feed-nav-long-word">Opportunities</span>
+          <span className="feed-nav-short-word">Jobs</span>
+        </Link>
         <Link to="/network">Network</Link>
         <Link to="/messages">Messages</Link>
         {/* Switches Light / Dark / System. On phones this row moves under the

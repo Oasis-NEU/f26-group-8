@@ -81,6 +81,9 @@
   --focus-ring: var(--primary-dark); /* the outline when you reach something with the Tab key (6.9:1 on the page) */
   --on-primary: #ffffff;          /* words and icons on the blue buttons */
   --strong-fill: var(--text);     /* the darkest box color, for boxes with white words on them */
+  --discovery-highlight: #9fd0f5; /* Discovery page: sky-blue words and outlines on the dark top box
+                                     (about 9:1 on it in light mode, 12:1 in dark mode). Dark mode
+                                     doesn't set its own, so it uses this one too */
   --signup-error: #9b1c1c;        /* red error messages under the boxes (7.2:1 on boxes) */
   --shadow-color: #0f2a44;        /* shadows under floating boxes (used see-through) */
 
@@ -2601,6 +2604,12 @@ html:has(.about-site) {
   text-underline-offset: 4px;  /* moves the underline a bit lower so it doesn't touch the letters */
 }
 
+/* The Opportunities link has a long word and a short word. Big screens show
+   the long one ("Opportunities") and hide the short one ("Jobs") */
+.feed-nav-short-word {
+  display: none;
+}
+
 /* Your circle in the top bar is a link to your profile. It isn't a word link
    like Home, so it skips the padding and underline those links get above,
    and keeps its white letters */
@@ -2615,6 +2624,45 @@ html:has(.about-site) {
 .feed-nav-avatar:focus-visible {
   outline: 2px solid var(--focus-ring);   /* blue ring (4.5:1 on the bar) */
   outline-offset: 2px;
+}
+
+/* Tablets and small laptops: everything still fits in one row if the search
+   box is allowed to shrink, the links sit a little closer together, and the
+   Opportunities link shows "Jobs". Without this, the right side pokes off the
+   edge of the screen below about 1120px wide */
+@media (max-width: 1120px) {
+  .feed-nav-left {
+    flex: 1;              /* the left side takes the room the right side doesn't need... */
+    min-width: 0;         /* ...and is allowed to get narrower than its contents */
+  }
+
+  .feed-nav-search {
+    flex: 1;              /* the search box fills whatever room is left... */
+    min-width: 0;         /* ...and is allowed to get narrower than 260px */
+    width: auto;          /* (instead of always being 260px wide) */
+    max-width: 260px;     /* but never wider than it is on big screens */
+  }
+
+  .feed-nav-right {
+    gap: 8px;             /* links a little closer together */
+  }
+
+  /* A slightly smaller name and picture, so the search box keeps enough room */
+  .feed-nav-logo {
+    font-size: 26px;
+  }
+  .feed-nav-logo .site-logo-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* "Jobs" instead of "Opportunities" */
+  .feed-nav-long-word {
+    display: none;
+  }
+  .feed-nav-short-word {
+    display: inline;
+  }
 }
 
 /* Phones: the top bar is too narrow for everything in one row, so it
@@ -2651,7 +2699,14 @@ html:has(.about-site) {
   }
 
   .feed-nav-right {
-    gap: 4px;             /* links closer together, so they fit in one row */
+    gap: 2px;             /* links closer together, so they fit in one row */
+    flex-wrap: wrap;      /* on very small phones, the circle drops to a second
+                             line instead of poking off the edge of the screen */
+  }
+
+  .feed-nav-right a {
+    padding: 10px 5px;    /* less space on the sides of each link, so all 4 fit */
+    font-size: 15px;      /* a touch smaller, so your circle fits on the same row */
   }
 }
 
@@ -4509,9 +4564,13 @@ html:has(.about-site) {
   cursor: pointer;                    /* the mouse turns into a pointing hand over it */
 }
 
-/* The button gets a very light blue background when the mouse is over it */
-.network-connect-button:hover {
-  background-color: var(--soft);
+/* The button gets a very light blue background when the mouse is over it.
+   Only for real mice: on a phone, a tap counts as "hover" and the color
+   would get stuck on after you lift your finger */
+@media (hover: hover) and (pointer: fine) {
+  .network-connect-button:hover {
+    background-color: var(--soft);
+  }
 }
 
 /* After you click Connect, the button turns solid blue and says "Pending",
@@ -4521,9 +4580,11 @@ html:has(.about-site) {
   color: var(--on-primary);                       /* white words (4.9:1 on the blue, WCAG) */
 }
 
-/* A darker blue when the mouse is over the "Pending" button */
-.network-connect-button-on:hover {
-  background-color: var(--primary-dark);  /* darker blue (white words on it are 7.1:1) */
+/* A darker blue when the mouse is over the "Pending" button (real mice only, see above) */
+@media (hover: hover) and (pointer: fine) {
+  .network-connect-button-on:hover {
+    background-color: var(--primary-dark);  /* darker blue (white words on it are 7.1:1) */
+  }
 }
 
 /* The small "Examples" tag next to a box title. It says the people and
@@ -6195,6 +6256,1032 @@ html:has(.about-site) {
 
   :root:not([data-reduce-motion="on"]) .settings-slider::-moz-range-thumb {
     transition: box-shadow var(--time-hover) var(--ease-out);
+  }
+}
+
+/* ---------- Discovery page ---------- */
+/* Everything below styles the Discovery page (Discovery.jsx, yoursite.com/discovery).
+   Every class name starts with "discovery-" so it can't clash with other pages.
+   The layout copies the Feed page's sizes and spacing on purpose, so the two
+   pages feel like the same site. */
+
+/* The whole page: the same grid as .feed-page. The title and tabs stretch
+   across the top, then the list on the left and the side column on the right */
+.discovery-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;  /* right column 340px; the list gets the rest.
+                                                   minmax(0, ...) lets it shrink, so a long word
+                                                   can't push it wider */
+  column-gap: 32px;                             /* space between the 2 columns */
+  row-gap: 24px;                                /* space between the rows (title, tabs, columns) */
+  align-items: start;                           /* each column is only as tall as its own boxes */
+  max-width: 1240px;                            /* never wider than 1240px (same as Feed) */
+  margin: 0 auto;                               /* centers the page on the screen */
+  padding: 40px 24px 64px;                      /* space inside the edges: top, left/right, bottom */
+  overflow-wrap: break-word;                    /* a very long word breaks instead of spilling off */
+}
+
+/* ---------- Discovery page: title and search ---------- */
+
+/* The dark box at the top: the title, one sentence, and the search bar.
+   It stretches across both columns */
+.discovery-header {
+  grid-column: 1 / -1;                   /* from the first column to the last */
+  position: relative;                    /* lets the faint circle (below) be placed inside this box */
+  overflow: hidden;                      /* cuts off the part of the circle that sticks out */
+  padding: 44px 48px;                    /* space inside: top/bottom, left/right */
+  border-radius: 16px;                   /* rounded corners, the same as every other big box on the site */
+  background-color: var(--strong-fill);  /* the darkest navy (even darker in dark mode) */
+  color: var(--on-primary);              /* white words (12.9:1, WCAG) */
+}
+
+/* The faint circle outline in the top right corner. It's only decoration,
+   so it's drawn with ::after instead of a real element */
+.discovery-header::after {
+  content: "";                           /* ::after needs this to show up at all */
+  position: absolute;                    /* placed by the numbers below, not in the normal flow */
+  top: -300px;                           /* starts above the box, so only the bottom of the circle shows */
+  right: 6%;                             /* a little in from the right edge */
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;                    /* turns the square into a circle */
+  border: 1px solid color-mix(in srgb, var(--on-primary) 15%, transparent); /* faint see-through white line */
+  pointer-events: none;                  /* the mouse goes straight through it */
+}
+
+/* Everything inside the box sits above the circle, so its line never
+   crosses over the words */
+.discovery-header > * {
+  position: relative;                    /* needed for z-index to work */
+  z-index: 1;                            /* one layer above the circle */
+}
+
+/* "Find a place to put your skills to work." */
+.discovery-title {
+  font-size: clamp(32px, 4.2vw, 52px);   /* big text that shrinks on phones, never below 32px */
+  font-weight: 800;                      /* extra bold */
+  line-height: 1.05;                     /* lines close together */
+  letter-spacing: -0.03em;               /* letters slightly tighter, which big text needs */
+  text-wrap: balance;                    /* if it wraps, both lines are about the same length */
+}
+
+/* "skills to work." in sky blue */
+.discovery-title-blue {
+  color: var(--discovery-highlight);     /* sky blue (9:1 on the navy box, WCAG) */
+}
+
+/* The sentence under the title. Slightly softer white, so the title reads
+   first (still about 10:1, WCAG) */
+.discovery-subtitle {
+  margin-top: 12px;                      /* space between the title and this */
+  font-size: 18px;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--on-primary) 82%, transparent); /* white, a little see-through */
+  max-width: 60ch;                       /* stops the line getting too long to read */
+}
+
+/* The search bar: a light pill with the magnifying glass and the typing box */
+.discovery-search {
+  display: flex;
+  align-items: center;                   /* lines the icon and words up in the middle */
+  gap: 10px;                             /* space between the icon and the typing box */
+  max-width: 560px;                      /* never wider than 560px */
+  margin-top: 24px;                      /* space above it */
+  padding: 0 20px;                       /* space on the left and right */
+  border-radius: 999px;                  /* fully round ends */
+  background-color: var(--card);         /* the light box color */
+}
+
+/* The magnifying glass */
+.discovery-search-icon {
+  flex-shrink: 0;                        /* never gets squished */
+  color: var(--subtle);                  /* soft blue */
+}
+
+/* The typing box */
+.discovery-search-input {
+  flex: 1;                               /* fills the rest of the bar */
+  min-width: 0;                          /* lets it shrink on small screens */
+  padding: 13px 0;                       /* space above and below the words (makes the bar 48px tall) */
+  background-color: transparent;         /* no box of its own; the search bar is the box */
+  font-size: 16px;                       /* 16px or more stops iPhones from zooming in when you tap it */
+  color: var(--text);                    /* navy words (13:1, WCAG) */
+}
+
+/* The example words before you type */
+.discovery-search-input::placeholder {
+  color: var(--subtle);                  /* soft blue (6:1 on the box, WCAG) */
+}
+
+/* When you're typing, the WHOLE search bar gets the outline instead of
+   just the typing box inside it, so it's easy to see on the navy (WCAG) */
+.discovery-search-input:focus {
+  outline: none;                         /* hide the typing box's own outline... */
+}
+.discovery-search:has(.discovery-search-input:focus-visible) {
+  outline: 3px solid var(--discovery-highlight); /* ...and draw a sky-blue one around the whole bar */
+  outline-offset: 3px;
+}
+
+/* ---------- Discovery page: tabs ---------- */
+/* The same look as Feed's "For you / Following" tabs */
+
+/* The row of tabs, with a thin line along the bottom */
+.discovery-tabs {
+  grid-column: 1 / -1;                   /* from the first column to the last */
+  position: relative;                    /* the sliding blue line (below) is placed inside this row */
+  display: flex;                         /* side by side */
+  gap: 28px;                             /* space between the tabs */
+  overflow-x: auto;                      /* on small screens the row scrolls sideways
+                                            instead of pushing the page wider */
+  padding: 4px 4px 0;                    /* a little room so the keyboard outline isn't cut off... */
+  margin: 0 -4px;                        /* ...and this pulls the row back so the words still line up */
+  box-shadow: inset 0 -1px 0 var(--line); /* the thin line along the bottom (a shadow, so the
+                                             picked tab's blue line can sit on top of it) */
+  scrollbar-width: none;                 /* hides the scrollbar (you can still swipe or use Tab) */
+}
+
+/* One tab */
+.discovery-tab {
+  padding: 12px 2px;                     /* space above and below the word */
+  border-bottom: 3px solid transparent;  /* an invisible line, so every tab is as tall as the picked one */
+  font-weight: 600;                      /* semi-bold */
+  color: var(--subtle);                  /* soft blue (5.3:1 on the page, WCAG) */
+  white-space: nowrap;                   /* "Part-time" never splits onto 2 lines */
+  cursor: pointer;
+}
+
+/* The picked tab: navy words. The blue line under it is a separate element
+   (below), so it's not only a color change (WCAG) */
+.discovery-tab-picked {
+  color: var(--text);                    /* deep navy */
+}
+
+/* The blue line under the picked tab. There's only one, and Discovery.jsx
+   moves it under whichever tab is picked. It's 1px wide here; the code
+   stretches it to the tab's width with scaleX */
+.discovery-tab-line {
+  position: absolute;                    /* placed inside the row, not in the normal flow */
+  bottom: 0;                             /* along the bottom of the row */
+  left: 0;                               /* starts at the left edge; the code moves it right */
+  width: 1px;
+  height: 3px;                           /* the same thickness as Feed's tab line */
+  background-color: var(--primary);      /* the main blue */
+  transform-origin: left;                /* stretches to the right from its left edge */
+  pointer-events: none;                  /* clicks go straight through it */
+}
+
+/* Windows High Contrast mode removes background colors, which would hide
+   the line. So there, the picked tab gets an underline border instead (WCAG) */
+@media (forced-colors: active) {
+  .discovery-tab-line {
+    display: none;
+  }
+  .discovery-tab-picked {
+    border-bottom-color: CanvasText;     /* the high contrast text color */
+  }
+}
+
+/* Mouse hover on the other tabs: navy words */
+@media (hover: hover) and (pointer: fine) {
+  .discovery-tab:hover {
+    color: var(--text);
+  }
+}
+
+/* ---------- Discovery page: the list ---------- */
+
+/* The small row above the list: the count on the left, Sort on the right */
+.discovery-results-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;        /* count left, Sort right */
+  gap: 12px;
+  margin-bottom: 16px;                   /* space before the first opportunity */
+}
+
+/* "5 opportunities" */
+.discovery-results-count {
+  font-size: 15px;
+  font-weight: 600;                      /* semi-bold */
+  color: var(--muted);                   /* blue (7.3:1 on the page, WCAG) */
+  font-variant-numeric: tabular-nums;    /* the number doesn't wiggle when it changes */
+}
+
+/* "Sort by" + the dropdown */
+.discovery-sort {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* The dropdown, pill-shaped like the site's other buttons */
+.discovery-sort-select {
+  min-height: 40px;                      /* easy to tap */
+  padding: 0 14px;                       /* space on the left and right */
+  border: 1px solid var(--border);       /* blue edge (4.1:1, WCAG) */
+  border-radius: 999px;                  /* fully round ends */
+  background-color: var(--card);         /* the light box color */
+  color: var(--text);                    /* navy */
+  font-size: 14px;
+  font-weight: 600;                      /* semi-bold */
+  cursor: pointer;
+}
+
+/* The list of opportunity boxes, stacked */
+.discovery-opportunities {
+  display: flex;
+  flex-direction: column;                /* top to bottom */
+  gap: 20px;                             /* space between boxes */
+}
+
+/* One opportunity box (same look as a Feed post) */
+.discovery-opportunity {
+  overflow: hidden;                      /* keeps the blue strip inside the rounded corners */
+  background-color: var(--card);         /* the light box color */
+  border: 1px solid var(--line);         /* thin line around it */
+  border-radius: 16px;                   /* rounded corners */
+}
+
+/* The blue strip across the top: "Best match for you" or the type, like
+   the "UPDATE" strip on Feed's posts */
+.discovery-strip {
+  padding: 10px 24px;                    /* space inside: top/bottom, left/right */
+  background-color: var(--primary);      /* the main blue */
+  color: var(--on-primary);              /* white words (6.2:1, WCAG) */
+  font-size: 13px;
+  font-weight: 700;                      /* bold */
+  letter-spacing: 0.04em;                /* letters a little apart, so the small words are easy to read */
+}
+
+/* The inside of the box, laid out on a grid:
+     row 1:  logo | title + facts | match %
+     after:  the rest (description, tags, footer) under the title */
+.discovery-opportunity-body {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) auto; /* logo 48px | words get the rest | match its own size */
+  gap: 14px 16px;                        /* space between rows / between columns */
+  padding: 20px 24px;                    /* space inside */
+}
+
+/* Everything after row 1 starts under the title, not under the logo */
+.discovery-opportunity-wide {
+  grid-column: 2 / -1;                   /* from column 2 to the last column */
+}
+
+/* The round badge with the company's initials (same size as Feed's avatars) */
+.discovery-logo {
+  display: grid;
+  place-items: center;                   /* centers the letters */
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;                   /* a rounded square, so it reads as a company, not a person */
+  background-color: var(--primary);      /* the main blue */
+  color: var(--on-primary);              /* white letters (6.2:1, WCAG) */
+  font-size: 16px;
+  font-weight: 800;                      /* extra bold */
+}
+
+/* "Front-End Developer Co-op" */
+.discovery-opportunity-title {
+  font-size: 20px;
+  font-weight: 700;                      /* bold */
+  line-height: 1.25;
+  color: var(--text);                    /* navy */
+}
+
+/* "Brightloop Learning · Remote · Jan–Jun 2027" */
+.discovery-opportunity-facts {
+  margin-top: 4px;
+  font-size: 14px;
+  color: var(--subtle);                  /* soft blue (6:1, WCAG) */
+}
+
+/* "92% match" on the right */
+.discovery-match {
+  display: flex;
+  flex-direction: column;                /* number on top, "match" under it */
+  align-items: flex-end;                 /* both lined up on the right */
+}
+
+/* "92%" */
+.discovery-match-number {
+  font-size: 22px;
+  font-weight: 800;                      /* extra bold */
+  line-height: 1;
+  color: var(--primary-text);            /* the main blue as a word color (5.5:1, WCAG) */
+  font-variant-numeric: tabular-nums;    /* every digit the same width */
+}
+
+/* "match" under the number */
+.discovery-match-label {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--subtle);                  /* soft blue */
+}
+
+/* The description paragraph */
+.discovery-opportunity-description {
+  max-width: 70ch;                       /* lines no longer than about 70 letters */
+  font-size: 16px;
+  line-height: 1.6;                      /* comfy space between lines */
+  color: var(--muted);                   /* blue paragraph color (8.9:1, WCAG) */
+}
+
+/* The row of skill tags */
+.discovery-tags {
+  display: flex;
+  flex-wrap: wrap;                       /* tags wrap onto a new line if they don't fit */
+  gap: 8px;                              /* space between tags */
+}
+
+/* One skill tag */
+.discovery-tag {
+  padding: 4px 12px;                     /* space inside: top/bottom, left/right */
+  border-radius: 999px;                  /* pill shape */
+  background-color: var(--soft);         /* very light blue */
+  font-size: 13px;
+  color: var(--muted);                   /* blue words */
+}
+
+/* The bottom of the box: a line, then "Apply by" on the left and the buttons on the right */
+.discovery-opportunity-footer {
+  padding-top: 14px;
+  border-top: 1px solid var(--line);     /* the thin line above it */
+}
+
+/* The row inside the footer */
+.discovery-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;        /* "Apply by" left, buttons right */
+  flex-wrap: wrap;                       /* buttons drop under "Apply by" if there isn't room */
+  gap: 12px 16px;
+}
+
+/* "Apply by Nov 20" with the calendar icon */
+.discovery-apply-by {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--subtle);                  /* soft blue (6:1, WCAG) */
+}
+
+/* The Save and View buttons, side by side */
+.discovery-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Shared shape for all Discovery buttons: pills, like the buttons on the
+   Network and Profile pages */
+.discovery-outline-button,
+.discovery-solid-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;                              /* space between the icon and the words */
+  min-height: 40px;                      /* easy to tap */
+  padding: 0 16px;                       /* space on the left and right */
+  border-radius: 999px;                  /* fully round ends */
+  font-size: 14px;
+  font-weight: 700;                      /* bold */
+  cursor: pointer;
+}
+
+/* Light button with a blue edge (Save, Show all opportunities) */
+.discovery-outline-button {
+  border: 1px solid var(--border);       /* blue edge (4.1:1, WCAG) */
+  background-color: var(--card);         /* the light box color */
+  color: var(--text);                    /* navy words */
+}
+
+/* Save after it's pressed: light blue fill, blue edge, and a filled-in
+   bookmark, so "saved" doesn't rely on color alone (WCAG) */
+.discovery-outline-button[aria-pressed="true"] {
+  border-color: var(--primary);
+  background-color: var(--accent-soft);
+}
+.discovery-outline-button[aria-pressed="true"] svg {
+  fill: currentColor;                    /* fills the bookmark in with the word color */
+}
+
+/* Solid blue button (View opportunity) */
+.discovery-solid-button {
+  border: 1px solid transparent;         /* keeps an edge in Windows High Contrast mode */
+  background-color: var(--primary);      /* the main blue */
+  color: var(--on-primary);              /* white words (6.2:1, WCAG) */
+}
+
+/* Mouse hover for both buttons */
+@media (hover: hover) and (pointer: fine) {
+  .discovery-outline-button:hover {
+    background-color: var(--soft);       /* very light blue */
+  }
+  .discovery-outline-button[aria-pressed="true"]:hover {
+    background-color: var(--accent-soft); /* a saved button keeps its light blue */
+  }
+  .discovery-solid-button:hover {
+    background-color: var(--primary-dark); /* darker blue */
+  }
+}
+
+/* The message under a box's buttons ("Saved.", or the View message) */
+.discovery-card-message {
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* Empty messages take up no space */
+.discovery-card-message:empty {
+  margin-top: 0;
+}
+
+/* Shown when the search and tab hide every opportunity */
+.discovery-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;                   /* everything centered */
+  gap: 12px;
+  padding: 40px 24px;
+  border: 1px dashed var(--border);      /* dashed edge: "there's nothing here right now" */
+  border-radius: 16px;
+  background-color: var(--card);
+  text-align: center;
+}
+
+/* "No opportunities match" */
+.discovery-empty-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* The sentence under it */
+.discovery-empty-text {
+  max-width: 44ch;
+  font-size: 15px;
+  color: var(--muted);
+}
+
+/* ---------- Discovery page: right column ---------- */
+
+/* The right column stacks its boxes top to bottom (same as Feed's) */
+.discovery-side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* "My applications": the blue box at the top, like Feed's date box */
+.discovery-tracker-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;        /* words left, arrow right */
+  gap: 16px;
+  padding: 22px 26px;                    /* space inside (same as Feed's date box) */
+  border-radius: 16px;                   /* rounded corners */
+  background-color: var(--accent);       /* the accent blue, like Feed's date box */
+  color: var(--accent-text);             /* white words (7.6:1 light / 5.3:1 dark, WCAG) */
+}
+
+/* The two lines of words inside it, stacked */
+.discovery-tracker-words {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* "My applications" */
+.discovery-tracker-title {
+  font-size: 20px;
+  font-weight: 800;                      /* extra bold, like "November 5" on Feed */
+}
+
+/* "Track everything you've applied to" */
+.discovery-tracker-text {
+  font-size: 14px;
+  color: color-mix(in srgb, var(--accent-text) 88%, transparent); /* soft white (about 6:1, WCAG) */
+}
+
+/* Darker blue on hover */
+@media (hover: hover) and (pointer: fine) {
+  .discovery-tracker-link:hover {
+    background-color: var(--accent-hover);
+  }
+}
+
+/* The light boxes in the right column (same look as Feed's side boxes) */
+.discovery-side-card {
+  padding: 24px 24px 12px;               /* space inside: top, left/right, bottom */
+  border: 1px solid var(--line);         /* thin line around it */
+  border-radius: 16px;                   /* rounded corners */
+  background-color: var(--card);         /* the light box color */
+}
+
+/* "Profile boost" */
+.discovery-side-title {
+  font-size: 20px;
+  font-weight: 700;                      /* bold */
+  color: var(--text);                    /* navy */
+}
+
+/* The words in a side box */
+.discovery-side-text {
+  margin-top: 8px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--muted);                   /* blue paragraph color */
+}
+
+/* Blue links with an arrow, like "Add a skill" */
+.discovery-text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;                              /* space between the words and the arrow */
+  min-height: 44px;                      /* easy to tap */
+  font-size: 15px;
+  font-weight: 700;                      /* bold */
+  color: var(--link);                    /* blue link color (7.8:1 on boxes, WCAG) */
+  text-underline-offset: 4px;            /* the hover underline sits a little below the letters */
+}
+
+/* Underline on hover, so the change isn't only a color change (WCAG) */
+@media (hover: hover) and (pointer: fine) {
+  .discovery-text-link:hover {
+    text-decoration: underline;
+  }
+}
+
+/* ---------- Discovery page: the "View opportunity" pop-up ----------
+   A <dialog>: the browser's own pop-up. The browser shows it in the middle
+   of the screen, above everything else, when the code calls showModal(). */
+
+/* Stops the page behind from scrolling while a pop-up is open.
+   ":has(dialog[open])" means "the page, while it has an open pop-up" */
+html:has(.discovery-dialog[open]) {
+  overflow: hidden;
+}
+
+/* The pop-up box. It has no padding of its own (so a click on it, and not on
+   something inside it, means the dark area around it was clicked) */
+.discovery-dialog {
+  width: min(680px, calc(100vw - 32px));  /* 680px wide, or the screen minus 16px each side on phones */
+  max-height: calc(100dvh - 48px);        /* never taller than the screen (dvh = the real phone screen height) */
+  margin: auto;                           /* centered on the screen */
+  padding: 0;
+  border: none;
+  border-radius: 16px;                    /* same corners as the boxes on the page */
+  background-color: var(--card);          /* the light box color */
+  color: var(--text);                     /* navy words */
+  overflow: hidden;                       /* keeps the dark top inside the rounded corners */
+  box-shadow: 0 24px 64px -24px color-mix(in srgb, var(--shadow-color) 50%, transparent); /* a soft shadow, so it floats */
+}
+
+/* While it's open: top, middle, and bottom stacked, and only the middle scrolls.
+   (Only while open, because display on a closed dialog would show it) */
+.discovery-dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+/* The dark see-through layer behind the pop-up that dims the page.
+   (::backdrop is drawn by the browser; it can't always read our color
+   variables, so the navy is written out: the same as --shadow-color) */
+.discovery-dialog::backdrop {
+  background-color: rgb(15 42 68 / 0.55);
+}
+
+/* The dark band at the top: logo | title | close button */
+.discovery-dialog-top {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto; /* logo | words get the rest | X */
+  align-items: start;
+  gap: 16px;
+  padding: 24px 24px 22px 28px;           /* space inside: top, right, bottom, left */
+  background-color: var(--strong-fill);   /* the same dark navy as the page's top box */
+  color: var(--on-primary);               /* white words (12.9:1, WCAG) */
+}
+
+/* "Co-op" above the title */
+.discovery-dialog-type {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--discovery-highlight);      /* sky blue (9:1 on the navy, WCAG) */
+}
+
+/* The job title in the pop-up */
+.discovery-dialog-title {
+  margin-top: 2px;
+  font-size: 24px;
+  font-weight: 800;                       /* extra bold */
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+/* "Brightloop Learning · Remote" */
+.discovery-dialog-facts {
+  margin-top: 4px;
+  font-size: 15px;
+  color: color-mix(in srgb, var(--on-primary) 82%, transparent); /* soft white (about 10:1) */
+}
+
+/* The X button in the top right */
+.discovery-dialog-close {
+  display: grid;
+  place-items: center;                    /* centers the X */
+  width: 44px;                            /* easy to tap */
+  height: 44px;
+  border-radius: 999px;                   /* a circle */
+  color: var(--on-primary);               /* white X */
+  cursor: pointer;
+}
+
+/* A see-through white circle behind the X when the mouse is over it */
+@media (hover: hover) and (pointer: fine) {
+  .discovery-dialog-close:hover {
+    background-color: color-mix(in srgb, var(--on-primary) 12%, transparent);
+  }
+}
+
+/* Keyboard outline for the X, sky blue so it shows on the navy (WCAG) */
+.discovery-dialog-close:focus-visible {
+  outline: 2px solid var(--discovery-highlight);
+  outline-offset: 2px;
+}
+
+/* The middle part: scrolls if the details are longer than the screen */
+.discovery-dialog-body {
+  flex: 1;                                /* takes the space between the top and bottom */
+  overflow-y: auto;                       /* scrolls up and down when needed */
+  padding: 24px 28px 28px;                /* space inside */
+  overscroll-behavior: contain;           /* scrolling to the end doesn't start scrolling the page */
+}
+
+/* The quick facts: small boxes in a grid (Pay, When, Hours, Apply by).
+   4 in a row on big screens, 2 by 2 on phones */
+.discovery-dialog-facts-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr)); /* 4 equal columns */
+  gap: 10px;
+}
+
+/* "92% match" in the dark band, in sky blue so it stands out */
+.discovery-dialog-match {
+  font-weight: 700;                       /* bold */
+  color: var(--discovery-highlight);      /* sky blue (9:1 on the navy, WCAG) */
+}
+
+/* One fact box */
+.discovery-dialog-facts-grid > div {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background-color: var(--soft);          /* very light blue */
+}
+
+/* The label in a fact box ("Pay") */
+.discovery-dialog-facts-grid dt {
+  font-size: 13px;
+  color: var(--subtle);                   /* soft blue (WCAG) */
+}
+
+/* The value in a fact box ("$27–30/hr") */
+.discovery-dialog-facts-grid dd {
+  margin-top: 2px;
+  font-size: 15px;
+  font-weight: 700;                       /* bold */
+  color: var(--text);                     /* navy */
+}
+
+/* Section titles in the pop-up ("About the role", "What you'll do", ...) */
+.discovery-dialog-heading {
+  margin: 24px 0 8px;                     /* more space above than below, so it belongs to what follows */
+  font-size: 17px;
+  font-weight: 700;                       /* bold */
+  color: var(--text);                     /* navy */
+}
+
+/* Paragraphs in the pop-up */
+.discovery-dialog-text {
+  max-width: 65ch;                        /* lines no longer than about 65 letters */
+  font-size: 16px;
+  line-height: 1.6;                       /* comfy space between lines */
+  color: var(--muted);                    /* blue paragraph color (8.9:1, WCAG) */
+}
+
+/* The bullet lists ("What you'll do", "What they're looking for") */
+.discovery-dialog-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;                               /* space between items */
+  padding-left: 20px;                     /* room for the bullets */
+  list-style: disc;                       /* round bullets (Tailwind turns them off by default) */
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--muted);                    /* blue paragraph color */
+}
+
+/* The bullets themselves, in the main blue */
+.discovery-dialog-list li::marker {
+  color: var(--primary);
+}
+
+/* The bottom: a message on the left, Save and Apply on the right. It stays
+   in place while the middle scrolls */
+.discovery-dialog-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;         /* message left, buttons right */
+  flex-wrap: wrap;                        /* the buttons drop under the message on small phones */
+  gap: 12px;
+  padding: 16px 28px;                     /* space inside */
+  border-top: 1px solid var(--line);      /* a thin line above it */
+}
+
+/* "Applying isn't built yet." */
+.discovery-dialog-message {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* Phones: less space inside, and Save and Apply share their row evenly */
+@media (max-width: 480px) {
+  .discovery-dialog-top {
+    padding: 18px 12px 18px 18px;
+    gap: 12px;
+  }
+  .discovery-dialog-title {
+    font-size: 20px;
+  }
+  .discovery-dialog-body {
+    padding: 18px;
+  }
+  .discovery-dialog-facts-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)); /* 2 by 2 */
+  }
+  .discovery-dialog-bottom {
+    padding: 14px 18px;
+  }
+}
+
+/* The pop-up's motion: it fades in and grows from 96% to full size, and the
+   dark layer fades in with it. Closing plays it backwards, a little faster.
+   @starting-style says where the opening starts from, and allow-discrete
+   lets the browser keep showing it until the closing finishes. */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-reduce-motion="on"]) .discovery-dialog {
+    opacity: 0;
+    transform: scale(0.96);
+    transition:
+      opacity 150ms var(--ease-out),
+      transform 150ms var(--ease-out),
+      overlay 150ms allow-discrete,
+      display 150ms allow-discrete;
+  }
+  :root:not([data-reduce-motion="on"]) .discovery-dialog[open] {
+    opacity: 1;
+    transform: none;
+    transition-duration: 220ms;           /* opening is a touch slower than closing */
+  }
+  @starting-style {
+    :root:not([data-reduce-motion="on"]) .discovery-dialog[open] {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+  }
+
+  :root:not([data-reduce-motion="on"]) .discovery-dialog::backdrop {
+    opacity: 0;
+    transition:
+      opacity 220ms ease,
+      overlay 220ms allow-discrete,
+      display 220ms allow-discrete;
+  }
+  :root:not([data-reduce-motion="on"]) .discovery-dialog[open]::backdrop {
+    opacity: 1;
+  }
+  @starting-style {
+    :root:not([data-reduce-motion="on"]) .discovery-dialog[open]::backdrop {
+      opacity: 0;
+    }
+  }
+}
+
+/* ---------- Discovery page: keyboard outlines ----------
+   Everything you can reach with Tab gets a clear outline (WCAG). The search
+   bar has its own, above. */
+.discovery-tab:focus-visible,
+.discovery-sort-select:focus-visible,
+.discovery-outline-button:focus-visible,
+.discovery-solid-button:focus-visible,
+.discovery-text-link:focus-visible,
+.discovery-tracker-link:focus-visible {
+  outline: 2px solid var(--focus-ring);  /* the site's blue focus outline */
+  outline-offset: 2px;                   /* a small gap between the thing and its outline */
+}
+
+/* ---------- Discovery page: motion ----------
+   Colors fade instead of snapping, buttons shrink a tiny bit while pressed,
+   and link arrows slide right a little on hover. Only when the computer
+   allows motion, and the Settings page's "Reduce motion" switch is off. */
+@media (prefers-reduced-motion: no-preference) {
+  .discovery-tab,
+  .discovery-outline-button,
+  .discovery-solid-button,
+  .discovery-tracker-link {
+    transition:
+      background-color var(--time-hover) ease,
+      border-color var(--time-hover) ease,
+      color var(--time-hover) ease,
+      transform var(--time-press) var(--ease-out);
+  }
+
+  /* 97% size while held down */
+  :root:not([data-reduce-motion="on"]) .discovery-outline-button:active,
+  :root:not([data-reduce-motion="on"]) .discovery-solid-button:active,
+  :root:not([data-reduce-motion="on"]) .discovery-tracker-link:active {
+    transform: scale(0.97);
+  }
+
+  /* The arrows get ready to slide... */
+  .discovery-text-link svg,
+  .discovery-tracker-link svg {
+    transition: transform var(--time-hover) var(--ease-out);
+  }
+}
+
+/* ...and slide 3px right on mouse hover */
+@media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
+  :root:not([data-reduce-motion="on"]) .discovery-text-link:hover svg,
+  :root:not([data-reduce-motion="on"]) .discovery-tracker-link:hover svg {
+    transform: translateX(3px);
+  }
+}
+
+/* ---------- Discovery page: the bigger moments ----------
+   Four pieces of motion that make the page feel alive, each with a job:
+     1. The blue tab line SLIDES to the tab you click (shows where you moved).
+     2. When the page opens, the dark box's words and the opportunity boxes
+        rise into place one after another, instead of all popping in at once.
+     3. The bookmark on Save gives a small pop when you save (confirms the click).
+     4. A soft shine sweeps across "Best match for you" once, a moment after
+        the page opens, so your eye lands on the best opportunity first.
+   All of it is off when the computer asks for less motion or the Settings
+   page's "Reduce motion" switch is on. */
+
+/* Rise into place: start 12px lower and see-through, end where it belongs */
+@keyframes discovery-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+/* The bookmark pop: starts a little small and grows back to normal size */
+@keyframes discovery-pop {
+  from {
+    transform: scale(0.8);
+  }
+}
+
+/* The shine: a soft white band moves from off the left edge to off the right edge */
+@keyframes discovery-shine {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* 1. The tab line slides (only its transform changes, so it stays smooth) */
+  :root:not([data-reduce-motion="on"]) .discovery-tab-line {
+    transition: transform var(--time-move) var(--ease-in-out);
+  }
+
+  /* 2. The dark box's title, sentence, and search bar rise in, 60ms apart.
+        "both" keeps them hidden during their wait, so they don't flash first */
+  :root:not([data-reduce-motion="on"]) .discovery-header > * {
+    animation: discovery-rise 400ms var(--ease-out) both;
+  }
+  :root:not([data-reduce-motion="on"]) .discovery-header > :nth-child(2) {
+    animation-delay: 60ms;
+  }
+  :root:not([data-reduce-motion="on"]) .discovery-header > :nth-child(3) {
+    animation-delay: 120ms;
+  }
+
+  /* 2. The opportunity boxes rise in after the box, 50ms apart. Picking a
+        tab brings in new boxes the same way, so they don't just appear */
+  :root:not([data-reduce-motion="on"]) .discovery-opportunity {
+    animation: discovery-rise var(--time-enter) var(--ease-out) both;
+    animation-delay: 150ms;
+  }
+  :root:not([data-reduce-motion="on"]) .discovery-opportunity:nth-child(2) {
+    animation-delay: 200ms;
+  }
+  :root:not([data-reduce-motion="on"]) .discovery-opportunity:nth-child(3) {
+    animation-delay: 250ms;
+  }
+  :root:not([data-reduce-motion="on"]) .discovery-opportunity:nth-child(n + 4) {
+    animation-delay: 300ms;              /* the rest are below the fold, so they don't wait longer */
+  }
+
+  /* 3. The bookmark pops when Save turns on */
+  :root:not([data-reduce-motion="on"]) .discovery-outline-button[aria-pressed="true"] svg {
+    animation: discovery-pop var(--time-enter) var(--ease-out);
+  }
+
+  /* 4. The shine on "Best match for you". The strip hides anything that
+        sticks out, so only the part over the strip shows */
+  .discovery-strip-best {
+    position: relative;                  /* the shine is placed inside the strip */
+    overflow: hidden;                    /* hides the shine when it's off the edges */
+  }
+  :root:not([data-reduce-motion="on"]) .discovery-strip-best::after {
+    content: "";                         /* ::after needs this to show up at all */
+    position: absolute;
+    inset: 0;                            /* covers the whole strip */
+    background: linear-gradient(
+      100deg,
+      transparent 30%,
+      color-mix(in srgb, var(--on-primary) 30%, transparent) 50%,
+      transparent 70%
+    );                                   /* a soft see-through white band in the middle */
+    transform: translateX(-100%);        /* starts off the left edge */
+    animation: discovery-shine 1100ms var(--ease-in-out) 700ms 1 forwards; /* once, after the boxes arrive */
+    pointer-events: none;
+  }
+}
+
+/* Reduced motion: no movement, but the boxes still fade in gently, so they
+   don't snap onto the page */
+@media (prefers-reduced-motion: reduce) {
+  @keyframes discovery-fade {
+    from {
+      opacity: 0;
+    }
+  }
+  .discovery-opportunity {
+    animation: discovery-fade 200ms ease both;
+  }
+}
+
+/* ---------- Discovery page: smaller screens ---------- */
+/* The same sizes Feed uses */
+
+/* Laptops and tablets: the right column gets a bit narrower */
+@media (max-width: 1100px) {
+  .discovery-page {
+    grid-template-columns: minmax(0, 1fr) 300px;
+    column-gap: 24px;
+  }
+}
+
+/* Phones and small tablets: everything stacks in one column, in the same
+   order as in Discovery.jsx, so the Tab key still goes top to bottom (WCAG) */
+@media (max-width: 760px) {
+  .discovery-page {
+    grid-template-columns: minmax(0, 1fr); /* one column */
+    row-gap: 20px;
+    padding: 24px 16px 48px;
+  }
+  .discovery-header {
+    padding: 28px 20px;                  /* less space inside the dark box */
+  }
+  .discovery-header::after {
+    display: none;                       /* hide the circle: on a narrow box it runs through the words */
+  }
+  .discovery-tabs {
+    gap: 20px;                           /* tabs a little closer together */
+  }
+  .discovery-opportunity-body {
+    padding: 18px;
+  }
+  .discovery-opportunity-wide {
+    grid-column: 1 / -1;                 /* the rest uses the full width, under the logo too */
+  }
+  .discovery-strip {
+    padding: 10px 18px;
+  }
+}
+
+/* Small phones: the Save and View buttons share their row evenly */
+@media (max-width: 480px) {
+  .discovery-actions {
+    width: 100%;                         /* the buttons take the whole row... */
+  }
+  .discovery-actions > * {
+    flex: 1;                             /* ...split evenly */
+    white-space: nowrap;                 /* the words stay on one line */
+  }
+  .discovery-solid-button svg {
+    display: none;                       /* no arrow on small phones, so "View opportunity" fits */
   }
 }
 
