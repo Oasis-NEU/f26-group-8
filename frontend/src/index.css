@@ -84,6 +84,8 @@
   --discovery-highlight: #9fd0f5; /* Discovery page: sky-blue words and outlines on the dark top box
                                      (about 9:1 on it in light mode, 12:1 in dark mode). Dark mode
                                      doesn't set its own, so it uses this one too */
+  --tracker-sent: #2f8a57;        /* Application tracker: the green "Submitted" dot (4:1 on boxes;
+                                     dots need 3:1, WCAG). The site has no other green */
   --signup-error: #9b1c1c;        /* red error messages under the boxes (7.2:1 on boxes) */
   --shadow-color: #0f2a44;        /* shadows under floating boxes (used see-through) */
 
@@ -131,6 +133,7 @@
   --primary-text: var(--link);
   --focus-ring: var(--link);
   --strong-fill: #0a121d;  /* darker than the page, for boxes with white words */
+  --tracker-sent: #5cc28a; /* Application tracker: the green "Submitted" dot (8:1 on boxes) */
   --signup-error: #f2a7a7; /* light red, so it's readable on dark boxes (7.7:1) */
   --shadow-color: #02060c; /* shadows are nearly black in the dark */
 
@@ -2111,6 +2114,100 @@ html:has(.about-site) {
   cursor: pointer;              /* the mouse turns into a pointing hand over it */
 }
 
+/* "Post update": a solid blue pill, pushed to the right end of the row, so
+   it's clearly the button that sends the post */
+.feed-composer-post {
+  margin-left: auto;                     /* pushes it to the right end of the row */
+  padding: 8px 16px;                     /* a little wider than the other button */
+  border-radius: 999px;                  /* pill shape */
+  background-color: var(--primary);      /* the main blue */
+  color: var(--on-primary);              /* white words and sparkle (6.2:1, WCAG) */
+}
+
+/* The chosen photo and its description box, under the typing box.
+   Lined up with the typing box, past your circle (48px circle + 14px gap) */
+.feed-composer-photo-area {
+  margin: 14px 0 0 62px;                 /* top, right, bottom, left */
+}
+
+/* The photo preview. "relative" lets the X sit in its corner */
+.feed-composer-photo {
+  position: relative;
+  width: fit-content;                    /* only as wide as the photo */
+}
+
+/* The photo itself: never too big, with rounded corners */
+.feed-composer-photo img {
+  display: block;
+  max-width: 100%;                       /* never wider than the post box */
+  max-height: 220px;                     /* never taller than 220px */
+  border-radius: 12px;                   /* rounded corners */
+  object-fit: cover;                     /* fills its space without stretching */
+}
+
+/* The X in the photo's top right corner */
+.feed-composer-photo-remove {
+  position: absolute;                    /* placed on top of the photo... */
+  top: 8px;                              /* ...8px from the top... */
+  right: 8px;                            /* ...and 8px from the right */
+  display: grid;
+  place-items: center;                   /* centers the X */
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;                  /* a circle */
+  background-color: var(--strong-fill);  /* the darkest navy, so it shows on any photo */
+  color: var(--on-primary);              /* white X */
+  cursor: pointer;
+}
+
+/* "Describe the photo (for people using screen readers)" */
+.feed-composer-alt-label {
+  display: block;
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 600;                      /* semi-bold */
+  color: var(--muted);                   /* blue (8.3:1, WCAG) */
+}
+
+/* The description box */
+.feed-composer-alt {
+  width: 100%;
+  margin-top: 6px;
+  padding: 10px 14px;                    /* space inside */
+  border: 1px solid var(--border);       /* blue edge (WCAG: input borders need 3:1) */
+  border-radius: 10px;                   /* rounded corners */
+  background-color: var(--soft);         /* very light blue, like the typing box */
+  font-size: 16px;                       /* 16px or more stops phones from zooming in */
+  color: var(--text);                    /* navy words */
+}
+
+/* The example words in the description box */
+.feed-composer-alt::placeholder {
+  color: var(--subtle);                  /* soft blue (WCAG) */
+}
+
+/* "Posted." or "Write something or add a photo first." under the buttons */
+.feed-composer-message {
+  margin: 8px 0 0 62px;                  /* lined up with the typing box */
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* Empty messages take up no space */
+.feed-composer-message:empty {
+  margin-top: 0;
+}
+
+/* A photo inside a post */
+.feed-post-photo {
+  display: block;
+  width: 100%;                           /* as wide as the post */
+  max-height: 460px;                     /* never taller than 460px */
+  margin: 4px 0 16px;                    /* space above and below */
+  border-radius: 12px;                   /* rounded corners */
+  object-fit: cover;                     /* fills its space without stretching */
+}
+
 /* ----- One post ----- */
 
 /* The box around each post */
@@ -2505,6 +2602,12 @@ html:has(.about-site) {
     color: var(--text);                 /* deep navy */
   }
 
+  /* "Post update" stays blue, just darker */
+  .feed-composer-post:hover {
+    background-color: var(--primary-dark);
+    color: var(--on-primary);
+  }
+
 }
 
 /* Mouse users: the eye button fills in light blue and its line gets darker
@@ -2719,7 +2822,9 @@ html:has(.about-site) {
 .feed-composer-button:focus-visible,
 .feed-post-actions button:focus-visible,
 .feed-profile-button:focus-visible,
-.feed-composer-input:focus-visible {
+.feed-composer-input:focus-visible,
+.feed-composer-alt:focus-visible,
+.feed-composer-photo-remove:focus-visible {
   outline: 2px solid var(--focus-ring);    /* blue outline (4.5:1 on the boxes; outlines need 3:1, WCAG) */
   outline-offset: 2px;                  /* a little gap between it and the outline */
 }
@@ -2896,7 +3001,9 @@ html:has(.about-site) {
   }
 
   /* The post box's buttons line up with the left edge instead of past the circle */
-  .feed-composer-buttons {
+  .feed-composer-buttons,
+  .feed-composer-photo-area,
+  .feed-composer-message {
     margin-left: 0;
   }
 
@@ -7282,6 +7389,407 @@ html:has(.discovery-dialog[open]) {
   }
   .discovery-solid-button svg {
     display: none;                       /* no arrow on small phones, so "View opportunity" fits */
+  }
+}
+
+/* ---------- Application tracker page ---------- */
+/* Everything below styles the Application tracker page (ApplicationTracker.jsx,
+   yoursite.com/applications). Every class name starts with "tracker-" so it
+   can't clash with other pages. */
+
+/* The whole page: centered, the same width as Feed and Discovery */
+.tracker-page {
+  max-width: 1240px;                     /* never wider than 1240px */
+  margin: 0 auto;                        /* centers the page on the screen */
+  padding: 32px 24px 64px;               /* space inside the edges: top, left/right, bottom */
+}
+
+/* ---------- Application tracker: the top ---------- */
+
+/* Back link on top, then the title on the left and the "active" box on the right */
+.tracker-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px; /* title gets the rest | box 360px */
+  grid-template-areas:
+    "back back"
+    "heading progress";                  /* names for the spots, used below */
+  gap: 16px 32px;                        /* space between rows / between columns */
+  align-items: end;                      /* the title and the box line up along the bottom */
+  margin-bottom: 28px;                   /* space above the board */
+}
+
+/* "← Back to opportunities" */
+.tracker-back-link {
+  grid-area: back;                       /* the top row */
+  justify-self: start;                   /* only as wide as its words */
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;                              /* space between the arrow and the words */
+  min-height: 44px;                      /* easy to tap */
+  font-size: 15px;
+  font-weight: 700;                      /* bold */
+  color: var(--link);                    /* blue link color (7.8:1 on boxes, WCAG) */
+  text-underline-offset: 4px;            /* the hover underline sits a little below the letters */
+}
+
+/* The title and the sentence */
+.tracker-heading {
+  grid-area: heading;
+}
+
+/* "Application tracker" (the same size as Feed's title) */
+.tracker-title {
+  font-size: clamp(36px, 5vw, 60px);     /* big text that shrinks on phones, never below 36px */
+  font-weight: 800;                      /* extra bold */
+  line-height: 1.05;                     /* lines close together */
+  letter-spacing: -0.03em;               /* letters slightly tighter, which big text needs */
+  color: var(--text);                    /* navy (10.4:1 on the page, WCAG) */
+}
+
+/* "Keep the opportunities you care about moving forward." */
+.tracker-subtitle {
+  margin-top: 12px;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--muted);                   /* blue (7.3:1 on the page, WCAG) */
+}
+
+/* The "active" box on the right */
+.tracker-progress {
+  grid-area: progress;
+  padding: 20px 22px;                    /* space inside */
+  border: 1px solid var(--line);         /* thin line around it */
+  border-radius: 16px;                   /* rounded corners */
+  background-color: var(--card);         /* the light box color */
+}
+
+/* "5 active" */
+.tracker-progress-count {
+  display: flex;
+  align-items: baseline;                 /* the big number and the word sit on the same line */
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);                    /* navy */
+}
+
+/* The big number */
+.tracker-progress-number {
+  font-size: 28px;
+  font-weight: 800;                      /* extra bold */
+  color: var(--primary-text);            /* the main blue as a word color (5.5:1, WCAG) */
+  font-variant-numeric: tabular-nums;    /* the number doesn't wiggle when it changes */
+}
+
+/* The progress bar. appearance: none turns off the browser's own look, so
+   the colors below can be used instead */
+.tracker-progress-bar {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 8px;
+  margin-top: 12px;
+  border: none;
+  border-radius: 999px;                  /* round ends */
+  background-color: var(--soft);         /* the empty part: very light blue */
+  overflow: hidden;                      /* keeps the filled part inside the round ends */
+}
+
+/* Chrome and Safari draw the bar with these two parts... */
+.tracker-progress-bar::-webkit-progress-bar {
+  background-color: var(--soft);         /* the empty part */
+}
+.tracker-progress-bar::-webkit-progress-value {
+  background-color: var(--primary);      /* the filled part: the main blue */
+  border-radius: 999px;
+}
+/* ...and Firefox uses this one for the filled part */
+.tracker-progress-bar::-moz-progress-bar {
+  background-color: var(--primary);
+  border-radius: 999px;
+}
+
+/* "2 of 5 submitted" */
+.tracker-progress-text {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--subtle);                  /* soft blue (6:1 on the box, WCAG) */
+}
+
+/* ---------- Application tracker: the board ---------- */
+
+/* The 3 columns side by side */
+.tracker-board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)); /* 3 equal columns */
+  gap: 20px;                             /* space between columns */
+  align-items: stretch;                  /* all 3 columns are as tall as the tallest */
+}
+
+/* One column. A see-through version of the box color, so the cards inside
+   (full box color) stand out from it */
+.tracker-column {
+  display: flex;
+  flex-direction: column;
+  min-height: 480px;                     /* tall enough to drop into, even when empty */
+  padding: 20px;                         /* space inside */
+  border: 1px solid var(--line);         /* thin line around it */
+  border-radius: 16px;                   /* rounded corners */
+  background-color: color-mix(in srgb, var(--card) 55%, transparent); /* lighter than the page, darker than the cards */
+}
+
+/* While a card is dragged over a column: a blue dashed edge and a light
+   blue fill, so you can see where it will land */
+.tracker-column-over {
+  border-style: dashed;
+  border-color: var(--primary);
+  background-color: color-mix(in srgb, var(--accent-soft) 70%, transparent);
+}
+
+/* The top of the column: dot + title on the left, count on the right */
+.tracker-column-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;        /* title left, count right */
+  gap: 12px;
+}
+
+/* "Saved", "Preparing", "Submitted" */
+.tracker-column-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;                             /* space between the dot and the word */
+  font-size: 20px;
+  font-weight: 700;                      /* bold */
+  color: var(--text);                    /* navy */
+}
+
+/* The small colored dot in front of each title */
+.tracker-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;                    /* a circle */
+  flex-shrink: 0;                        /* never gets squished */
+}
+.tracker-dot-saved {
+  background-color: var(--subtle);       /* soft blue: just saved */
+}
+.tracker-dot-preparing {
+  background-color: var(--primary);      /* the main blue: in progress */
+}
+.tracker-dot-submitted {
+  background-color: var(--tracker-sent); /* green: sent */
+}
+
+/* The small number bubble on the right */
+.tracker-count {
+  min-width: 30px;                       /* even "1" gets a round bubble */
+  padding: 3px 9px;
+  border-radius: 999px;                  /* round ends */
+  background-color: var(--soft);         /* very light blue */
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);                    /* navy */
+  text-align: center;
+  font-variant-numeric: tabular-nums;    /* the number doesn't wiggle when it changes */
+}
+
+/* "Interesting roles to revisit" under the title */
+.tracker-column-hint {
+  margin: 6px 0 16px 20px;               /* lines up with the title's word, not the dot */
+  font-size: 14px;
+  color: var(--subtle);                  /* soft blue (WCAG) */
+}
+
+/* The empty message: a dashed box with an icon and a sentence */
+.tracker-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;                   /* centered */
+  justify-content: center;
+  gap: 10px;
+  min-height: 160px;
+  padding: 24px;
+  border: 1px dashed var(--border);      /* dashed edge: "drop something here" */
+  border-radius: 12px;
+  font-size: 14px;
+  color: var(--subtle);                  /* soft blue (WCAG) */
+  text-align: center;
+}
+
+/* The list of cards in a column, stacked */
+.tracker-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;                             /* space between cards */
+}
+
+/* One card */
+.tracker-card {
+  padding: 16px;                         /* space inside */
+  border: 1px solid var(--line);         /* thin line around it */
+  border-radius: 12px;                   /* rounded corners (a little smaller than the column's) */
+  background-color: var(--card);         /* the light box color */
+  cursor: grab;                          /* an open hand: "you can pick this up" */
+}
+
+/* While the mouse is holding it: a closed hand */
+.tracker-card:active {
+  cursor: grabbing;
+}
+
+/* The card being dragged fades in its old spot, so the copy under the
+   mouse is the one you notice */
+.tracker-card-dragging {
+  opacity: 0.45;
+}
+
+/* Logo | title and company | grip dots */
+.tracker-card-top {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 12px;
+}
+
+/* The square with the company's initials */
+.tracker-logo {
+  display: grid;
+  place-items: center;                   /* centers the letters */
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;                   /* rounded corners */
+  background-color: var(--primary);      /* the main blue */
+  color: var(--on-primary);              /* white letters (6.2:1, WCAG) */
+  font-size: 14px;
+  font-weight: 800;
+}
+
+/* The job title on a card */
+.tracker-card-title {
+  font-size: 16px;
+  font-weight: 700;                      /* bold */
+  line-height: 1.3;
+  color: var(--text);                    /* navy */
+}
+
+/* The company under it */
+.tracker-card-org {
+  margin-top: 2px;
+  font-size: 14px;
+  color: var(--subtle);                  /* soft blue (6:1, WCAG) */
+}
+
+/* The six dots in the corner */
+.tracker-grip {
+  color: var(--subtle);                  /* soft blue */
+  padding-top: 2px;
+}
+
+/* The bottom of the card: the note on the left, "Move to" on the right */
+.tracker-card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);     /* a thin line above it */
+}
+
+/* "Apply by Nov 20" or "Application sent" */
+.tracker-card-note {
+  font-size: 13px;
+  color: var(--subtle);                  /* soft blue (WCAG) */
+}
+
+/* The small "Move to" menu */
+.tracker-move {
+  min-height: 32px;
+  padding: 0 8px;
+  border: 1px solid var(--border);       /* blue edge (4.1:1, WCAG) */
+  border-radius: 999px;                  /* pill shape */
+  background-color: var(--card);
+  color: var(--text);                    /* navy */
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Mouse hover: underline on the Back link, a blue edge on cards */
+@media (hover: hover) and (pointer: fine) {
+  .tracker-back-link:hover {
+    text-decoration: underline;
+  }
+  .tracker-card:hover {
+    border-color: var(--primary);
+  }
+}
+
+/* Keyboard outlines (WCAG) */
+.tracker-back-link:focus-visible,
+.tracker-move:focus-visible {
+  outline: 2px solid var(--focus-ring);  /* the site's blue focus outline */
+  outline-offset: 2px;
+}
+
+/* ---------- Application tracker: motion ----------
+   A card that lands in a new column grows in from 96% size with a fade, so
+   you can see where it went. Column colors fade instead of snapping. Only
+   when motion is allowed and the Settings page's "Reduce motion" switch is off. */
+@keyframes tracker-arrive {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-reduce-motion="on"]) .tracker-card {
+    animation: tracker-arrive var(--time-enter) var(--ease-out);
+    transition:
+      border-color var(--time-hover) ease,
+      opacity var(--time-hover) ease;
+  }
+  :root:not([data-reduce-motion="on"]) .tracker-column {
+    transition:
+      background-color var(--time-hover) ease,
+      border-color var(--time-hover) ease;
+  }
+}
+
+/* ---------- Application tracker: smaller screens ---------- */
+
+/* Tablets: the "active" box goes under the title */
+@media (max-width: 900px) {
+  .tracker-header {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "back"
+      "heading"
+      "progress";
+  }
+  .tracker-progress {
+    max-width: 420px;                    /* doesn't stretch all the way across */
+  }
+}
+
+/* Phones and small tablets: the columns stack. (Dragging doesn't work on
+   most phones, so the "Move to" menu is how cards move there) */
+@media (max-width: 760px) {
+  .tracker-page {
+    padding: 24px 16px 48px;
+  }
+  .tracker-board {
+    grid-template-columns: minmax(0, 1fr); /* one column */
+    gap: 16px;
+  }
+  .tracker-column {
+    min-height: 0;                       /* only as tall as what's in it */
+    padding: 16px;
+  }
+  .tracker-empty {
+    min-height: 120px;
   }
 }
 

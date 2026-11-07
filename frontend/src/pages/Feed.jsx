@@ -8,7 +8,9 @@
 
 // useState lets the page remember a value and redraw itself when it changes.
 // useEffect runs some code after the page shows up on screen.
-import { useEffect, useState } from "react";
+// useRef keeps a reference to something on the screen (here: the hidden
+// file picker), so the code can click it for you.
+import { useEffect, useRef, useState } from "react";
 import NavBar from "../components/NavBar.jsx";
 // Link makes a clickable link to another page of our site.
 import { Link } from "react-router";
@@ -189,6 +191,24 @@ function SparkleIcon() {
   );
 }
 
+// An X, for the button that removes the photo from the post box
+function XIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      aria-hidden="true"
+    >
+      <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  );
+}
+
 // A calendar: a box with two rings on top and a line across
 function CalendarIcon() {
   return (
@@ -339,10 +359,86 @@ function FeedTabs(props) {
 }
 
 // The "Share something you're working on" box at the top of the posts.
-// It's only for looks right now: typing and clicking don't post anything yet.
-function PostComposer() {
+// Type something (and/or add a photo), press "Post update", and it shows up
+// as your own post at the top of the feed.
+// props.onPost is a function from Feed (below): the box calls it with the new post.
+function PostComposer(props) {
+  // What's typed in the box. Starts empty.
+  const [text, setText] = useState("");
+  // The chosen photo, as a web address the browser made for it (or null if none)
+  const [photo, setPhoto] = useState(null);
+  // The photo's description for screen readers (alt text)
+  const [photoAlt, setPhotoAlt] = useState("");
+  // A short message under the buttons, like "Posted."
+  const [message, setMessage] = useState("");
+  // A reference to the hidden file picker, so "Add photo" can open it
+  const fileRef = useRef(null);
+  // A reference to the typing box, so we can put the cursor back in it
+  const textRef = useRef(null);
+
+  // Runs after you pick a photo in the file picker
+  function choosePhoto(event) {
+    // files is the list of chosen files; [0] is the first (and only) one
+    const file = event.target.files[0];
+    if (file) {
+      // createObjectURL gives the photo a temporary web address, so an <img>
+      // can show it. It only works in this browser tab (nothing is uploaded).
+      setPhoto(URL.createObjectURL(file));
+      setMessage("");
+    }
+    // Clears the picker, so choosing the same photo again still works
+    event.target.value = "";
+  }
+
+  // Runs when you press the X on the photo
+  function removePhoto() {
+    // Frees the temporary web address, since the photo isn't needed anymore
+    URL.revokeObjectURL(photo);
+    setPhoto(null);
+    setPhotoAlt("");
+  }
+
+  // Runs when you press "Post update" (or Enter in the typing box)
+  function handlePost(event) {
+    // A form normally reloads the whole page when it's sent. This stops that.
+    event.preventDefault();
+    // trim() removes spaces at the start and end, so "   " counts as empty
+    const words = text.trim();
+    // Nothing to post: say so, and put the cursor in the box
+    if (words === "" && photo === null) {
+      setMessage("Write something or add a photo first.");
+      textRef.current.focus();
+      return;
+    }
+    // Hand the new post to Feed (below), which puts it at the top of the list
+    props.onPost({
+      // Date.now() is the time in milliseconds, so every post gets a different id
+      id: Date.now(),
+      author: "Roemer Mallari",
+      initials: "RMV",
+      headline: "Computer Science & Business Administration @ Northeastern University",
+      time: "Just now",
+      kind: "Update",
+      color: "blue",
+      title: "",
+      text: words,
+      photo: photo,
+      // If no description was written, use a plain one so the photo still has alt text (WCAG)
+      photoAlt: photoAlt.trim() || "Photo shared by Roemer Mallari",
+      following: false,
+      likes: 0,
+      comments: 0,
+    });
+    // Empty the box for the next post, and say it worked
+    setText("");
+    setPhoto(null);
+    setPhotoAlt("");
+    setMessage("Posted.");
+  }
+
   return (
-    <div className="feed-composer">
+    // A <form>, so pressing Enter in the typing box posts too
+    <form className="feed-composer" onSubmit={handlePost}>
       {/* Top row: your circle next to the typing box */}
       <div className="feed-composer-top">
         <div className="feed-post-avatar" aria-hidden="true">
@@ -356,25 +452,66 @@ function PostComposer() {
         <label htmlFor="feed-composer" className="sr-only">
           Share something you're working on
         </label>
-        {/* placeholder is the hint text that shows while the box is empty */}
+        {/* placeholder is the hint text that shows while the box is empty.
+            value + onChange: the box shows "text", and every key press saves
+            the new words into "text" */}
         <input
           id="feed-composer"
+          ref={textRef}
           className="feed-composer-input"
           placeholder="What are you working on?"
+          value={text}
+          onChange={(event) => setText(event.target.value)}
         />
       </div>
-      {/* The two buttons under the typing box. They don't do anything yet */}
+
+      {/* The chosen photo, only once there is one ("&&" means "only if") */}
+      {photo && (
+        <div className="feed-composer-photo-area">
+          <div className="feed-composer-photo">
+            {/* alt="" because the description box right under it says what it is */}
+            <img src={photo} alt="" />
+            {/* The X in the corner removes the photo. aria-label says what it does (WCAG) */}
+            <button type="button" className="feed-composer-photo-remove" aria-label="Remove photo" onClick={removePhoto}>
+              <XIcon />
+            </button>
+          </div>
+          {/* A description of the photo for people using screen readers (alt text, WCAG) */}
+          <label htmlFor="feed-photo-alt" className="feed-composer-alt-label">
+            Describe the photo (for people using screen readers)
+          </label>
+          <input
+            id="feed-photo-alt"
+            className="feed-composer-alt"
+            placeholder="For example: our team at the Oasis demo night"
+            value={photoAlt}
+            onChange={(event) => setPhotoAlt(event.target.value)}
+          />
+        </div>
+      )}
+
+      {/* The buttons under the typing box */}
       <div className="feed-composer-buttons">
-        <button className="feed-composer-button">
+        {/* The real file picker is hidden (it can't be styled), and "Add photo"
+            clicks it for you. accept="image/*" only allows pictures */}
+        <input ref={fileRef} type="file" accept="image/*" hidden onChange={choosePhoto} />
+        <button type="button" className="feed-composer-button" onClick={() => fileRef.current.click()}>
           <ImageIcon />
-          Add photo
+          {photo ? "Change photo" : "Add photo"}
         </button>
-        <button className="feed-composer-button">
+        {/* type="submit" sends the form, which runs handlePost */}
+        <button type="submit" className="feed-composer-button feed-composer-post">
           <SparkleIcon />
-          Write update
+          Post update
         </button>
       </div>
-    </div>
+
+      {/* Always on the page, empty until there's something to say.
+          role="status" makes screen readers read it out (WCAG) */}
+      <p className="feed-composer-message" role="status">
+        {message}
+      </p>
+    </form>
   );
 }
 
@@ -426,10 +563,14 @@ function Post(props) {
             </p>
           </div>
         </div>
-        {/* The post's title. An <h2>, because each post is one part of the page */}
-        <h2 className="feed-post-title">{props.title}</h2>
-        {/* What the post says */}
-        <p className="feed-post-text">{props.text}</p>
+        {/* The post's title. An <h2>, because each post is one part of the page.
+            Posts you write in the post box have no title, so it's only shown
+            when there is one ("&&" means "only if") */}
+        {props.title && <h2 className="feed-post-title">{props.title}</h2>}
+        {/* What the post says (a photo-only post has no words) */}
+        {props.text && <p className="feed-post-text">{props.text}</p>}
+        {/* The photo, if the post has one. alt describes it for screen readers (WCAG) */}
+        {props.photo && <img className="feed-post-photo" src={props.photo} alt={props.photoAlt} />}
         <div className="feed-post-counts">
           {/* "liked ? A : B" means: if liked is true, use A. Otherwise, use B.
               So the count goes up by 1 while you have the post liked.
@@ -594,13 +735,25 @@ function PeopleToKnow() {
 function Feed() {
   // "picked" remembers which tab is on. It starts on "For you".
   const [picked, setPicked] = useState("For you");
+  // Every post on the page. It starts as the sample posts, and grows when you
+  // post something. (New posts are only kept until the page is refreshed,
+  // because there's no backend to save them yet.)
+  const [allPosts, setAllPosts] = useState(posts);
+
+  // Runs when the post box sends a new post: puts it at the top of the list.
+  // [newPost, ...allPosts] makes a new list: the new post, then all the old ones
+  function addPost(newPost) {
+    setAllPosts([newPost, ...allPosts]);
+    // Your own post shows on "For you", so switch there if you were on "Following"
+    setPicked("For you");
+  }
 
   // Picks which posts to show, based on the tab.
   // "For you" shows every post. On "Following", .filter() goes through the
   // posts and keeps only the ones where "following" is true
-  let shownPosts = posts;
+  let shownPosts = allPosts;
   if (picked === "Following") {
-    shownPosts = posts.filter((post) => post.following);
+    shownPosts = allPosts.filter((post) => post.following);
   }
 
   return (
@@ -619,7 +772,8 @@ function Feed() {
 
         {/* Left column: the post box, then the posts */}
         <section className="feed-middle" aria-label="Posts">
-          <PostComposer />
+          {/* The post box. onPost is how it hands a new post back up to Feed */}
+          <PostComposer onPost={addPost} />
           {/* "A ? B : C" again: if there are posts to show, show them.
               Otherwise, show a short message instead of an empty space */}
           {shownPosts.length > 0 ? (
@@ -637,6 +791,8 @@ function Feed() {
                 color={post.color}
                 title={post.title}
                 text={post.text}
+                photo={post.photo}
+                photoAlt={post.photoAlt}
                 likes={post.likes}
                 comments={post.comments}
               />
