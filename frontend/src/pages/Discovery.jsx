@@ -19,9 +19,12 @@
 // useRef keeps a reference to something on the screen, so the code can
 // measure it. useLayoutEffect runs code right after React draws the page but
 // BEFORE you see it, so a measurement can be used without a flicker.
-import { useLayoutEffect, useRef, useState } from "react";
+// useEffect runs code after the page is drawn (here: opening a pop-up).
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 // Link goes to another page of the site without reloading everything.
-import { Link } from "react-router";
+// useSearchParams reads the extra info at the end of the address, like the
+// "?job=1" in "/discovery?job=1" (the Feed page links here that way).
+import { Link, useSearchParams } from "react-router";
 // NavBar is the bar across the top of the page. It lives in its own file
 // (components/NavBar.jsx) because every page uses it.
 import NavBar from "../components/NavBar.jsx";
@@ -483,6 +486,21 @@ function OpportunityCard(props) {
   // A reference to this box's pop-up, so "View opportunity" can open it
   const dialogRef = useRef(null);
 
+  // If the Feed page sent you here for THIS job ("/discovery?job=1"), open its
+  // pop-up as soon as the box is on the screen. props.openOnArrival is true
+  // only for that job. After opening, props.onOpened clears the "?job=1", so
+  // the pop-up doesn't open again by itself (for example after switching tabs).
+  const openOnArrival = props.openOnArrival;
+  const onOpened = props.onOpened;
+  useEffect(() => {
+    // ".open" is true if the pop-up is already open. Opening it twice would
+    // cause an error, so only open it if it isn't open yet.
+    if (openOnArrival && !dialogRef.current.open) {
+      dialogRef.current.showModal();
+      onOpened();
+    }
+  }, [openOnArrival, onOpened]);
+
   // The words under the buttons
   let message = "";
   if (saved) {
@@ -648,6 +666,9 @@ function ResultsSection(props) {
               key={opportunity.id}
               opportunity={opportunity}
               isBest={opportunity.id === props.bestMatchId}
+              // true only for the job the Feed page linked to (see Discovery below)
+              openOnArrival={opportunity.id === props.openJobId}
+              onOpened={props.onOpened}
             />
           ))}
         </ul>
@@ -698,6 +719,19 @@ function Discovery() {
   const [picked, setPicked] = useState("All");
   // How the list is sorted: "match" or "deadline".
   const [sortBy, setSortBy] = useState("match");
+  // The extra info at the end of the address. For "/discovery?job=1",
+  // searchParams.get("job") gives "1". setSearchParams changes it.
+  const [searchParams, setSearchParams] = useSearchParams();
+  // The job to open right away, as a number (Number("1") is 1), or null if
+  // the address has no "?job=". Number(null) would be 0, so check first.
+  const openJobId = searchParams.get("job") ? Number(searchParams.get("job")) : null;
+
+  // Runs after that job's pop-up opens: removes "?job=1" from the address.
+  // replace: true swaps the address instead of adding a new one, so the
+  // browser's Back button still goes back to the Feed page.
+  function clearOpenJob() {
+    setSearchParams({}, { replace: true });
+  }
 
   // The opportunity with the highest match: sort by match, take the first.
   const bestMatch = sortByMatch(opportunities)[0];
@@ -735,6 +769,8 @@ function Discovery() {
           sortBy={sortBy}
           setSortBy={setSortBy}
           showAll={showAll}
+          openJobId={openJobId}
+          onOpened={clearOpenJob}
         />
 
         <SideColumn />

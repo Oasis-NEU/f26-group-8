@@ -14,6 +14,10 @@ import { useEffect, useRef, useState } from "react";
 import NavBar from "../components/NavBar.jsx";
 // Link makes a clickable link to another page of our site.
 import { Link } from "react-router";
+// The jobs in the "Opportunities for you" box (right column). They're the
+// same list as the Discovery page uses (src/data/opportunities.js), so
+// clicking one can open that exact job there.
+import { opportunities } from "../data/opportunities.js";
 
 // ---------- Sample data ----------
 // These lists hold the made-up content shown on the page.
@@ -90,31 +94,6 @@ const posts = [
   },
 ];
 
-// The jobs and programs in the "Opportunities for you" box (right column).
-// These are made-up examples (the box says so), because there are no real
-// listings yet. "type" is what kind of opportunity it is.
-// "color" picks the square's color
-const opportunities = [
-  {
-    id: 1,
-    initials: "GL",
-    color: "sky",
-    type: "Internship",
-    title: "Climate Data Intern",
-    place: "GreenLine Labs · Remote",
-    when: "Apply by Nov 14",
-  },
-  {
-    id: 2,
-    initials: "M+",
-    color: "blue",
-    type: "Competition",
-    title: "Design Challenge",
-    place: "Mobility+ Youth Lab",
-    when: "Starts Dec 2",
-  },
-];
-
 // The people in the "People to know" box (right column)
 const people = [
   { id: 1, name: "Kyle Vergara", initials: "KV", headline: "Nursing Student" },
@@ -166,27 +145,6 @@ function ImageIcon() {
       <rect x="3" y="3" width="18" height="18" rx="2" />
       <circle cx="9" cy="9" r="2" />
       <path d="m21 15-5-5L5 21" />
-    </svg>
-  );
-}
-
-// A sparkle: a big 4-pointed star with a small one next to it
-function SparkleIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M10 3 11.8 8.2 17 10l-5.2 1.8L10 17l-1.8-5.2L3 10l5.2-1.8Z" />
-      <path d="M18 15v6" />
-      <path d="M15 18h6" />
     </svg>
   );
 }
@@ -501,7 +459,6 @@ function PostComposer(props) {
         </button>
         {/* type="submit" sends the form, which runs handlePost */}
         <button type="submit" className="feed-composer-button feed-composer-post">
-          <SparkleIcon />
           Post update
         </button>
       </div>
@@ -535,10 +492,63 @@ function Post(props) {
     setLiked(!liked);
   }
 
+  // "showComments" remembers whether the comment area under the post is open.
+  // It starts closed (false). The Comment button opens and closes it.
+  const [showComments, setShowComments] = useState(false);
+  // The comments YOU write on this post. [] = an empty list to start with.
+  // (The sample posts only have a comment count, not real comments.)
+  const [myComments, setMyComments] = useState([]);
+  // What's typed in the comment box right now. Starts empty.
+  const [commentText, setCommentText] = useState("");
+  // The message after pressing Share, like "Link copied."
+  const [shareMessage, setShareMessage] = useState("");
+
+  // An id for the comment area, so the Comment button can say it controls it (WCAG)
+  const commentsId = "feed-comments-" + props.id;
+
+  // Runs when you press Post in the comment box
+  function addComment(event) {
+    // A form normally reloads the whole page when it's sent. This stops that.
+    event.preventDefault();
+    // trim() removes spaces at the start and end, so "   " counts as empty
+    const words = commentText.trim();
+    if (words === "") {
+      return; // nothing typed, so nothing to add
+    }
+    // [...myComments, newComment] makes a new list: the old comments, plus the new one at the end.
+    // Date.now() is the time in milliseconds, so every comment gets a different id.
+    setMyComments([...myComments, { id: Date.now(), text: words }]);
+    // Empty the box for the next comment
+    setCommentText("");
+  }
+
+  // Runs when you press Share. "async" lets it wait for the browser to finish
+  // sharing or copying before it shows the message ("await" is the waiting part).
+  async function sharePost() {
+    // The link to this post: the site's address + /feed + #post-1 (for post 1).
+    // window.location.origin is the start of the address, like "http://localhost:5173"
+    const link = window.location.origin + "/feed#post-" + props.id;
+    // try/catch: sharing can fail (for example if you close the share menu),
+    // and then "catch" runs instead of the page breaking
+    try {
+      if (navigator.share) {
+        // Phones (and some computers) have a built-in share menu: use it
+        await navigator.share({ title: props.author + "'s post on ScoutSearch", url: link });
+        setShareMessage("");
+      } else {
+        // Otherwise, copy the link so you can paste it anywhere
+        await navigator.clipboard.writeText(link);
+        setShareMessage("Link copied.");
+      }
+    } catch {
+      setShareMessage("Couldn't share this post. Try again.");
+    }
+  }
+
   return (
     // <article> means "one post that makes sense on its own" (screen readers
-    // can jump from post to post)
-    <article className="feed-post">
+    // can jump from post to post). id="post-1" lets a shared link jump straight to it
+    <article className="feed-post" id={"post-" + props.id}>
       {/* The colored strip across the top, like "Build log".
           The color comes from props.color, so "blue" gives the class
           "feed-post-strip-blue" (see index.css) */}
@@ -590,7 +600,8 @@ function Post(props) {
               {countWords(liked ? props.likes + 1 : props.likes, "like")}
             </span>
           </span>
-          <span>{countWords(props.comments, "comment")}</span>
+          {/* The comment count goes up by 1 for every comment you add */}
+          <span>{countWords(props.comments + myComments.length, "comment")}</span>
         </div>
         <div className="feed-post-actions">
           {/* Clicking Like runs toggleLike (above), which flips "liked".
@@ -610,10 +621,74 @@ function Post(props) {
             {/* The button's words change too */}
             {liked ? "Liked" : "Like"}
           </button>
-          {/* These two don't do anything yet */}
-          <button>Comment</button>
-          <button>Share</button>
+          {/* Opens and closes the comment area under the post.
+              aria-expanded tells screen readers if it's open, and aria-controls
+              says which part of the page it opens (WCAG). While it's open, it
+              gets the "feed-liked" class too, so it looks pressed like Like does */}
+          <button
+            onClick={() => setShowComments(!showComments)}
+            className={showComments ? "feed-liked" : ""}
+            aria-expanded={showComments}
+            aria-controls={commentsId}
+            aria-label={"Comment on " + props.author + "'s post"}
+          >
+            Comment
+          </button>
+          {/* Shares a link to this post (see sharePost above) */}
+          <button onClick={sharePost} aria-label={"Share " + props.author + "'s post"}>
+            Share
+          </button>
         </div>
+
+        {/* "Link copied." after pressing Share. role="status" reads it out (WCAG) */}
+        <p className="feed-post-message" role="status">
+          {shareMessage}
+        </p>
+
+        {/* The comment area, only while it's open ("&&" means "only if") */}
+        {showComments && (
+          <div className="feed-comments" id={commentsId}>
+            {/* Your comments, one per row. .map() goes through them in order */}
+            {myComments.length > 0 && (
+              <ul className="feed-comment-list">
+                {myComments.map((comment) => (
+                  <li key={comment.id} className="feed-comment">
+                    <div className="feed-comment-avatar" aria-hidden="true">
+                      RMV
+                    </div>
+                    <div className="feed-comment-bubble">
+                      <p className="feed-comment-author">
+                        Roemer Mallari
+                        <span className="feed-comment-time"> · Just now</span>
+                      </p>
+                      <p className="feed-comment-text">{comment.text}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {/* The box to write a comment. A <form>, so pressing Enter posts it */}
+            <form className="feed-comment-form" onSubmit={addComment}>
+              {/* A real label for screen readers (sr-only hides it on screen, WCAG) */}
+              <label htmlFor={"feed-comment-input-" + props.id} className="sr-only">
+                {"Write a comment on " + props.author + "'s post"}
+              </label>
+              {/* autoFocus puts the cursor in the box as soon as it opens */}
+              <input
+                id={"feed-comment-input-" + props.id}
+                className="feed-comment-input"
+                placeholder="Write a comment..."
+                value={commentText}
+                onChange={(event) => setCommentText(event.target.value)}
+                autoFocus
+              />
+              <button type="submit" className="feed-comment-post">
+                Post
+              </button>
+            </form>
+          </div>
+        )}
       </div>
     </article>
   );
@@ -632,7 +707,6 @@ function TodayCard() {
   });
   return (
     <div className="feed-today">
-      <SparkleIcon />
       {/* <time> marks it as a date. dateTime gives computers the exact date,
           like "2026-10-24" (the first 10 letters of toISOString) */}
       <time
@@ -648,6 +722,10 @@ function TodayCard() {
 
 // The "Opportunities for you" box: jobs and programs that fit you (right column)
 function OpportunityRadar() {
+  // Your 2 best matches: copy the list ([...opportunities]), sort it highest
+  // match first (b.match - a.match), and keep the first 2 (.slice(0, 2)).
+  const topJobs = [...opportunities].sort((a, b) => b.match - a.match).slice(0, 2);
+
   return (
     <section className="feed-side-card">
       {/* The box's title. The small "Examples" tag says these jobs are
@@ -657,32 +735,47 @@ function OpportunityRadar() {
         <span className="feed-side-note">Examples</span>
       </h2>
       <ul className="feed-side-list">
-        {/* Makes one row for each item in the opportunities list */}
-        {opportunities.map((job) => (
+        {/* Makes one row for each of the 2 jobs */}
+        {topJobs.map((job) => (
           <li key={job.id} className="feed-opportunity">
-            {/* The colored square with the company's initials.
+            {/* The square with the company's initials.
                 Hidden from screen readers, because the company name is in the words */}
-            <div
-              className={"feed-opportunity-logo feed-opportunity-logo-" + job.color}
-              aria-hidden="true"
-            >
+            <div className="feed-opportunity-logo feed-opportunity-logo-blue" aria-hidden="true">
               {job.initials}
             </div>
             <div className="feed-opportunity-info">
-              {/* What kind of opportunity it is, like "Internship" */}
+              {/* What kind of opportunity it is, like "Co-op" */}
               <p className="feed-opportunity-type">{job.type}</p>
-              {/* The job's name. An <h3>, because it's inside the box's <h2> */}
-              <h3 className="feed-opportunity-title">{job.title}</h3>
-              <p className="feed-opportunity-place">{job.place}</p>
-              {/* The deadline, with a little calendar next to it */}
+              {/* The job's name, as a link. "/discovery?job=1" opens the Discovery
+                  page with job 1's pop-up open ("?job=1" is extra info added to the
+                  end of the address). The CSS stretches the link over the whole row,
+                  so you can click anywhere on it. An <h3>, because it's inside the
+                  box's <h2> */}
+              <h3 className="feed-opportunity-title">
+                <Link to={"/discovery?job=" + job.id} className="feed-opportunity-link">
+                  {job.title}
+                </Link>
+              </h3>
+              <p className="feed-opportunity-place">
+                {job.organization} · {job.place}
+              </p>
+              {/* The deadline, with a little calendar next to it. The date is
+                  written "2026-11-20" in the data, and toLocaleDateString turns
+                  it into "Nov 20" ("T00:00" = midnight, so it doesn't slip a day) */}
               <p className="feed-opportunity-when">
                 <CalendarIcon />
-                {job.when}
+                {"Apply by " +
+                  new Date(job.deadline + "T00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })}
               </p>
             </div>
           </li>
         ))}
       </ul>
+      {/* Goes to the Discovery page, to see every opportunity */}
+      <Link to="/discovery" className="feed-side-more">
+        See all opportunities
+        <span aria-hidden="true">→</span>
+      </Link>
     </section>
   );
 }
@@ -783,6 +876,7 @@ function Feed() {
             shownPosts.map((post) => (
               <Post
                 key={post.id}
+                id={post.id}
                 author={post.author}
                 initials={post.initials}
                 headline={post.headline}

@@ -2346,6 +2346,117 @@ html:has(.about-site) {
   background-color: var(--soft);    /* light blue fill, so "liked" doesn't rely on color alone (WCAG) */
 }
 
+/* "Link copied." under the buttons after pressing Share */
+.feed-post-message {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--muted);                 /* blue (8.3:1, WCAG) */
+  text-align: center;
+}
+
+/* Empty messages take up no space */
+.feed-post-message:empty {
+  margin-top: 0;
+}
+
+/* The comment area under the buttons, with a thin line above it */
+.feed-comments {
+  margin-top: 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);   /* thin light line */
+}
+
+/* The list of comments, stacked */
+.feed-comment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;                           /* space between comments */
+  margin-bottom: 12px;                 /* space above the comment box */
+}
+
+/* One comment: the circle on the left, the bubble on the right */
+.feed-comment {
+  display: flex;
+  align-items: flex-start;             /* the circle stays at the top if the comment is long */
+  gap: 10px;
+}
+
+/* The small circle with your initials */
+.feed-comment-avatar {
+  display: grid;
+  place-items: center;                 /* centers the letters */
+  flex-shrink: 0;                      /* never squished */
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;                  /* a circle */
+  background-color: var(--primary);    /* the main blue */
+  color: var(--on-primary);            /* white letters (WCAG) */
+  font-size: 12px;
+  font-weight: 800;
+}
+
+/* The light bubble holding the name and the comment */
+.feed-comment-bubble {
+  min-width: 0;                        /* long words wrap instead of stretching the bubble */
+  padding: 8px 14px;                   /* space inside */
+  border-radius: 14px;                 /* rounded corners */
+  background-color: var(--soft);       /* very light blue */
+}
+
+/* "Roemer Mallari" */
+.feed-comment-author {
+  font-size: 14px;
+  font-weight: 700;                    /* bold */
+  color: var(--text);                  /* navy */
+}
+
+/* " · Just now" next to the name */
+.feed-comment-time {
+  font-weight: 400;                    /* normal, not bold */
+  color: var(--subtle);                /* soft blue (WCAG) */
+}
+
+/* The comment's words */
+.feed-comment-text {
+  margin-top: 2px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--muted);                 /* blue (8.3:1, WCAG) */
+}
+
+/* The comment box and its Post button, side by side */
+.feed-comment-form {
+  display: flex;
+  gap: 8px;
+}
+
+/* The comment box: a light pill, like the search box in the top bar */
+.feed-comment-input {
+  flex: 1;                             /* stretches to fill the row */
+  min-width: 0;                        /* lets it shrink on small screens */
+  padding: 10px 16px;                  /* space inside */
+  border: 1px solid var(--border);     /* blue edge (WCAG: input borders need 3:1) */
+  border-radius: 999px;                /* pill shape */
+  background-color: var(--soft);       /* very light blue */
+  font-size: 16px;                     /* 16px or more stops phones from zooming in */
+  color: var(--text);                  /* navy words */
+}
+
+/* The example words in the comment box */
+.feed-comment-input::placeholder {
+  color: var(--subtle);                /* soft blue (WCAG) */
+}
+
+/* The Post button next to the comment box: a small solid blue pill */
+.feed-comment-post {
+  padding: 0 18px;
+  border-radius: 999px;                /* pill shape */
+  background-color: var(--primary);    /* the main blue */
+  color: var(--on-primary);            /* white words (6.2:1, WCAG) */
+  font-weight: 700;
+  cursor: pointer;
+}
+
 /* The like count ("223 likes"). overflow: hidden hides the number while it's
    still rolling in from below or above, so it looks like it slides into a slot */
 .feed-like-count {
@@ -2396,20 +2507,12 @@ html:has(.about-site) {
 /* The sky blue box with today's date. It sits straight like the other boxes,
    and tilts like a sticky note when the mouse is over it (see "Feed: motion") */
 .feed-today {
-  display: flex;                      /* the sparkle next to the words */
+  display: flex;
   align-items: center;                /* lined up in the middle, top-to-bottom */
-  gap: 16px;                          /* space between them */
   padding: 22px 26px;                 /* space inside: top/bottom, left/right */
   border-radius: 16px;                /* rounded corners */
   background-color: var(--accent);    /* the accent blue */
   color: var(--accent-text);          /* white words (7.6:1 light / 5.3:1 dark, WCAG) */
-}
-
-/* The sparkle in the date box is a bit bigger than the other icons */
-.feed-today svg {
-  width: 30px;
-  height: 30px;
-  flex-shrink: 0;         /* never squished */
 }
 
 /* The weekday and the date, stacked */
@@ -2484,6 +2587,7 @@ html:has(.about-site) {
   grid-template-columns: 56px minmax(0, 1fr);  /* square 56px wide, the words get the rest */
   gap: 16px;                          /* space between them */
   padding: 18px 0;                    /* space above and below each job */
+  position: relative;                 /* the job's link (below) is stretched over this whole row */
 }
 
 /* The colored square with the company's initials */
@@ -2498,12 +2602,7 @@ html:has(.about-site) {
   font-weight: 800;             /* extra thick */
 }
 
-/* The square's 2 colors. Feed.jsx picks one with each job's "color" */
-.feed-opportunity-logo-sky {
-  background-color: var(--accent-soft); /* light blue (so it looks different from the blue one) */
-  color: var(--text);                   /* dark letters (10.9:1 light / 9.7:1 dark) */
-}
-
+/* The square's color: the main blue, the same as the logos on the Discovery page */
 .feed-opportunity-logo-blue {
   background-color: var(--primary);     /* the main blue */
   color: var(--on-primary);                         /* white letters (4.9:1, WCAG) */
@@ -2524,6 +2623,61 @@ html:has(.about-site) {
   font-size: 17px;
   font-weight: 700;             /* bold */
   color: var(--text);           /* navy */
+}
+
+/* The job's name is a link to that job on the Discovery page. ::after is an
+   invisible layer stretched over the whole row (inset: 0 = all 4 edges), so
+   you can click anywhere on the row, not just the words */
+.feed-opportunity-link::after {
+  content: "";                  /* ::after needs this to show up at all */
+  position: absolute;
+  inset: 0;                     /* covers the whole row */
+}
+
+/* Mouse over a row: the job's name gets underlined, so you can tell it's a link */
+@media (hover: hover) and (pointer: fine) {
+  .feed-opportunity:hover .feed-opportunity-link {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+/* Keyboard users (Tab): the whole row gets the blue outline, since the link
+   covers the whole row. ":has(...)" means "the row, while its link is focused" (WCAG) */
+.feed-opportunity-link:focus-visible {
+  outline: none;                /* no outline on just the words... */
+}
+.feed-opportunity:has(.feed-opportunity-link:focus-visible) {
+  outline: 2px solid var(--focus-ring);  /* ...the whole row gets it instead */
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+/* "See all opportunities →" at the bottom of the box */
+.feed-side-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;                     /* space between the words and the arrow */
+  min-height: 44px;             /* easy to tap */
+  margin-bottom: 8px;
+  font-size: 15px;
+  font-weight: 700;             /* bold */
+  color: var(--link);           /* blue link color (WCAG) */
+  text-underline-offset: 4px;
+}
+
+/* Underline on mouse hover, so it's not only a color (WCAG) */
+@media (hover: hover) and (pointer: fine) {
+  .feed-side-more:hover {
+    text-decoration: underline;
+  }
+}
+
+/* Keyboard outline (WCAG) */
+.feed-side-more:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 /* The company and where, like "GreenLine Labs · Remote" */
@@ -2600,6 +2754,11 @@ html:has(.about-site) {
   .feed-post-actions button:hover {
     background-color: var(--soft);
     color: var(--text);                 /* deep navy */
+  }
+
+  /* The comment Post button gets a darker blue */
+  .feed-comment-post:hover {
+    background-color: var(--primary-dark);
   }
 
   /* "Post update" stays blue, just darker */
@@ -2824,7 +2983,9 @@ html:has(.about-site) {
 .feed-profile-button:focus-visible,
 .feed-composer-input:focus-visible,
 .feed-composer-alt:focus-visible,
-.feed-composer-photo-remove:focus-visible {
+.feed-composer-photo-remove:focus-visible,
+.feed-comment-input:focus-visible,
+.feed-comment-post:focus-visible {
   outline: 2px solid var(--focus-ring);    /* blue outline (4.5:1 on the boxes; outlines need 3:1, WCAG) */
   outline-offset: 2px;                  /* a little gap between it and the outline */
 }
