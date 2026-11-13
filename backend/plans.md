@@ -156,3 +156,102 @@ SSO login (planned 2026-10-19) - replaces username/password with Supabase Auth
             the login (useEffect + getSession) and goes to /feed
         [ ] Vite proxy for /api (NOT /auth), Bearer header on backend calls (after S4)
         [ ] put Supabase values in frontend/.env.local (after S1c)
+
+Jobs: outside sources + employer postings (planned 2026-11-13) - frontend/plans.md B3 + B6
+    Real jobs come from two places and land in one jobs table:
+        1. official public job APIs (no scraping: LinkedIn, Indeed, Handshake, Glassdoor are out)
+        2. employers posting directly. They pick Employer at signup, and their jobs stay
+           'pending' (hidden) until an admin verifies them, so fake listings can't reach students.
+    $0 budget, no new npm packages (Node's built-in fetch). API keys go in secrets.env,
+    added by hand: USAJOBS_API_KEY, USAJOBS_EMAIL, ADZUNA_APP_ID, ADZUNA_APP_KEY.
+
+    Sources and their rules (checked 2026-11-13):
+        Greenhouse  boards-api.greenhouse.io/v1/boards/{token}/jobs?content=true   no key, one company per call
+        Lever       api.lever.co/v0/postings/{site}?mode=json                     no key, one company per call
+        USAJOBS     data.usajobs.gov/api/search?HiringPath=student;graduates      free key; headers Host,
+                    User-Agent (= the email used to sign up for the key), Authorization-Key
+        Adzuna      api.adzuna.com/v1/api/jobs/us/search/{page}?what=intern        free key, free tier is for
+                    evaluation/academic use; every Adzuna listing must show an "Adzuna" label linked to adzuna.com
+        Every outside job shows its source and links out to the original posting.
+
+    Shared contract additions (copy into frontend/plans.md once agreed):
+        Job also has  source: 'employer' | 'greenhouse' | 'lever' | 'usajobs' | 'adzuna'
+                      status: 'pending' | 'open' | 'closed'
+        Job ids are uuid strings, not numbers
+        Job drops is_posted (status already says whether a job is visible)
+        GET  /api/jobs                  also takes q= (search) and page=; only returns open jobs
+                                        50 per page, newest first; fewer than 50 back = last page
+                                        level=college or level=high-school also returns 'both' jobs
+                                        empty filters (?type=) count as no filter
+        GET  /api/jobs/:id              open AND closed jobs (check status), never pending; else 404
+                                        a past-deadline job still says status 'open' here (the list
+                                        hides it): check deadline too before showing Apply
+        apply_url is always http:// or https:// (jobs.sql step 3)
+        GET  /api/jobs/mine             (employer)  -> { jobs: [Job] }, every status
+        POST /api/auth/employer-request (student)   body { company_name } -> { profile }
+
+    ORDER: run jobs.sql BEFORE roles.sql (verify_employer in roles.sql updates the jobs table,
+    so that table has to exist first).
+
+    [x] Task JB1 - jobs table                          files: backend/sql/jobs.sql (new)  (Anthony)
+        JB1a. columns from the contract's Job, plus source, external_id, status, last_seen_at
+        JB1b. unique (source, external_id) so re-imports update rows instead of copying them
+        JB1c. RLS on, no policies (same as profiles: only the backend reads and writes)
+
+    [x] Task R1 - roles on profiles                    files: backend/sql/roles.sql (new)  (Anthony)
+        R1a. profiles: role ('student' | 'employer' | 'admin', default 'student'),
+             company_name, employer_verified (default false)
+        R1b. verify_employer(user id): sets employer_verified and opens that employer's pending jobs.
+             An admin runs it in the SQL Editor for now.
+        R1c. revoke execute on verify_employer from public, anon, authenticated
+             (otherwise anyone with the publishable key could call it at /rest/v1/rpc)
+
+    [ ] Task JB2 - importer                            files: backend/src/job-sources/ (new folder),
+                                                              backend/src/import-jobs.ts (new),
+                                                              backend/package.json (scripts only)  (Anthony)
+        JB2a. one file per source that turns that API's shape into ours; keep only intern/co-op titles
+        JB2b. import-jobs.ts, per source: fetch -> drop duplicate ids -> upsert -> close jobs the
+              source no longer lists (only if every fetch for that source worked)
+        JB2c. "import-jobs" script; run it by hand for now (not on startup: tsx watch restarts
+              on every save and would use up Adzuna's daily limit)
+        Progress (2026-11-13):
+            [x] shared.ts, greenhouse.ts (10 boards), lever.ts (3 sites), import-jobs.ts, the script
+            [x] first real run against Supabase: greenhouse 131, lever 67
+            [ ] usajobs.ts and adzuna.ts, after their free keys are in secrets.env
+
+    [x] Task JB3 - read routes                         files: backend/src/jobs.ts (new),
+                                                              backend/src/app.ts (one line)  (Anthony)
+        JB3a. app.use('/api/jobs', jobsRouter)
+        JB3b. GET /: open jobs only, hides past deadlines, 400 on unknown filter values,
+              q stripped to letters/digits/spaces/hyphens, 50 per page
+        JB3c. GET /:id: check it's a uuid first (404, not a Postgres error turned into a 500)
+
+    [ ] Task J2 - requireRole middleware (= B4)        files: backend/src/middleware.ts  (Jayden)
+        needs: J1, R1
+        J2a. requireRole(...roles): look up profiles.role by req.user.id, 403 if not allowed,
+             set req.role and req.employerVerified. Supabase tokens don't carry our roles,
+             so this has to read the table.
+
+    [ ] Task JB4 - employer request                    files: backend/src/auth.ts  (Anthony)
+        needs: J1, S4, R1
+        JB4a. POST /employer-request { company_name }: only while role is 'student' (else 409);
+              sets role 'employer', company_name, employer_verified false. Can never set admin.
+
+    [ ] Task JB5 - employer and admin routes           files: backend/src/jobs.ts  (Anthony)
+        needs: JB3, J2, JB4
+        JB5a. GET /mine (employer), defined BEFORE /:id so Express doesn't read "mine" as an id
+        JB5b. POST / (employer): copy only the allowed fields, never insert req.body directly.
+              The server sets source, posted_by, organization (from the profile, never the body)
+              and status ('open' if verified, otherwise 'pending')
+        JB5c. PATCH /:id and POST /:id/close (owner or admin), employer jobs only
+        JB5d. DELETE /:id (admin) -> 204
+
+    Not ours - pass to the frontend team:
+        [ ] F10: ids are uuid strings (Discovery.jsx uses Number(?job=), ApplicationTracker only
+            looks jobs up in opportunities.js). Fields follow the contract (location, pay_text).
+            Outside jobs have no match/tags and may have null deadline, setting, paid, pay_text.
+        [ ] F10: a source label on every outside job; the Adzuna label on Adzuna jobs; Apply opens
+            apply_url in a new tab; never render description as HTML
+        [ ] Signup: Student / Employer choice (save it before the Google redirect); employers then
+            enter a company name -> POST /api/auth/employer-request
+        [ ] PRODUCT.md: the "every job is made up and labeled an example" rule changes

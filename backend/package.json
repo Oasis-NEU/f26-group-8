@@ -5,7 +5,8 @@
   "main": "src/app.ts",
   "scripts": {
     "dev": "tsx watch --env-file=secrets.env src/app.ts",
-    "start": "tsx --env-file=secrets.env src/app.ts"
+    "start": "tsx --env-file=secrets.env src/app.ts",
+    "import-jobs": "tsx --env-file=secrets.env src/import-jobs.ts"
   },
   "keywords": [],
   "author": "",

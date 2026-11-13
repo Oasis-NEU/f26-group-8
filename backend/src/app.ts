@@ -1,5 +1,6 @@
 import express, { type Express, type Request, type Response, type NextFunction } from 'express';
 import authRouter from './auth.js';
+import jobsRouter from './jobs.js';
 
 const app: Express = express();
 app.use(express.json());
@@ -10,6 +11,10 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.use('/auth', authRouter);
+
+// JB3a: job routes. under /api because the frontend's Vite proxy only forwards /api
+// (see the shared contract in plans.md). /auth moves under /api too, in Task S4.
+app.use('/api/jobs', jobsRouter);
 
 // catch-all error handler: has to come after all the routes so it catches their errors.
 // Express knows this is an error handler because it takes 4 arguments (err comes first),
